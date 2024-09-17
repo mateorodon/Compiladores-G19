@@ -1,22 +1,41 @@
 package compi.g19;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-@Data
+@Getter
+@Setter
 public class AnalizadorLexico {
     private BufferedReader entrada;
     private int estadoAct;
+    @Getter
     public static int lineaAct = 1;
     private int[][] matrizEstados = AutomataModel.getMatrizEstados();
     private AccionSemantica[][] matrizAS = AutomataModel.getMatrizAS();
+    static List<Error> erroresLexicos = new ArrayList<Error>();
+    static List<Error> erroresSintacticos = new ArrayList<Error>();
 
     public AnalizadorLexico(BufferedReader entrada) {
         this.entrada = entrada;
         this.estadoAct = 0; // Estado inicial
     }
+
+    public static void agregarErrorLexico(String error){
+        Error e = new Error(error, getLineaAct());
+        erroresLexicos.add(e);
+    }
+
+    public static void agregarErrorSintactico(String error){
+        Error e = new Error(error, getLineaAct());
+        erroresSintacticos.add(e);
+    }
+
     public Token obtenerToken() throws IOException {
 
         StringBuilder lexemaBuilder = new StringBuilder();
@@ -147,7 +166,7 @@ public class AnalizadorLexico {
     private boolean caracterEspecial(Character c) {
         String caracterComoString = Character.toString(c);
         return ((caracterComoString.equals("\n") || caracterComoString.equals("\r")
-                || caracterComoString.equals("\t") || caracterComoString.isEmpty()) ||caracter.toString().isBlank() || caracterComoString.isEmpty());
+                || caracterComoString.equals("\t") || caracterComoString.isEmpty()) ||caracterComoString.isBlank());
 
 
     }

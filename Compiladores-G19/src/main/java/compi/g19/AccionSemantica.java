@@ -39,14 +39,14 @@ public abstract class AccionSemantica {
 
     public abstract void ejecutar(Token t, Character c, Reader entrada) throws IOException;
 
-    class generarASCII extends AccionSemantica {
+    static class generarASCII extends AccionSemantica {
         @Override
         public void ejecutar(Token t, Character c, Reader entrada) {
 
         }
     }
 
-    class ignorar extends AccionSemantica {
+    static class ignorar extends AccionSemantica {
         @Override
         public void ejecutar(Token t, Character c, Reader entrada) {
             if (c.equals('\n')){
@@ -55,14 +55,14 @@ public abstract class AccionSemantica {
         }
     }
 
-    class concatenar extends AccionSemantica {
+    static class concatenar extends AccionSemantica {
         @Override
         public void ejecutar(Token t, Character c, Reader entrada) {
             t.agregarCaracter(c);
         }
     }
 
-    class resetear extends AccionSemantica {
+    static class resetear extends AccionSemantica {
         @Override
         public void ejecutar(Token t, Character c, Reader entrada) throws IOException {
             t.borrarUltimoCaracter();
@@ -70,7 +70,7 @@ public abstract class AccionSemantica {
         }
     }
 
-    class generarToken extends AccionSemantica {
+    static class generarToken extends AccionSemantica {
         @Override
         public void ejecutar(Token t, Character c, Reader entrada){
             t.setLinea(AnalizadorLexico.lineaAct);
@@ -78,13 +78,33 @@ public abstract class AccionSemantica {
         }
     }
 
-    class error extends AccionSemantica {
+    static class error extends AccionSemantica {
         @Override
         public void ejecutar(Token t, Character c, Reader entrada){
 
         }
     }
 
+    static class chequeoEntero extends AccionSemantica {
+        @Override
+        public void ejecutar(Token t, Character c, Reader entrada){
+            int valueInt = Integer.parseInt(t.getLexema().toString());
+            if ((0 <= valueInt) && (valueInt < 256)){
+                t.setId(ENTERO);
+                //falta resetear
+            }
+        }
+    }
 
-    
+    static class chequeoFlotante extends AccionSemantica {
+        @Override
+        public void ejecutar(Token t, Character c, Reader entrada){
+            String flotante = t.getLexema().toString().replace('D', 'e').replace('d','e');
+            double valueFloat = Double.parseDouble(flotante);
+            if ((valueFloat >= 1.17549435e-38) && (valueFloat <= 3.40282347e+38)){
+                t.setId(FLOTANTE);
+                //falta resetear
+            }
+        }
+    }
 }

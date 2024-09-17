@@ -4,8 +4,20 @@ import java.util.List;
 
 public class AutomataModel {
 
-    private static final int[][] matrizEstados;
+    int rows=10;
+    int columns=10;
 
+    private static final AccionSemantica generarASCII = new AccionSemantica.generarASCII();
+    private static final AccionSemantica ignorar = new AccionSemantica.ignorar();
+    private static final AccionSemantica concatenar = new AccionSemantica.concatenar();
+    private static final AccionSemantica resetear = new AccionSemantica.resetear();
+    private static final AccionSemantica generarToken = new AccionSemantica.generarToken();
+    private static final AccionSemantica error = new AccionSemantica.error();
+    private static final AccionSemantica chequeoEntero = new AccionSemantica.chequeoEntero();
+    private static final AccionSemantica chequeoFlotante = new AccionSemantica.chequeoFlotante();
+
+
+    private static final int[][] matrizEstados;
     static {
         matrizEstados = new int[][] {
                 {1, 1, 5, 10, 0, 12, 0, 4, 3, 2, 2, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0},
@@ -27,11 +39,10 @@ public class AutomataModel {
     }
 
 
-    private static final List<AccionSemantica>[][] matrizAS;
-
-    static {
-        matrizAS = new int[][] {
-                {1, 1, 5, 10, 0, 12, 0, 4, 3, 2, 2, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0},
+    private static final List<AccionSemantica>[][] matrizAS = new List[15][23];
+    /*static {
+        matrizAS{
+                {0, 1, 5, 10, 0, 12, 0, 4, 3, 2, 2, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0},
                 {1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0},
                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -47,7 +58,7 @@ public class AutomataModel {
                 {13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 14, 13, 13, 13, 13, 13, 13, 13, 13},
                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
         };
-    }
+    }*/
 
     public static int[][] getMatrizEstados() {
         return matrizEstados;
