@@ -47,8 +47,6 @@ public abstract class AccionSemantica {
         private AccionSemantica a1;
         private AccionSemantica a2;
 
-
-
         @Override
         public void ejecutar(Token t, Character c, Reader entrada) throws IOException {
             a1.ejecutar(t, c, entrada);
@@ -62,7 +60,6 @@ public abstract class AccionSemantica {
         private AccionSemantica a1;
         private AccionSemantica a2;
         private AccionSemantica a3;
-
 
         @Override
         public void ejecutar(Token t, Character c, Reader entrada) throws IOException {
@@ -78,6 +75,13 @@ public abstract class AccionSemantica {
         @Override
         public void ejecutar(Token t, Character c, Reader entrada) {
 
+        }
+    }
+
+    static class comentario extends AccionSemantica {
+        @Override
+        public void ejecutar(Token t, Character c, Reader entrada) {
+            System.out.println("SE RECONOCIO UN COMENTARIO");
         }
     }
 
@@ -124,9 +128,23 @@ public abstract class AccionSemantica {
         @Override
         public void ejecutar(Token t, Character c, Reader entrada){
             int valueInt = Integer.parseInt(t.getLexema().toString());
-            if ((0 <= valueInt) && (valueInt < 256)){
-                t.setId(ENTERO);
-                //falta resetear
+            if (0 > valueInt)  {
+                t.setLexema(new StringBuilder(String.valueOf(0)));
+            }
+            if (valueInt > 256){
+                t.setLexema(new StringBuilder(String.valueOf(256)));
+            }
+            t.setId(ENTERO);
+        }
+    }
+
+    //falta ver si es PR
+    static class truncar extends AccionSemantica {
+        @Override
+        public void ejecutar(Token t, Character c, Reader entrada){
+            if (t.getLexema().length()>TAMANIO_VAR){
+                t.setLexema(new StringBuilder(t.getLexema().substring(0, TAMANIO_VAR)));
+                t.setId(ID);
             }
         }
     }
@@ -136,10 +154,14 @@ public abstract class AccionSemantica {
         public void ejecutar(Token t, Character c, Reader entrada){
             String flotante = t.getLexema().toString().replace('D', 'e').replace('d','e');
             double valueFloat = Double.parseDouble(flotante);
-            if ((valueFloat >= 1.17549435e-38) && (valueFloat <= 3.40282347e+38)){
-                t.setId(FLOTANTE);
-                //falta resetear
+            if (valueFloat < 1.17549435e-38) {
+                //FUERA DE RANGO, LE ASIGNO VALOR VALIDO
+                t.setLexema(new StringBuilder(String.valueOf(1.17549435e-38).replace('e','s')));
             }
+            if (valueFloat > 3.40282347e+38 ){
+                t.setLexema(new StringBuilder(String.valueOf(3.40282347e+38).replace('e','s')));
+            }
+            t.setId(FLOTANTE);
         }
     }
 }
