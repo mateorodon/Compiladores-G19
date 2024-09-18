@@ -1,5 +1,7 @@
 package compi.g19;
 
+import lombok.AllArgsConstructor;
+
 import java.io.IOException;
 import java.io.Reader;
 
@@ -38,6 +40,39 @@ public abstract class AccionSemantica {
     }
 
     public abstract void ejecutar(Token t, Character c, Reader entrada) throws IOException;
+
+    @AllArgsConstructor
+    static class compuesta extends AccionSemantica {
+
+        private AccionSemantica a1;
+        private AccionSemantica a2;
+
+
+
+        @Override
+        public void ejecutar(Token t, Character c, Reader entrada) throws IOException {
+            a1.ejecutar(t, c, entrada);
+            a2.ejecutar(t, c, entrada);
+        }
+    }
+
+    @AllArgsConstructor
+    static class compuestaTriple extends AccionSemantica {
+
+        private AccionSemantica a1;
+        private AccionSemantica a2;
+        private AccionSemantica a3;
+
+
+        @Override
+        public void ejecutar(Token t, Character c, Reader entrada) throws IOException {
+            a1.ejecutar(t, c, entrada);
+            a2.ejecutar(t, c, entrada);
+            a3.ejecutar(t, c, entrada);
+        }
+    }
+
+
 
     static class generarASCII extends AccionSemantica {
         @Override

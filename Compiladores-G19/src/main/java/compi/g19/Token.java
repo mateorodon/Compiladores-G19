@@ -13,7 +13,7 @@ public class Token {
     private Integer linea;
 
     public void resetLexema(){
-        this.lexema;
+        this.lexema.setLength(0);
     }
 
     public void borrarUltimoCaracter(){
