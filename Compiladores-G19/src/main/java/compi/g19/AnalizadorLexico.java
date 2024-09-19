@@ -1,6 +1,5 @@
 package compi.g19;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,8 +15,8 @@ public class AnalizadorLexico {
     private int estadoAct;
     @Getter
     public static int lineaAct = 1;
-    private int[][] matrizEstados = AutomataModel.getMatrizEstados();
-    private AccionSemantica[][] matrizAS = AutomataModel.getMatrizAS();
+    private int[][] matrizEstados = GeneradorMatriz.matrizEstados;
+    private AccionSemantica[][] matrizAS = GeneradorMatriz.matrizAS;
     static List<Error> erroresLexicos = new ArrayList<Error>();
     static List<Error> erroresSintacticos = new ArrayList<Error>();
 
@@ -58,9 +57,9 @@ public class AnalizadorLexico {
             }
 
             //Si es un espacio en blanco no generamos token
-            if (caracterEspecial(caracter)){
-                val=0;
-            }
+            //if (caracterEspecial(caracter)){
+               // val=0;
+           // }
         }
 
         lexemaBuilder.setLength(0);
@@ -73,11 +72,11 @@ public class AnalizadorLexico {
             return 'd'; // Devuelve 'd' si es un dígito excepto '0'
         }
 
-        if (c >= 'A' && c <= 'F') {
+        if (c >= 'a' && c <= 'f') {
             return 'L'; // Devuelve 'L' si está entre A - F
         }
 
-        if (c >= 'G' && c <= 'Z' && c != 'x' && c != 's') {
+        if (c >= 'g' && c <= 'z' && c != 'x' && c != 's') {
             return 'l'; // Devuelve 'l' si está entre G - Z y no es 'x' ni 's'
         }
 
@@ -165,7 +164,7 @@ public class AnalizadorLexico {
 
     private boolean caracterEspecial(Character c) {
         String caracterComoString = Character.toString(c);
-        return ((caracterComoString.equals("\n") || caracterComoString.equals("\r")
+        return ((caracterComoString.equals("\n")
                 || caracterComoString.equals("\t") || caracterComoString.isEmpty()) ||caracterComoString.isBlank());
 
 

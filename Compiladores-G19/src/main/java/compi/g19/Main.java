@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) {
-        String filePath = "src/main/java/compi/g19/entrada1.txt";
+        String filePath = "E:/Facultad/Compiladores-G19/Compiladores-G19/src/main/java/compi/g19/entrada1.txt";
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             AnalizadorLexico analizador = new AnalizadorLexico(reader);

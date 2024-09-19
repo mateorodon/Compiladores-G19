@@ -2,9 +2,7 @@ package compi.g19;
 
 import lombok.Getter;
 
-import java.util.List;
-
-public class AutomataModel {
+public class GeneradorMatriz {
 
     private static final AccionSemantica generarASCII = new AccionSemantica.generarASCII();
     private static final AccionSemantica ignorar = new AccionSemantica.ignorar();
@@ -28,8 +26,7 @@ public class AutomataModel {
 
 
 
-    @Getter
-    private static final int[][] matrizEstados;
+    public static final int[][] matrizEstados;
     static {
         matrizEstados = new int[][] {
                 {1, 1, 5, 10, 0, 12, 0, 4, 3, 2, 2, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0},
@@ -51,7 +48,7 @@ public class AutomataModel {
     }
 
 
-    private static final AccionSemantica[][] matrizAS;
+    public static final AccionSemantica[][] matrizAS;
     static {
         matrizAS=new AccionSemantica[][]{
                 {concatenar, concatenar, concatenar, concatenar, error, ignorar, generarASCII, ignorar,concatenar,concatenar, concatenar,generarASCII,generarASCII,generarASCII, generarASCII, generarASCII,generarASCII,concatenar,concatenar,ignorar, ignorar, ignorar, generarASCII},
@@ -72,7 +69,4 @@ public class AutomataModel {
         };
     }
 
-    public static AccionSemantica[][] getMatrizAS() {
-        return null;
-    }
 }

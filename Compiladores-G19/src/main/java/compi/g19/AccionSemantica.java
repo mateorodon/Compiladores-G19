@@ -104,7 +104,7 @@ public abstract class AccionSemantica {
     static class resetear extends AccionSemantica {
         @Override
         public void ejecutar(Token t, Character c, Reader entrada) throws IOException {
-            t.borrarUltimoCaracter();
+            //t.borrarUltimoCaracter();
             entrada.reset();
         }
     }

@@ -4,13 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Data
 public class Token {
     private int id;
     private StringBuilder lexema;
     private Integer linea;
+
+    public Token() {
+        this.id = 0;
+        this.lexema = new StringBuilder();
+        this.linea = 0;
+    }
 
     public void resetLexema(){
         this.lexema.setLength(0);
