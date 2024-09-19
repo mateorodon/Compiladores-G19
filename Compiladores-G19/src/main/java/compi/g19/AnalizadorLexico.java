@@ -57,9 +57,9 @@ public class AnalizadorLexico {
             }
 
             //Si es un espacio en blanco no generamos token
-            //if (caracterEspecial(caracter)){
-               // val=0;
-           // }
+            if (caracterEspecial(caracter)){
+                val=0;
+            }
         }
 
         lexemaBuilder.setLength(0);
@@ -84,88 +84,41 @@ public class AnalizadorLexico {
     }
 
     private static int getCaracter(char c) {
-        int valor;
-        switch(mapCaracter(c)) {
-            case 'L':
-                valor = 0;
-                break;
-            case 'l':
-                valor = 1;
-                break;
-            case 'd':
-                valor = 2;
-                break;
-            case '0':
-                valor = 3;
-                break;
-            case '_':
-                valor = 4;
-                break;
-            case '/':
-                valor = 5;
-                break;
-            case '*':
-                valor = 6;
-                break;
-            case '{':
-                valor = 7;
-                break;
-            case '!':
-                valor = 8;
-                break;
-            case '<':
-                valor = 9;
-                break;
-            case '>':
-                valor = 10;
-                break;
-            case '=':
-                valor = 11;
-                break;
-            case '.':
-                valor = 12;
-                break;
-            case '}':
-                valor = 13;
-                break;
-            case '#':
-                valor = 14;
-                break;
-            case '+':
-                valor = 15;
-                break;
-            case '-':
-                valor = 16;
-                break;
-            case 's':
-                valor = 17;
-                break;
-            case 'x':
-                valor = 18;
-                break;
-            case '\n':
-                valor = 19;
-                break;
-            case '\t':
-                valor = 20;
-                break;
-            case '\r':
-                valor = 21;
-                break;
-            case 'o':
-                valor = 22;
-                break;
-            default:
-                valor = -1; // Valor por defecto para caracteres no mapeados
-                break;
-        }
-        return valor;
-    }
+        return switch (mapCaracter(c)) {
+            case 'L' -> 0;
+            case 'l' -> 1;
+            case 'd' -> 2;
+            case '0' -> 3;
+            case '_' -> 4;
+            case '/' -> 5;
+            case '*' -> 6;
+            case '{' -> 7;
+            case '!' -> 8;
+            case '<' -> 9;
+            case '>' -> 10;
+            case '=' -> 11;
+            case '.' -> 12;
+            case '}' -> 13;
+            case '#' -> 14;
+            case '+' -> 15;
+            case '-' -> 16;
+            case 's' -> 17;
+            case 'x' -> 18;
+            case '\n' -> 19;
+            case '\t' -> 20;
+            case '\r' -> 21;
+            case ' ' -> 21;
+            case 'o' -> 22;
+            //PONEMOS COMA DE PRUEBA
+            case ',' -> 22;
+            default -> -1; // Valor por defecto para caracteres no mapeados
+        };
+    };
 
-    private boolean caracterEspecial(Character c) {
+    public static boolean caracterEspecial(Character c) {
         String caracterComoString = Character.toString(c);
         return ((caracterComoString.equals("\n")
-                || caracterComoString.equals("\t") || caracterComoString.isEmpty()) ||caracterComoString.isBlank());
+                || caracterComoString.equals("\t") || caracterComoString.isEmpty()));
 
 
     }

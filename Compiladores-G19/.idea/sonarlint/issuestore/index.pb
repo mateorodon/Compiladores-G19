@@ -9,3 +9,13 @@ R
 "src/main/java/compi/g19/Token.java,3\6\367cc3b9818dfe78524d5eb73b1dd4990f33a0fc
 ]
 -src/main/java/compi/g19/AnalizadorLexico.java,5\1\511b8691f065cc6f79aa3f865736bcb528aa9307
+T
+$src/main/java/compi/g19/entrada1.txt,c\8\c861ad9b4bdcc2223c649c23ae074cb1ba2f7e32
+_
+/src/main/java/compi/g19/PalabrasReservadas.java,7\a\7a8bb2c52748f31bc08b030cf04232cff2a816c5
+\
+,src/main/java/compi/g19/GeneradorMatriz.java,a\b\ab09ecbbba850e67290e9144566bb4144ce9934d
+P
+ src/main/java/compi/g19/entrada2,4\0\40459a335e48d0348764ae951652334ecdf89c6c
+T
+$src/main/java/compi/g19/entrada2.txt,5\e\5ebfc48ae0a04b27bff28dcfd0a0b937dbca6f55

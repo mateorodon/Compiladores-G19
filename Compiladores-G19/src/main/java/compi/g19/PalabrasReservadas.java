@@ -4,9 +4,8 @@ import java.util.HashMap;
 
 public class PalabrasReservadas {
 
-    private static final HashMap<String, Short> palabrasReservadas = new HashMap<>();
-
-    public PalabrasReservadas(){
+    public static final HashMap<String, Short> palabrasReservadas = new HashMap<>();
+    static {
         palabrasReservadas.put("if", (short) 265);
         palabrasReservadas.put("then", (short) 266);
         palabrasReservadas.put("else", (short) 267);

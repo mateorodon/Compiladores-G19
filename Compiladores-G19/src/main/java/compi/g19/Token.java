@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import static compi.g19.PalabrasReservadas.palabrasReservadas;
+
 @Data
 public class Token {
     private int id;
@@ -26,6 +28,10 @@ public class Token {
 
     public void agregarCaracter(char c){
         lexema.append(c);
+    }
+
+    public Short esPR(){
+        return palabrasReservadas.get(this.lexema.toString().toLowerCase());
     }
 
 }

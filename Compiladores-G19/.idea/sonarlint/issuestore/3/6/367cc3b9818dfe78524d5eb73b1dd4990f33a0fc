@@ -1,7 +1,5 @@
 
-<
-java:S1068"&Remove this unused "id" private field.(æ¨ç†
-E
-java:S1068"*Remove this unused "lexema" private field.(Ÿç—„üÿÿÿÿ
-D
-java:S1068")Remove this unused "linea" private field.(âßÞÌùÿÿÿÿ
+X
+java:S1128"6Remove this unused import 'lombok.AllArgsConstructor'.(´œ¾öùÿÿÿÿ8¿ÂÃà 2
+R
+java:S1128"5Remove this unused import 'lombok.NoArgsConstructor'.(¸¨›8ÀÂÃà 2

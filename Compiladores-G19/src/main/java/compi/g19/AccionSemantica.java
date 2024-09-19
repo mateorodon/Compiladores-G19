@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import java.io.IOException;
 import java.io.Reader;
 
+import static compi.g19.AnalizadorLexico.caracterEspecial;
+
 public abstract class AccionSemantica {
 
     protected static final int TAMANIO_VAR = 15;
@@ -74,7 +76,8 @@ public abstract class AccionSemantica {
     static class generarASCII extends AccionSemantica {
         @Override
         public void ejecutar(Token t, Character c, Reader entrada) {
-
+            int ascii = (int) c.charValue();
+            t.setId((short) ascii);
         }
     }
 
@@ -104,7 +107,9 @@ public abstract class AccionSemantica {
     static class resetear extends AccionSemantica {
         @Override
         public void ejecutar(Token t, Character c, Reader entrada) throws IOException {
-            //t.borrarUltimoCaracter();
+            if (caracterEspecial(c)){
+                t.borrarUltimoCaracter();
+            }
             entrada.reset();
         }
     }
@@ -142,8 +147,15 @@ public abstract class AccionSemantica {
     static class truncar extends AccionSemantica {
         @Override
         public void ejecutar(Token t, Character c, Reader entrada){
-            if (t.getLexema().length()>TAMANIO_VAR){
-                t.setLexema(new StringBuilder(t.getLexema().substring(0, TAMANIO_VAR)));
+            Short idPR = t.esPR();
+            if (idPR != null){
+                t.setId(idPR);
+            }
+            else {
+                if (t.getLexema().length() > TAMANIO_VAR) {
+                    //ADD WARNING = ID MAYOR A 20 CARACTERES
+                    t.setLexema(new StringBuilder(t.getLexema().substring(0, TAMANIO_VAR)));
+                }
                 t.setId(ID);
             }
         }

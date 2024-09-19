@@ -1,17 +1,21 @@
 
-	java:S101"MRename this class name to match the regular expression '^[A-Z][a-zA-Z0-9]*$'.(¹ÉÁ8³İÜĞ˜2J$afe62800-df35-44b3-a2f1-34af751ff058
-	java:S101"MRename this class name to match the regular expression '^[A-Z][a-zA-Z0-9]*$'.(éäŒ¡8µİÜĞ˜2J$ccca3c30-e662-466c-8841-bdcb98db53d2
-”	java:S101"MRename this class name to match the regular expression '^[A-Z][a-zA-Z0-9]*$'.(öÙïÆùÿÿÿÿ8¶İÜĞ˜2J$0acab667-8193-4ec8-aa58-8b2902027fd9
-”	java:S101"MRename this class name to match the regular expression '^[A-Z][a-zA-Z0-9]*$'.(‚†›Šúÿÿÿÿ8·İÜĞ˜2J$26c412a5-d2c3-4b6a-ae4d-2a156d1d3049
-	java:S101$"MRename this class name to match the regular expression '^[A-Z][a-zA-Z0-9]*$'.(¯½ìˆ8¸İÜĞ˜2J$1f57d397-7e2d-4d1e-9105-a9e2a96cfb69
+”	java:S101/"MRename this class name to match the regular expression '^[A-Z][a-zA-Z0-9]*$'.(Ôşí¡şÿÿÿÿ8¨‡Ôá 2J$26e9dc98-d9d6-4574-b450-33d8a35ca1f6
+	java:S101<"MRename this class name to match the regular expression '^[A-Z][a-zA-Z0-9]*$'.(¸ÒÛ‘8¨‡Ôá 2J$d06678c4-08e4-4174-9796-1d0e8d11e714
+”	java:S101L"MRename this class name to match the regular expression '^[A-Z][a-zA-Z0-9]*$'.(ìêÄÁüÿÿÿÿ8¨‡Ôá 2J$60d812b8-cff7-4148-8ba3-002393fbdca6
+	java:S101T"MRename this class name to match the regular expression '^[A-Z][a-zA-Z0-9]*$'.(äÌ¦Ó8¨‡Ôá 2J$929fd3f3-ede0-4e53-a9c1-d1b291aaa156
+	java:S101["MRename this class name to match the regular expression '^[A-Z][a-zA-Z0-9]*$'.(‡êÖæ8¨‡Ôá 2J$6b403377-7658-47e0-a94f-b424a6dcb1fd
+”	java:S101d"MRename this class name to match the regular expression '^[A-Z][a-zA-Z0-9]*$'.(‘üÊÒÿÿÿÿÿ8¨‡Ôá 2J$018bc231-aa92-4512-92a1-8dff9033ac4b
+	java:S101k"MRename this class name to match the regular expression '^[A-Z][a-zA-Z0-9]*$'.(öÚåÆ8¨‡Ôá 2J$a86a6001-3888-4b4b-a451-7010d41fbdc5
+”	java:S101u"MRename this class name to match the regular expression '^[A-Z][a-zA-Z0-9]*$'.(Çºü½ûÿÿÿÿ8©‡Ôá 2J$d73c213a-27b1-4748-97cb-b3f3614b2c63
+”	java:S101}"MRename this class name to match the regular expression '^[A-Z][a-zA-Z0-9]*$'.(ŸÊ¬Ïûÿÿÿÿ8©‡Ôá 2J$9df80ef9-90a1-4001-9077-95f066aa2f9a
+	java:S101„"MRename this class name to match the regular expression '^[A-Z][a-zA-Z0-9]*$'.(¦’ß·8©‡Ôá 2J$74e542e1-21b1-4147-b44b-364f09dda80b
+•	java:S101“"MRename this class name to match the regular expression '^[A-Z][a-zA-Z0-9]*$'.(ËêÁ¸úÿÿÿÿ8©‡Ôá 2J$7a73cc15-1c95-42af-999a-d2912a254a49
+•	java:S101¤"MRename this class name to match the regular expression '^[A-Z][a-zA-Z0-9]*$'.(à›±²şÿÿÿÿ8©‡Ôá 2J$71c0f927-9b85-421f-b686-c37d6c8d8108
+i	java:S131""Add a default case to this switch.(ğÉ¾Ôøÿÿÿÿ8·‡Ôá 2J$b809c303-6091-41e8-b660-7c668435f502
+i
+java:S1905O"&Remove this unnecessary cast to "int".(åµ¨ 8»‡Ôá 2J$a48244c3-c916-417e-baef-7e46a2b30c84
+r	java:S106W"+Replace this use of System.out by a logger.(À±š¾ıÿÿÿÿ8½‡Ôá 2J$96c987ce-e044-4acb-b860-0f00ca34bde3
 É
-java:S1186
-"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(ººçøÿÿÿÿ8ÇİÜĞ˜2J$3daef2aa-96fd-479e-8fe4-45bec6454cfe
-É
-java:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(ººçøÿÿÿÿ8ËİÜĞ˜2J$310ea173-43ee-40e8-bc87-ec3ff90f4772
-É
-java:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(ººçøÿÿÿÿ8ÎİÜĞ˜2J$76f93a6a-ce5e-4335-841a-608aff1255be
-É
-java:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(ººçøÿÿÿÿ8ĞİÜĞ˜2J$36e3b593-dda5-4ea7-9e1b-4d2ef0c76b9f
-É
-java:S1186&"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(ººçøÿÿÿÿ8ÓİÜĞ˜2J$d94c0b99-2b16-47a3-919d-df7ec9273c29
+java:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(ÒÕÌùÿÿÿÿ8À‡Ôá 2J$4bcd9e9b-02ab-4ab3-b1d6-3c01021559fd
+m
+java:S3398"%Move this method into "generarToken".(»ãÜæÿÿÿÿÿ8È‡Ôá 2J$08eca72a-6a04-4ff0-a50c-4ef5772b3a8c
