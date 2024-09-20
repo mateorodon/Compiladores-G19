@@ -18,6 +18,7 @@ public class GeneradorMatriz {
     private static final AccionSemantica concatGenerarToken = new AccionSemantica.compuesta(concatenar, generarToken);
     private static final AccionSemantica resetTruncar = new AccionSemantica.compuesta(resetear, truncar);
     private static final AccionSemantica resetGenerarASCII = new AccionSemantica.compuesta(resetear, generarASCII);
+    private static final AccionSemantica concatGenerarASCII = new AccionSemantica.compuesta(concatenar, generarASCII);
     private static final AccionSemantica resetGenerarToken = new AccionSemantica.compuesta(resetear, generarToken);
 
     private static final AccionSemantica tokenEntero = new AccionSemantica.compuestaTriple(resetear, chequeoEntero, generarToken);
@@ -51,7 +52,7 @@ public class GeneradorMatriz {
     public static final AccionSemantica[][] matrizAS;
     static {
         matrizAS=new AccionSemantica[][]{
-                {concatenar, concatenar, concatenar, concatenar, error, ignorar, generarASCII, ignorar,concatenar,concatenar, concatenar,generarASCII,generarASCII,generarASCII, generarASCII, generarASCII,generarASCII,concatenar,concatenar,ignorar, ignorar, ignorar, generarASCII},
+                {concatenar, concatenar, concatenar, concatenar, error, ignorar, concatGenerarASCII, ignorar,concatenar,concatenar, concatenar,concatGenerarASCII,concatGenerarASCII,concatGenerarASCII, concatGenerarASCII, concatGenerarASCII,concatGenerarASCII,concatenar,concatenar,ignorar, ignorar, ignorar, concatGenerarASCII},
                 {concatenar, concatenar, concatenar, concatenar, concatenar, resetTruncar,resetTruncar,resetTruncar,resetTruncar, resetTruncar,resetTruncar,resetTruncar,resetTruncar,resetTruncar,resetTruncar, resetTruncar, resetTruncar, concatenar, concatenar, resetTruncar, resetTruncar,resetTruncar, resetTruncar},
                 {resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII,resetGenerarASCII,resetGenerarASCII,resetGenerarASCII,resetGenerarASCII,concatGenerarToken,resetGenerarASCII,resetGenerarASCII,resetGenerarASCII,resetGenerarASCII,resetGenerarASCII,resetGenerarASCII,resetGenerarASCII,resetGenerarASCII,resetGenerarASCII,resetGenerarASCII,resetGenerarASCII},
                 {error, error, error, error,error, error,error,error, error, error,error,concatGenerarToken,error, error, error, error, error, error, error, error, error, error, error},

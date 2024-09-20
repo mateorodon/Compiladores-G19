@@ -8,12 +8,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static compi.g19.AccionSemantica.token;
+
+
 @Getter
 @Setter
 public class AnalizadorLexico {
     private BufferedReader entrada;
     private int estadoAct;
-    @Getter
     public static int lineaAct = 1;
     private int[][] matrizEstados = GeneradorMatriz.matrizEstados;
     private AccionSemantica[][] matrizAS = GeneradorMatriz.matrizAS;
@@ -26,12 +28,12 @@ public class AnalizadorLexico {
     }
 
     public static void agregarErrorLexico(String error){
-        Error e = new Error(error, getLineaAct());
+        Error e = new Error(error, lineaAct);
         erroresLexicos.add(e);
     }
 
     public static void agregarErrorSintactico(String error){
-        Error e = new Error(error, getLineaAct());
+        Error e = new Error(error, lineaAct);
         erroresSintacticos.add(e);
     }
 
@@ -41,13 +43,12 @@ public class AnalizadorLexico {
         int valorLeido;
         int val = 0;
         entrada.mark(1);
-        Token token = new Token();
-
+        //Token token = new Token();
         while (estadoAct != -1 && val != 100 && (valorLeido = entrada.read()) != -1) {
             Character caracter = (char) valorLeido;
 
             int valorCaracter = getCaracter(Character.toLowerCase(caracter));
-            matrizAS[estadoAct][valorCaracter].ejecutar(token, caracter, entrada);
+            matrizAS[estadoAct][valorCaracter].ejecutar(lexemaBuilder, caracter, entrada);
             estadoAct = matrizEstados[estadoAct][valorCaracter];
 
             entrada.mark(1);
@@ -57,14 +58,16 @@ public class AnalizadorLexico {
             }
 
             //Si es un espacio en blanco no generamos token
-            if (caracterEspecial(caracter)){
+            //Paso el LEXEMA porque si paso solo el token me seguiria concatenando con el siguiente TOKEN en caso de venir un caracter especial, ya que no cortaria la ejecucion
+            if (caracterEspecial(lexemaBuilder)){
                 val=0;
             }
         }
 
         lexemaBuilder.setLength(0);
 
-        return token;
+        //Llegaria aca con LEXEMA vacio en caso de llegar al fin del archivo.
+        return (token.getLexema().isEmpty()) ? null : token;
     }
 
     private static char mapCaracter(char c) {
@@ -108,17 +111,18 @@ public class AnalizadorLexico {
             case '\t' -> 20;
             case '\r' -> 21;
             case ' ' -> 21;
-            case 'o' -> 22;
+            default -> 22;
+            /*case 'o' -> 22;
             //PONEMOS COMA DE PRUEBA
             case ',' -> 22;
-            default -> -1; // Valor por defecto para caracteres no mapeados
+            default -> -1; // Valor por defecto para caracteres no mapeados*/
         };
     };
 
-    public static boolean caracterEspecial(Character c) {
-        String caracterComoString = Character.toString(c);
-        return ((caracterComoString.equals("\n")
-                || caracterComoString.equals("\t") || caracterComoString.isEmpty()));
+    public static boolean caracterEspecial(StringBuilder c) {
+        String caracterComoString = String.valueOf(c);
+        return ((caracterComoString.equals("\n") || caracterComoString.equals("\t")
+                || caracterComoString.isEmpty() || caracterComoString.equals("\r") || caracterComoString.isBlank()));
 
 
     }

@@ -6,9 +6,11 @@ import java.io.IOException;
 import java.io.Reader;
 
 import static compi.g19.AnalizadorLexico.caracterEspecial;
+import static compi.g19.AnalizadorLexico.lineaAct;
 
 public abstract class AccionSemantica {
 
+    public static Token token;
     protected static final int TAMANIO_VAR = 15;
     protected static final short ID = 256;
     protected static final short ASIGNACION = 257;
@@ -41,7 +43,7 @@ public abstract class AccionSemantica {
 
     }
 
-    public abstract void ejecutar(Token t, Character c, Reader entrada) throws IOException;
+    public abstract void ejecutar(StringBuilder lexema, Character c, Reader entrada) throws IOException;
 
     @AllArgsConstructor
     static class compuesta extends AccionSemantica {
@@ -50,9 +52,9 @@ public abstract class AccionSemantica {
         private AccionSemantica a2;
 
         @Override
-        public void ejecutar(Token t, Character c, Reader entrada) throws IOException {
-            a1.ejecutar(t, c, entrada);
-            a2.ejecutar(t, c, entrada);
+        public void ejecutar(StringBuilder lexema, Character c, Reader entrada) throws IOException {
+            a1.ejecutar(lexema, c, entrada);
+            a2.ejecutar(lexema, c, entrada);
         }
     }
 
@@ -64,10 +66,10 @@ public abstract class AccionSemantica {
         private AccionSemantica a3;
 
         @Override
-        public void ejecutar(Token t, Character c, Reader entrada) throws IOException {
-            a1.ejecutar(t, c, entrada);
-            a2.ejecutar(t, c, entrada);
-            a3.ejecutar(t, c, entrada);
+        public void ejecutar(StringBuilder lexema, Character c, Reader entrada) throws IOException {
+            a1.ejecutar(lexema, c, entrada);
+            a2.ejecutar(lexema, c, entrada);
+            a3.ejecutar(lexema, c, entrada);
         }
     }
 
@@ -75,22 +77,24 @@ public abstract class AccionSemantica {
 
     static class generarASCII extends AccionSemantica {
         @Override
-        public void ejecutar(Token t, Character c, Reader entrada) {
-            int ascii = (int) c.charValue();
-            t.setId((short) ascii);
+        public void ejecutar(StringBuilder lexema, Character c, Reader entrada) {
+            token = new Token();
+            int ascii = (int) c;
+            token.setId((short) ascii);
+            token.setLexema(lexema);
         }
     }
 
     static class comentario extends AccionSemantica {
         @Override
-        public void ejecutar(Token t, Character c, Reader entrada) {
+        public void ejecutar(StringBuilder lexema, Character c, Reader entrada) {
             System.out.println("SE RECONOCIO UN COMENTARIO");
         }
     }
 
     static class ignorar extends AccionSemantica {
         @Override
-        public void ejecutar(Token t, Character c, Reader entrada) {
+        public void ejecutar(StringBuilder lexema, Character c, Reader entrada) {
             if (c.equals('\n')){
                 AnalizadorLexico.sumarLinea();
             }
@@ -99,81 +103,85 @@ public abstract class AccionSemantica {
 
     static class concatenar extends AccionSemantica {
         @Override
-        public void ejecutar(Token t, Character c, Reader entrada) {
-            t.agregarCaracter(c);
+        public void ejecutar(StringBuilder lexema, Character c, Reader entrada) {
+            lexema.append(c);
         }
     }
 
     static class resetear extends AccionSemantica {
         @Override
-        public void ejecutar(Token t, Character c, Reader entrada) throws IOException {
-            if (caracterEspecial(c)){
+        public void ejecutar(StringBuilder lexema, Character c, Reader entrada) throws IOException {
+            /*if (caracterEspecial(c)){
                 t.borrarUltimoCaracter();
-            }
+            }*/
             entrada.reset();
         }
     }
 
     static class generarToken extends AccionSemantica {
         @Override
-        public void ejecutar(Token t, Character c, Reader entrada){
-            t.setLinea(AnalizadorLexico.lineaAct);
-            setId(t);
+        public void ejecutar(StringBuilder lexema, Character c, Reader entrada){
+            token = new Token();
+            setId(token);
+            token.setLexema(lexema);
         }
     }
 
     static class error extends AccionSemantica {
         @Override
-        public void ejecutar(Token t, Character c, Reader entrada){
+        public void ejecutar(StringBuilder lexema, Character c, Reader entrada){
 
         }
     }
 
     static class chequeoEntero extends AccionSemantica {
         @Override
-        public void ejecutar(Token t, Character c, Reader entrada){
-            int valueInt = Integer.parseInt(t.getLexema().toString());
+        public void ejecutar(StringBuilder lexema, Character c, Reader entrada){
+            token = new Token();
+            int valueInt = Integer.parseInt(lexema.toString());
             if (0 > valueInt)  {
-                t.setLexema(new StringBuilder(String.valueOf(0)));
+                token.setLexema(new StringBuilder(String.valueOf(0)));
             }
             if (valueInt > 256){
-                t.setLexema(new StringBuilder(String.valueOf(256)));
+                token.setLexema(new StringBuilder(String.valueOf(256)));
             }
-            t.setId(ENTERO);
+            token.setId(ENTERO);
         }
     }
 
-    //falta ver si es PR
     static class truncar extends AccionSemantica {
         @Override
-        public void ejecutar(Token t, Character c, Reader entrada){
-            Short idPR = t.esPR();
+        public void ejecutar(StringBuilder lexema, Character c, Reader entrada){
+            token = new Token();
+            Short idPR = token.esPR(lexema);
             if (idPR != null){
-                t.setId(idPR);
+                token.setId(idPR);
+                token.setLexema(lexema);
             }
             else {
-                if (t.getLexema().length() > TAMANIO_VAR) {
+                if (lexema.length() > TAMANIO_VAR) {
                     //ADD WARNING = ID MAYOR A 20 CARACTERES
-                    t.setLexema(new StringBuilder(t.getLexema().substring(0, TAMANIO_VAR)));
+                    token.setLexema(new StringBuilder(lexema.substring(0, TAMANIO_VAR)));
                 }
-                t.setId(ID);
+                token.setId(ID);
             }
         }
     }
 
     static class chequeoFlotante extends AccionSemantica {
         @Override
-        public void ejecutar(Token t, Character c, Reader entrada){
-            String flotante = t.getLexema().toString().replace('D', 'e').replace('d','e');
+        public void ejecutar(StringBuilder lexema, Character c, Reader entrada){
+            token = new Token();
+            String flotante = lexema.toString().replace('D', 'e').replace('d','e');
             double valueFloat = Double.parseDouble(flotante);
             if (valueFloat < 1.17549435e-38) {
                 //FUERA DE RANGO, LE ASIGNO VALOR VALIDO
-                t.setLexema(new StringBuilder(String.valueOf(1.17549435e-38).replace('e','s')));
+                token.setLexema(new StringBuilder(String.valueOf(1.17549435e-38).replace('e','s')));
             }
             if (valueFloat > 3.40282347e+38 ){
-                t.setLexema(new StringBuilder(String.valueOf(3.40282347e+38).replace('e','s')));
+                token.setLexema(new StringBuilder(String.valueOf(3.40282347e+38).replace('e','s')));
             }
-            t.setId(FLOTANTE);
+            token.setId(FLOTANTE);
         }
     }
 }

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import static compi.g19.AnalizadorLexico.lineaAct;
 import static compi.g19.PalabrasReservadas.palabrasReservadas;
 
 @Data
@@ -15,7 +16,7 @@ public class Token {
     public Token() {
         this.id = 0;
         this.lexema = new StringBuilder();
-        this.linea = 0;
+        this.linea = lineaAct;
     }
 
     public void resetLexema(){
@@ -30,8 +31,8 @@ public class Token {
         lexema.append(c);
     }
 
-    public Short esPR(){
-        return palabrasReservadas.get(this.lexema.toString().toLowerCase());
+    public Short esPR(StringBuilder lexema){
+        return palabrasReservadas.get(lexema.toString().toLowerCase());
     }
 
 }
