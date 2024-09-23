@@ -17,7 +17,7 @@ public abstract class AccionSemantica {
     protected static final short MAYORIGUAL = 258;
     protected static final short MENORIGUAL = 259;
     protected static final short DISTINTO = 260;
-    protected static final short ENTERO = 261;
+    protected static final short ULONGINT = 261;
     protected static final short FLOTANTE = 262;
     protected static final short HEXA = 263;
     protected static final short CADENA = 264;
@@ -121,7 +121,7 @@ public abstract class AccionSemantica {
     static class generarToken extends AccionSemantica {
         @Override
         public void ejecutar(StringBuilder lexema, Character c, Reader entrada){
-            token = new Token();
+            //token = new Token();
             setId(token);
             token.setLexema(lexema);
         }
@@ -136,18 +136,18 @@ public abstract class AccionSemantica {
 
     static class chequeoEntero extends AccionSemantica {
         @Override
-        public void ejecutar(StringBuilder lexema, Character c, Reader entrada){
+        public void ejecutar(StringBuilder lexema, Character c, Reader entrada) {
             token = new Token();
-            int valueInt = Integer.parseInt(lexema.toString());
-            if (0 > valueInt)  {
-                token.setLexema(new StringBuilder(String.valueOf(0)));
+            long valueLong = Long.parseLong(lexema.toString());
+            if (valueLong < 0) {
+                token.setLexema(new StringBuilder("0"));
+            } else if (valueLong > 231) {
+                token.setLexema(new StringBuilder("231"));
             }
-            if (valueInt > 256){
-                token.setLexema(new StringBuilder(String.valueOf(256)));
-            }
-            token.setId(ENTERO);
+            token.setId(ULONGINT);
         }
     }
+
 
     static class truncar extends AccionSemantica {
         @Override
@@ -170,18 +170,18 @@ public abstract class AccionSemantica {
 
     static class chequeoFlotante extends AccionSemantica {
         @Override
-        public void ejecutar(StringBuilder lexema, Character c, Reader entrada){
+        public void ejecutar(StringBuilder lexema, Character c, Reader entrada) {
             token = new Token();
-            String flotante = lexema.toString().replace('D', 'e').replace('d','e');
-            double valueFloat = Double.parseDouble(flotante);
-            if (valueFloat < 1.17549435e-38) {
-                //FUERA DE RANGO, LE ASIGNO VALOR VALIDO
-                token.setLexema(new StringBuilder(String.valueOf(1.17549435e-38).replace('e','s')));
-            }
-            if (valueFloat > 3.40282347e+38 ){
-                token.setLexema(new StringBuilder(String.valueOf(3.40282347e+38).replace('e','s')));
+            // Valida rango de flotante
+            try {
+                float valueFloat = Float.parseFloat(lexema.toString());
+                token.setLexema(lexema);
+            } catch (NumberFormatException e) {
+                // Manejar error si el número está fuera del rango permitido
+                token.setLexema(new StringBuilder("0.0"));
             }
             token.setId(FLOTANTE);
         }
     }
+
 }

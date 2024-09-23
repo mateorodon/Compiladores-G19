@@ -19,6 +19,7 @@ public class PalabrasReservadas {
         palabrasReservadas.put("ulongint", (short) 275);
         palabrasReservadas.put("single", (short) 276);
         palabrasReservadas.put("for", (short) 277);
+        palabrasReservadas.put("or", (short) 276);
         palabrasReservadas.put("up", (short) 278);
         palabrasReservadas.put("down", (short) 279);
         palabrasReservadas.put("triple", (short) 280);

@@ -64,10 +64,15 @@ public class AnalizadorLexico {
             }
         }
 
+        Token returnToken = new Token();
+        returnToken.setId(token.getId());
+        returnToken.setLexema(new StringBuilder(token.getLexema()));
+        returnToken.setLinea(token.getLinea());
+
         lexemaBuilder.setLength(0);
 
         //Llegaria aca con LEXEMA vacio en caso de llegar al fin del archivo.
-        return (token.getLexema().isEmpty()) ? null : token;
+        return (returnToken.getLexema().isEmpty()) ? null : returnToken;
     }
 
     private static char mapCaracter(char c) {
