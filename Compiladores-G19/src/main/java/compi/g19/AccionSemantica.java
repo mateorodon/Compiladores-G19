@@ -78,6 +78,7 @@ public abstract class AccionSemantica {
         public void ejecutar(Token t, Character c, Reader entrada) {
             int ascii = (int) c.charValue();
             t.setId((short) ascii);
+            t.agregarCaracter(c);
         }
     }
 
@@ -99,7 +100,7 @@ public abstract class AccionSemantica {
 
     static class concatenar extends AccionSemantica {
         @Override
-        public void ejecutar(Token t, Character c, Reader entrada) {
+        public void ejecutar(Token t, Character c, Reader entrada) throws IOException {
             t.agregarCaracter(c);
         }
     }
@@ -107,9 +108,6 @@ public abstract class AccionSemantica {
     static class resetear extends AccionSemantica {
         @Override
         public void ejecutar(Token t, Character c, Reader entrada) throws IOException {
-            if (caracterEspecial(c)){
-                t.borrarUltimoCaracter();
-            }
             entrada.reset();
         }
     }

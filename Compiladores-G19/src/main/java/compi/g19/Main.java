@@ -11,8 +11,7 @@ public class Main {
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             AnalizadorLexico analizador = new AnalizadorLexico(reader);
             Token t; //Token leido
-            while ((t = analizador.obtenerToken()) != null || (reader.read() == -1)) {
-               // ES POR ACA, CONSULTAR SI READER.READ CAE EN UN NUL
+            while ((t = analizador.obtenerToken()) != null) {
                 System.out.println(t);
             }
         } catch (IOException e) {

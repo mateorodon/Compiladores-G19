@@ -42,10 +42,8 @@ public class AnalizadorLexico {
         int val = 0;
         entrada.mark(1);
         Token token = new Token();
-
-        while (estadoAct != -1 && val != 100 && (valorLeido = entrada.read()) != -1) {
+        while (estadoAct != -1 && val != 100 && ((valorLeido = entrada.read()) != -1)) {
             Character caracter = (char) valorLeido;
-
             int valorCaracter = getCaracter(Character.toLowerCase(caracter));
             matrizAS[estadoAct][valorCaracter].ejecutar(token, caracter, entrada);
             estadoAct = matrizEstados[estadoAct][valorCaracter];
@@ -61,10 +59,11 @@ public class AnalizadorLexico {
                 val=0;
             }
         }
-
         lexemaBuilder.setLength(0);
-
-        return token;
+        Token salida = null;
+        if (token.getId() != 0)
+            salida = token;
+            return salida;
     }
 
     private static char mapCaracter(char c) {
@@ -113,12 +112,12 @@ public class AnalizadorLexico {
             case ',' -> 22;
             default -> -1; // Valor por defecto para caracteres no mapeados
         };
-    };
+    }
 
     public static boolean caracterEspecial(Character c) {
         String caracterComoString = Character.toString(c);
-        return ((caracterComoString.equals("\n")
-                || caracterComoString.equals("\t") || caracterComoString.isEmpty()));
+        return (caracterComoString.equals("\n")
+                || caracterComoString.equals("\t") || caracterComoString.isEmpty() || caracterComoString.equals("\r"));
 
 
     }
