@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) {
-        String filePath = "src/main/java/compi/g19/entrada_correcta.txt";
+        String filePath = "src/main/java/compi/g19/entrada_errores.txt";
 
         try{
             BufferedReader reader = new BufferedReader(new FileReader(filePath));

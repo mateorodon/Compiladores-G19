@@ -157,18 +157,23 @@ public abstract class AccionSemantica {
                 valueLong = Long.parseLong(lexema.toString());
                 token.setId(ULONGINT);
             }
+
+            String newLexema;
             if (valueLong < 0) {
-                token.setLexema(new StringBuilder("0"));
+                newLexema = "0";
+                lexema.setLength(0);
+                lexema.append(newLexema);
+                token.setLexema(lexema);
             } else if (valueLong > Math.pow(2,31)-1) {
-                token.setLexema(new StringBuilder(String.valueOf((Math.pow(2,31)-1))));
+                newLexema = String.valueOf(Math.pow(2,31)-1);
+                lexema.setLength(0);
+                lexema.append(newLexema);
+                token.setLexema(lexema);
             }else {
                 token.setLexema(lexema);
             }
         }
     }
-
-
-
 
     static class truncar extends AccionSemantica {
         @Override
@@ -182,7 +187,13 @@ public abstract class AccionSemantica {
             else {
                 if (lexema.length() > TAMANIO_VAR) {
                     //ADD WARNING = ID MAYOR A 20 CARACTERES
-                    lexema = new StringBuilder(lexema.substring(0, TAMANIO_VAR));
+
+                    //Haciendo asi usamos siempre el mismo lexema, si creamos uno nuevo, no corta la ejecucion del programa
+                    //lexema = new StringBuilder(lexema.substring(0, TAMANIO_VAR));
+                    String newLexema = lexema.substring(0, TAMANIO_VAR);
+                    lexema.setLength(0);
+                    lexema.append(newLexema);
+
                     token.setLexema(lexema);
                 } else {
                     token.setLexema(lexema);
