@@ -1,12 +1,11 @@
-package compi.g19;
+package compi.g19.a.AnalisisLexico;
 
 import lombok.AllArgsConstructor;
 
 import java.io.IOException;
 import java.io.Reader;
 
-import static compi.g19.AnalizadorLexico.caracterEspecial;
-import static compi.g19.AnalizadorLexico.lineaAct;
+import static compi.g19.a.AnalisisLexico.AnalizadorLexico.lineaAct;
 
 public abstract class AccionSemantica {
 
@@ -27,6 +26,9 @@ public abstract class AccionSemantica {
         if (lexema.charAt(0) == '{') {
             token.setId(CADENA);
             lexema.deleteCharAt(0);
+            if ( ! TablaSimbolos.existeSimbolo(token.getLexema().toString()) ){
+                TablaSimbolos.addSimbolo(token.getLexema().toString(), token);
+            }
         }
         else {
             switch (lexema.toString()) {
@@ -133,6 +135,7 @@ public abstract class AccionSemantica {
             token.setLexema(lexema);
             setId(lexema); //SOLO SE USA EN generarToken()
             token.setLinea(lineaAct);
+
         }
     }
 

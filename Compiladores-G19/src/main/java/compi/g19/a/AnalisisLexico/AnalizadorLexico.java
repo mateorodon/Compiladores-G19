@@ -1,4 +1,4 @@
-package compi.g19;
+package compi.g19.a.AnalisisLexico;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static compi.g19.AccionSemantica.token;
+import static compi.g19.a.AnalisisLexico.AccionSemantica.token;
 
 
 @Getter

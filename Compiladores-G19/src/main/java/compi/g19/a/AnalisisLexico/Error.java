@@ -1,4 +1,4 @@
-package compi.g19;
+package compi.g19.a.AnalisisLexico;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

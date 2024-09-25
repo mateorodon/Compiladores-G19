@@ -1,11 +1,9 @@
-package compi.g19;
+package compi.g19.a.AnalisisLexico;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import static compi.g19.AnalizadorLexico.lineaAct;
-import static compi.g19.PalabrasReservadas.palabrasReservadas;
+import static compi.g19.a.AnalisisLexico.AnalizadorLexico.lineaAct;
+import static compi.g19.a.AnalisisLexico.PalabrasReservadas.palabrasReservadas;
 
 @Data
 public class Token {

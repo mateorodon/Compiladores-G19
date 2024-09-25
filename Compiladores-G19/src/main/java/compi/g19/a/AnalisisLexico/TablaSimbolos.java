@@ -1,0 +1,35 @@
+package compi.g19.a.AnalisisLexico;
+
+import lombok.Getter;
+
+import java.util.HashMap;
+import java.util.Map;
+
+@Getter
+public class TablaSimbolos {
+
+    /*
+    A la tabla de simbolos se deben agregar
+        - Identificadores (AS generarToken)
+        - Constantes enteras y flotantes (AS tokenEntero y AS tokenFlotante)
+        - Cadenas (AS setID solo la parte del IF donde reconoce cadena)
+     */
+
+    private static Map<String, Token> simbolos = new HashMap<>(); // <Lexema, Token>
+
+    public static void addSimbolo(String lexema,Token t){
+        simbolos.put(lexema,t);
+    }
+    public static boolean existeSimbolo(String lexema) {
+        return simbolos.containsKey(lexema);
+    }
+
+    public static void imprimirSimbolos() {
+        for (String key : simbolos.keySet()) {
+            Token token = simbolos.get(key);
+            System.out.println(token.toString());
+        }
+    }
+
+
+}

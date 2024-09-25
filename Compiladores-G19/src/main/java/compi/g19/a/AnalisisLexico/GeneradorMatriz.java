@@ -1,6 +1,4 @@
-package compi.g19;
-
-import lombok.Getter;
+package compi.g19.a.AnalisisLexico;
 
 public class GeneradorMatriz {
 
