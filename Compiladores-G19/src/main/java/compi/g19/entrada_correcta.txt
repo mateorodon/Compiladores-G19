@@ -1,0 +1,16 @@
+variable
+variablemasdequincecaracteres
+10.0s+3,
+ULONGINT
+SINGLE
+if,
+30 > 2
+>=
+!=
+0xFEEF
+else
+enD
+{¡Hola mundo !}
+/#comentario
+multilinea#/
+4

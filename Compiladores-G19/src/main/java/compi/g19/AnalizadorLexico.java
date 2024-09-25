@@ -49,6 +49,7 @@ public class AnalizadorLexico {
 
             int valorCaracter = getCaracter(Character.toLowerCase(caracter));
             matrizAS[estadoAct][valorCaracter].ejecutar(lexemaBuilder, caracter, entrada);
+
             estadoAct = matrizEstados[estadoAct][valorCaracter];
 
             entrada.mark(1);
@@ -64,10 +65,7 @@ public class AnalizadorLexico {
             }
         }
 
-        Token returnToken = new Token();
-        returnToken.setId(token.getId());
-        returnToken.setLexema(new StringBuilder(token.getLexema()));
-        returnToken.setLinea(token.getLinea());
+        Token returnToken = new Token(token);
 
         lexemaBuilder.setLength(0);
 

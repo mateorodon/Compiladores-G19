@@ -1,7 +1,0 @@
-/#los cui
-venceran/#
-20.0s+2
-IF 30 > 2,
-END
-{HOLAHGOOAL}
-0x784123
