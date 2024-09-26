@@ -33,6 +33,16 @@ public class AnalizadorLexico {
         warning.add(e);
     }
 
+    public static void imprimirErrores(){
+        for (Error e : errorLexico)
+            System.out.println(e.toString());
+    }
+
+    public static void imprimirWarnings(){
+        for (Error e : warning)
+            System.out.println(e.toString());
+    }
+
     public static void agregarErrorSintactico(String error){
         Error e = new Error(error, lineaAct);
         errorSintactico.add(e);

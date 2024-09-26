@@ -16,8 +16,12 @@ public class Main {
                 System.out.println(t);
                 t = analizador.obtenerToken();
             }
-            System.out.println("---------------------");
+            System.out.println("----------TABLA DE SIMBOLOS-----------");
             TablaSimbolos.imprimirSimbolos();
+            System.out.println("-----------ERRORES LEXICOS----------");
+            AnalizadorLexico.imprimirErrores();
+            System.out.println("----------WARNINGS-----------");
+            AnalizadorLexico.imprimirWarnings();
         } catch (IOException e) {
             e.printStackTrace();
         }

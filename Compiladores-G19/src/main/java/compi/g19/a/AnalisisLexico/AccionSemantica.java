@@ -186,7 +186,7 @@ public abstract class AccionSemantica {
             try {
                 valueLong = Long.parseLong(lexema.toString());
             }catch (NumberFormatException e){
-                AnalizadorLexico.agregarErrorLexico("El numero no se puede parsear debido a que excede el valor maximo de LONG");
+                //AnalizadorLexico.agregarErrorLexico("El numero no se puede parsear debido a que excede el valor maximo de LONG");
                 valueLong = Long.MAX_VALUE;
             }
 
@@ -283,7 +283,7 @@ public abstract class AccionSemantica {
                 token.setLexema(lexema);
             } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
                 // Si ocurre un error (como un formato no válido o falta de "s"), manejamos el error
-                AnalizadorLexico.agregarErrorSintactico("Constante flotante mal deifinida");
+                AnalizadorLexico.agregarErrorLexico("Constante flotante mal deifinida");
                 lexema.setLength(0);
                 lexema.append("0.0");
                 token.setLexema(lexema); // Asignamos un valor por defecto en caso de error
@@ -297,4 +297,45 @@ public abstract class AccionSemantica {
         }
     }
 
+    static class errorFlotanteDecimal extends AccionSemantica {
+        @Override
+        public void ejecutar(StringBuilder lexema, Character c, Reader entrada) {
+            lexema.append(c);
+            AnalizadorLexico.agregarErrorLexico("Constante flotante mal definida. Parte decimal esta ausente");
+        }
+    }
+
+    static class errorFlotanteEntera extends AccionSemantica {
+        @Override
+        public void ejecutar(StringBuilder lexema, Character c, Reader entrada) {
+            lexema.append(c);
+            if (lexema.charAt(0)=='.')
+                AnalizadorLexico.agregarErrorLexico("Constante flotante mal definida. Parte entera esta ausente");
+        }
+    }
+
+    static class errorIdentificador extends AccionSemantica {
+        @Override
+        public void ejecutar(StringBuilder lexema, Character c, Reader entrada) {
+            lexema.append(c);
+            if (lexema.charAt(0)=='_'){
+                AnalizadorLexico.agregarErrorLexico("El identificador no puede comenzar con \"_\"");
+                lexema.deleteCharAt(0);
+            }
+
+        }
+    }
+
+    static class errorCadena extends AccionSemantica {
+        @Override
+        public void ejecutar(StringBuilder lexema, Character c, Reader entrada) {
+            if (!(c.equals('\r') || c.equals('\n')))
+                lexema.append(c);
+            if (lexema.charAt(lexema.length()-1)!='}'){
+                AnalizadorLexico.agregarErrorLexico("La cadena debe finalizar con \"}\"");
+                setId(lexema);
+            }
+
+        }
+    }
 }
