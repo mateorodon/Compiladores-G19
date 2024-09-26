@@ -34,7 +34,7 @@ public class GeneradorMatriz {
                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                 {4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 0, 4, 4, 4},
                 {0, 0, 5, 5, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0}, //estado 8 es la 's', ausencia de decimal flotante
                 {0, 0, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0},
                 {0, 0, 8, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 9, 0, 0, 0, 0, 0, 0},
                 {0, 0, 9, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -42,7 +42,7 @@ public class GeneradorMatriz {
                 {11, 0, 11, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 0, 0, 0, 0, 0, 0},
                 {13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 14, 13, 13, 13, 13, 13, 13, 13, 13},
-                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         };
     }
 
@@ -50,19 +50,19 @@ public class GeneradorMatriz {
     public static final AccionSemantica[][] matrizAS;
     static {
         matrizAS=new AccionSemantica[][]{
-                {concatenar, concatenar, concatenar, concatenar, error, ignorar, concatGenerarASCII, concatenar,concatenar,concatenar, concatenar,concatGenerarASCII,concatGenerarASCII,concatGenerarASCII, concatGenerarASCII, concatGenerarASCII,concatGenerarASCII,concatenar,concatenar,ignorar, ignorar, ignorar, concatGenerarASCII},
+                {concatenar, concatenar, concatenar, concatenar, error, concatenar, concatenar, concatenar,concatenar,concatenar, concatenar,concatGenerarASCII,concatGenerarASCII,concatGenerarASCII, concatGenerarASCII, concatGenerarASCII,concatGenerarASCII,concatenar,concatenar,ignorar, ignorar, ignorar, concatGenerarASCII},
                 {concatenar, concatenar, concatenar, concatenar, concatenar, resetTruncar,resetTruncar,resetTruncar,resetTruncar, resetTruncar,resetTruncar,resetTruncar,resetTruncar,resetTruncar,resetTruncar, resetTruncar, resetTruncar, concatenar, concatenar, resetTruncar, resetTruncar,resetTruncar, resetTruncar},
                 {resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII,resetGenerarASCII,resetGenerarASCII,resetGenerarASCII,resetGenerarASCII,concatGenerarToken,resetGenerarASCII,resetGenerarASCII,resetGenerarASCII,resetGenerarASCII,resetGenerarASCII,resetGenerarASCII,resetGenerarASCII,resetGenerarASCII,resetGenerarASCII,resetGenerarASCII,resetGenerarASCII},
                 {error, error, error, error,error, error,error,error, error, error,error,concatGenerarToken,error, error, error, error, error, error, error, error, error, error, error},
                 {concatenar,concatenar,concatenar,concatenar,concatenar, concatenar, concatenar,concatenar,concatenar,concatenar,concatenar,concatenar, concatenar, generarToken,concatenar,concatenar,concatenar,concatenar,concatenar, error,concatenar,concatenar,concatenar},
                 {tokenEntero, tokenEntero, concatenar, concatenar, tokenEntero, tokenEntero,tokenEntero,tokenEntero,tokenEntero,tokenEntero, tokenEntero,tokenEntero, concatenar,tokenEntero,tokenEntero,tokenEntero,tokenEntero,tokenEntero,tokenEntero,tokenEntero,tokenEntero,tokenEntero,tokenEntero},
-                {error, error,concatenar,concatenar,concatenar, concatenar, concatenar, concatenar, concatenar, concatenar, concatenar, concatenar, concatenar, concatenar, concatenar, concatenar, concatenar, error, concatenar, concatenar, concatenar, concatenar, concatenar},
+                {error, error,concatenar,concatenar,concatenar, concatenar, concatenar, concatenar, concatenar, concatenar, concatenar, concatenar, concatenar, concatenar, concatenar, concatenar, concatenar, concatenar, concatenar, concatenar, concatenar, concatenar, concatenar},
                 {resetGenerarToken,resetGenerarToken,concatenar,resetGenerarToken,resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, concatenar, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken},
                 {error,error,concatenar,error,error, error, error, error, error, error, error, error, error, error, error, concatenar, concatenar, error, error, error, error, error, error},
                 {tokenFlotante,tokenFlotante,concatenar,concatenar,tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante,tokenFlotante,tokenFlotante,tokenFlotante,tokenFlotante,tokenFlotante,tokenFlotante,tokenFlotante, tokenFlotante},
                 {resetGenerarToken,resetGenerarToken,resetGenerarToken,resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, concatenar, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken},
                 {concatenar,tokenEntero,concatenar,tokenEntero,tokenEntero, tokenEntero, tokenEntero, tokenEntero, tokenEntero, tokenEntero, tokenEntero, tokenEntero, tokenEntero, tokenEntero, tokenEntero, tokenEntero, tokenEntero, tokenEntero, tokenEntero, tokenEntero, tokenEntero, tokenEntero, tokenEntero},
-                {resetGenerarToken, resetGenerarToken,resetGenerarToken,resetGenerarToken,resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, ignorar, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken},
+                {generarASCII, generarASCII,generarASCII,generarASCII,generarASCII, generarASCII, generarASCII, generarASCII, generarASCII, generarASCII, generarASCII, generarASCII, generarASCII, generarASCII, ignorar, generarASCII, generarASCII, generarASCII, generarASCII, generarASCII, generarASCII, generarASCII, generarASCII},
                 {ignorar,ignorar,ignorar,ignorar,ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar},
                 {error, error,error,error,error, comentario, error, error, error, error, error, error,error,error, error, error, error, error, error, error, error, error, error}
         };

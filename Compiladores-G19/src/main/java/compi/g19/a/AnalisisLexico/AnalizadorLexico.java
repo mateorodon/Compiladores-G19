@@ -19,22 +19,28 @@ public class AnalizadorLexico {
     public static int lineaAct = 1;
     private int[][] matrizEstados = GeneradorMatriz.matrizEstados;
     private AccionSemantica[][] matrizAS = GeneradorMatriz.matrizAS;
-    static List<Error> erroresLexicos = new ArrayList<Error>();
-    static List<Error> erroresSintacticos = new ArrayList<Error>();
+    static List<Error> warning = new ArrayList<Error>();
+    static List<Error> errorSintactico = new ArrayList<Error>();
+    static List<Error> errorLexico = new ArrayList<Error>();
 
     public AnalizadorLexico(BufferedReader entrada) {
         this.entrada = entrada;
         this.estadoAct = 0; // Estado inicial
     }
 
-    public static void agregarErrorLexico(String error){
+    public static void agregarWarning(String error){
         Error e = new Error(error, lineaAct);
-        erroresLexicos.add(e);
+        warning.add(e);
     }
 
     public static void agregarErrorSintactico(String error){
         Error e = new Error(error, lineaAct);
-        erroresSintacticos.add(e);
+        errorSintactico.add(e);
+    }
+
+    public static void agregarErrorLexico(String error){
+        Error e = new Error(error, lineaAct);
+        errorLexico.add(e);
     }
 
     public Token obtenerToken() throws IOException {

@@ -1,4 +1,4 @@
-variable
+variable;
 variable_mas_de_quince_caracteres
 10.0s+3,
 ULONGINT

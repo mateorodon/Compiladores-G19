@@ -20,6 +20,11 @@ public class TablaSimbolos {
     public static void addSimbolo(String lexema,Token t){
         simbolos.put(lexema,t);
     }
+
+    public static void addNuevoSimbolo(String lexema, Token t){
+        Token nuevo = new Token(t.getId(), t.getLexema(), t.getLinea());
+        simbolos.put(lexema, nuevo);
+    }
     public static boolean existeSimbolo(String lexema) {
         return simbolos.containsKey(lexema);
     }

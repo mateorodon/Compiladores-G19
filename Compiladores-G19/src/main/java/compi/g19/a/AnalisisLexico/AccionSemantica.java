@@ -26,8 +26,25 @@ public abstract class AccionSemantica {
         if (lexema.charAt(0) == '{') {
             token.setId(CADENA);
             lexema.deleteCharAt(0);
+            if (!TablaSimbolos.existeSimbolo(token.getLexema().toString())) {
+                TablaSimbolos.addNuevoSimbolo(token.getLexema().toString(), new Token(token));
+            } else {
+                TablaSimbolos.addSimbolo(token.getLexema().toString(), new Token(token));
+            }
+        }
+        else if (lexema.charAt(0) == 'u' ||lexema.charAt(0) == 'v' ||lexema.charAt(0) == 'w') {
+                token.setId(ULONGINT);
+                if ( ! TablaSimbolos.existeSimbolo(token.getLexema().toString()) ){
+                    TablaSimbolos.addNuevoSimbolo(token.getLexema().toString(), new Token(token));
+                } else {
+                    TablaSimbolos.addSimbolo(token.getLexema().toString(), new Token(token));
+                }
+        } else if (lexema.charAt(0) == 's'){
+            token.setId(FLOTANTE);
             if ( ! TablaSimbolos.existeSimbolo(token.getLexema().toString()) ){
-                TablaSimbolos.addSimbolo(token.getLexema().toString(), token);
+                TablaSimbolos.addNuevoSimbolo(token.getLexema().toString(), new Token(token));
+            } else {
+                TablaSimbolos.addSimbolo(token.getLexema().toString(), new Token(token));
             }
         }
         else {
@@ -106,6 +123,9 @@ public abstract class AccionSemantica {
             if (c.equals('\n')){
                 AnalizadorLexico.sumarLinea();
             }
+            if (!lexema.isEmpty() && lexema.charAt(0) == '/'){
+                lexema.setLength(0);
+            }
         }
     }
 
@@ -143,6 +163,10 @@ public abstract class AccionSemantica {
         @Override
         public void ejecutar(StringBuilder lexema, Character c, Reader entrada) throws IOException {
             System.out.println("ERRORRRRRRRRR");
+            String erroLexema = "ERROR";
+            lexema.setLength(0);
+            lexema.append(erroLexema);
+            token.setLexema(lexema);
             entrada.reset();
 
         }
@@ -154,26 +178,39 @@ public abstract class AccionSemantica {
             token = new Token();
             long valueLong;
             if( lexema.length() > 1 && lexema.charAt(1)=='x'){
-                valueLong = Long.parseLong(lexema.substring(2,lexema.length()-1), 16);
                 token.setId(HEXA);
             }else{
-                valueLong = Long.parseLong(lexema.toString());
+
                 token.setId(ULONGINT);
+            }
+            try {
+                valueLong = Long.parseLong(lexema.toString());
+            }catch (NumberFormatException e){
+                AnalizadorLexico.agregarErrorLexico("El numero no se puede parsear debido a que excede el valor maximo de LONG");
+                valueLong = Long.MAX_VALUE;
             }
 
             String newLexema;
             if (valueLong < 0) {
+                AnalizadorLexico.agregarErrorLexico("Constante entera fuera de rango");
                 newLexema = "0";
                 lexema.setLength(0);
                 lexema.append(newLexema);
                 token.setLexema(lexema);
             } else if (valueLong > Math.pow(2,31)-1) {
+                AnalizadorLexico.agregarErrorLexico("Constante entera fuera de rango");
                 newLexema = String.valueOf(Math.pow(2,31)-1);
                 lexema.setLength(0);
                 lexema.append(newLexema);
                 token.setLexema(lexema);
             }else {
                 token.setLexema(lexema);
+            }
+
+            if ( ! TablaSimbolos.existeSimbolo(token.getLexema().toString()) ){
+                TablaSimbolos.addNuevoSimbolo(token.getLexema().toString(), new Token(token));
+            } else {
+                TablaSimbolos.addSimbolo(token.getLexema().toString(), new Token(token));
             }
         }
     }
@@ -189,7 +226,8 @@ public abstract class AccionSemantica {
             }
             else {
                 if (lexema.length() > TAMANIO_VAR) {
-                    //ADD WARNING = ID MAYOR A 20 CARACTERES
+
+                    AnalizadorLexico.agregarWarning("Warning: El ID excedio el tamanio permitido");
 
                     //Haciendo asi usamos siempre el mismo lexema, si creamos uno nuevo, no corta la ejecucion del programa
                     //lexema = new StringBuilder(lexema.substring(0, TAMANIO_VAR));
@@ -203,6 +241,12 @@ public abstract class AccionSemantica {
                 }
                 token.setId(ID);
             }
+
+            if ( ! TablaSimbolos.existeSimbolo(token.getLexema().toString()) ){
+                TablaSimbolos.addNuevoSimbolo(token.getLexema().toString(), new Token(token));
+            } else {
+                TablaSimbolos.addSimbolo(token.getLexema().toString(), new Token(token));
+            }
         }
     }
 
@@ -213,27 +257,43 @@ public abstract class AccionSemantica {
             try {
                 String[] partes = lexema.toString().split("s");
 
-                float base = Float.parseFloat(partes[0]);
-
+                float base = 0;
                 float exponente = 0;
+
+                try {
+                    base = Float.parseFloat(partes[0]);
+                }catch (Exception e){
+                    AnalizadorLexico.agregarWarning("Parte entera del flotante ausente");
+                }
+
                 if (partes.length > 1) {
                     exponente = Float.parseFloat(partes[1]);
+                } else {
+                    AnalizadorLexico.agregarWarning("Parte decimal del flotante ausente");
                 }
 
                 float resultado = (float) Math.pow(base, exponente);
-                if (resultado > Float.MAX_VALUE)
+                if (resultado > Float.MAX_VALUE) {
+                    AnalizadorLexico.agregarErrorLexico("Constante flotante fuera de rango");
                     resultado = Float.MAX_VALUE;
+                }
                 lexema.setLength(0);
                 lexema.append(resultado);
 
                 token.setLexema(lexema);
             } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
                 // Si ocurre un error (como un formato no válido o falta de "s"), manejamos el error
+                AnalizadorLexico.agregarErrorSintactico("Constante flotante mal deifinida");
                 lexema.setLength(0);
                 lexema.append("0.0");
                 token.setLexema(lexema); // Asignamos un valor por defecto en caso de error
             }
             token.setId(FLOTANTE);
+            if ( ! TablaSimbolos.existeSimbolo(token.getLexema().toString()) ){
+                TablaSimbolos.addNuevoSimbolo(token.getLexema().toString(), new Token(token));
+            } else {
+                TablaSimbolos.addSimbolo(token.getLexema().toString(), new Token(token));
+            }
         }
     }
 

@@ -23,6 +23,12 @@ public class Token {
         this.linea = t.getLinea();
     }
 
+    public Token(int id, StringBuilder lexema, Integer linea) {
+        this.id = id;
+        this.lexema = lexema;
+        this.linea = linea;
+    }
+
     public void resetLexema(){
         this.lexema.setLength(0);
     }
