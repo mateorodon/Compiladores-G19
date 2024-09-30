@@ -127,8 +127,8 @@ public class AnalizadorLexico {
             case 's' -> 17;
             case 'x' -> 18;
             case '\n' -> 19;
+            case '\r' -> 19;
             case '\t' -> 20;
-            case '\r' -> 21;
             case ' ' -> 21;
             default -> 22;
             /*case 'o' -> 22;

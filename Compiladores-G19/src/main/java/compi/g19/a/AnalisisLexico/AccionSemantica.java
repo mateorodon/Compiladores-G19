@@ -17,9 +17,7 @@ public abstract class AccionSemantica {
     protected static final short MAYORIGUAL = 258;
     protected static final short MENORIGUAL = 259;
     protected static final short DISTINTO = 260;
-    protected static final short ULONGINT = 261;
-    protected static final short FLOTANTE = 262;
-    protected static final short HEXA = 263;
+    protected static final short CONSTANTE = 261;
     protected static final short CADENA = 264;
 
     private static void setId(StringBuilder lexema){
@@ -103,6 +101,14 @@ public abstract class AccionSemantica {
     static class generarASCII extends AccionSemantica {
         @Override
         public void ejecutar(StringBuilder lexema, Character c, Reader entrada) {
+            //SE LLAMA CUANDO VIENEN LOS LITERALES SOLOS, O CUANDO YA SE CONCATENO EL PRIMER CHAR DE LOS CASOS DE '!=', '>=', ETC.
+            //  POR ESO, HAY QUE VER SI LEXEMA ESTA VACIO, SI ESTA VACIO LE SETEAMOS 'c' COMO LEXEMA, SI NO SETEAMOS 'lexema'
+            //Ejemplo 1: Estoy en e0 y viene un '+'. Ejecuto esta AS y seteo 'c' como lexema.
+            //Ejemplo 2: Estoy en e2 ('lexema' ya tiene '!', '>', '<', ':') y viene algo que no es '='. Ejecuto esta AS y seteo 'lexema' como lexema y despues voy a resetaer.
+
+
+            //CHEQUEAR SI 'c' PERTENECE AL LENGUAJE, SI NO PERTENECE LANZA ERROR LEXICO: CARACTER NO CONOCIDO
+            //PERTENECEN: '*', =', '}', '#', '+', '-', '/', ';', '(', ')', '.', '='
             token = new Token();
             int ascii = (int) c;
             token.setId((short) ascii);
@@ -120,11 +126,9 @@ public abstract class AccionSemantica {
     static class ignorar extends AccionSemantica {
         @Override
         public void ejecutar(StringBuilder lexema, Character c, Reader entrada) {
+            ////TAMBIEN TIENE QUE CHEQUEAR SI PERTENECE AL LENGUAJE, SI NO PERTENECE LANZA ERROR LEXICO(es por los comentarios)
             if (c.equals('\n')){
                 AnalizadorLexico.sumarLinea();
-            }
-            if (!lexema.isEmpty() && lexema.charAt(0) == '/'){
-                lexema.setLength(0);
             }
         }
     }
@@ -146,16 +150,26 @@ public abstract class AccionSemantica {
         }
     }
 
-    static class generarToken extends AccionSemantica { //VER CUANDO VAMOS A USAR ESTO, CAPAZ NI ES NECESARIO
+    static class compararOAsignar extends AccionSemantica { //VER CUANDO VAMOS A USAR ESTO, CAPAZ NI ES NECESARIO
         @Override
         public void ejecutar(StringBuilder lexema, Character c, Reader entrada){
-            //token = new Token();
-            //LAS CADENAS DEL ESTILO {CADENA} SOLO CONCATENAN LLEGAN ACA CON LEXEMA = "CADENA",
-            // HABRIA QUE HACER UN AS QUE SEA reconocerCadena() O ALGO ASI
+            //PRIMERO YA CONCATENE, AHORA TENGO QUE CHEQUEAR CUAL DE LOS SIGUIENTES ES: '!=', '>=', '<=', ':='
             token.setLexema(lexema);
-            setId(lexema); //SOLO SE USA EN generarToken()
+            switch (lexema.toString()) {
+                case ">=":
+                    token.setId(MAYORIGUAL);
+                    break;
+                case "<=":
+                    token.setId(MENORIGUAL);
+                    break;
+                case ":=":
+                    token.setId(ASIGNACION);
+                    break;
+                case "!=":
+                    token.setId(DISTINTO);
+                    break;
+            }
             token.setLinea(lineaAct);
-
         }
     }
 
@@ -171,22 +185,33 @@ public abstract class AccionSemantica {
 
         }
     }
+    static class chequeoHexa extends AccionSemantica {
+        @Override
+        public void ejecutar(StringBuilder lexema, Character c, Reader entrada) throws IOException {
+                entrada.reset();
+                StringBuilder valorEntero = null;
+                //DEBEMOS CHEQUEAR QUE 'lexema' NO TENGA CARACTERES INVALIDOS (solo entre A-F o digitos son validos)
+                //LANZAMOS ERROR SINTACTICO EN CASO DE Q LOS TENGA, LOS ELIMINAMOS.
+                //PARSEAMOS A ENTERO PARA CHEQUEAR EL RANGO
+
+
+                AccionSemantica chequeoEntero = new chequeoEntero();
+                chequeoEntero.ejecutar(valorEntero,c,entrada);
+        }
+    }
 
     static class chequeoEntero extends AccionSemantica {
         @Override
         public void ejecutar(StringBuilder lexema, Character c, Reader entrada) {
+            //CHEQUEAR EL RANGO DEL LEXEMA -> ERROR LEXICO CONSTANTE ENTERA FUERA DE RANGO
+            //GENERAR TOKEN CON ID = Constante.
+            // AGREGAR A LA TS.
+
             token = new Token();
             long valueLong;
-            if( lexema.length() > 1 && lexema.charAt(1)=='x'){
-                token.setId(HEXA);
-            }else{
-
-                token.setId(ULONGINT);
-            }
             try {
                 valueLong = Long.parseLong(lexema.toString());
             }catch (NumberFormatException e){
-                //AnalizadorLexico.agregarErrorLexico("El numero no se puede parsear debido a que excede el valor maximo de LONG");
                 valueLong = Long.MAX_VALUE;
             }
 
@@ -218,6 +243,15 @@ public abstract class AccionSemantica {
     static class truncar extends AccionSemantica {
         @Override
         public void ejecutar(StringBuilder lexema, Character c, Reader entrada){
+
+            //TIENE QUE:
+            //1. VER SI ES PR O NO
+            //  SI NO ES PR:
+            //      1. CHEQUEAR QUE NO ARRANQUE CON '_' -> ERROR LEXICO
+            //      2. CHEQUEAR QUE lexema.LENGTH() <= 15 -> WARNING
+            //      3. CREAR UN TOKEN CON ID: Identificador
+            //      4. AGREGAR A TS SI NO EXISTE, SI NO DEVOLVER PUNTERO A LA TS
+
             token = new Token();
             Integer idPR = token.esPR(lexema);
             if (idPR != null){
@@ -318,7 +352,8 @@ public abstract class AccionSemantica {
         @Override
         public void ejecutar(StringBuilder lexema, Character c, Reader entrada) {
             lexema.append(c);
-            if (lexema.charAt(0)=='_'){
+            if (lexema.charAt(0)=='_'){ //ESTO SE EJECUTA UNICAMENTE CON '_'. AL PEDO PREGUNTAR.
+                                        //HABRIA QUE CONCATENAR Y CUANDO SE RECONOCE UN IDENTIFICADOR CHEQUEAR SI INICIA CON '_'.
                 AnalizadorLexico.agregarErrorLexico("El identificador no puede comenzar con \"_\"");
                 lexema.deleteCharAt(0);
             }
@@ -329,7 +364,7 @@ public abstract class AccionSemantica {
     static class errorCadena extends AccionSemantica {
         @Override
         public void ejecutar(StringBuilder lexema, Character c, Reader entrada) {
-            if (!(c.equals('\r') || c.equals('\n')))
+            if ((c.equals('\r') || c.equals('\n')))
                 lexema.append(c);
             if (lexema.charAt(lexema.length()-1)!='}'){
                 AnalizadorLexico.agregarErrorLexico("La cadena debe finalizar con \"}\"");
