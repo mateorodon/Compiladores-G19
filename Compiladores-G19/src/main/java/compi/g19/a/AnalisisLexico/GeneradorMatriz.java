@@ -13,18 +13,12 @@ public class GeneradorMatriz {
     private static final AccionSemantica comentario = new AccionSemantica.comentario();
     private static final AccionSemantica compararOAsignar = new AccionSemantica.compararOAsignar();
     private static final AccionSemantica error = new AccionSemantica.error();
-
-    private static final AccionSemantica errorFlotanteDecimal = new AccionSemantica.errorFlotanteDecimal();
-    private static final AccionSemantica errorFlotanteEntera = new AccionSemantica.errorFlotanteEntera();
-    private static final AccionSemantica errorIdentificador = new AccionSemantica.errorIdentificador();
-    private static final AccionSemantica errorCadena = new AccionSemantica.errorCadena();
+    private static final AccionSemantica cadena = new AccionSemantica.cadena();
 
 
     private static final AccionSemantica concatCompararOAsignar = new AccionSemantica.compuesta(concatenar, compararOAsignar);
     private static final AccionSemantica resetTruncar = new AccionSemantica.compuesta(resetear, truncar);
     private static final AccionSemantica resetGenerarASCII = new AccionSemantica.compuesta(resetear, generarASCII);
-    private static final AccionSemantica concatGenerarASCII = new AccionSemantica.compuesta(concatenar, generarASCII);
-    private static final AccionSemantica resetGenerarToken = new AccionSemantica.compuesta(resetear, compararOAsignar);//OJOTA ACA
 
     private static final AccionSemantica tokenEntero = new AccionSemantica.compuesta(resetear, chequeoEntero);
     private static final AccionSemantica tokenFlotante = new AccionSemantica.compuesta(resetear, chequeoFlotante);
@@ -66,15 +60,15 @@ public class GeneradorMatriz {
                 {tokenEntero,concatenar,concatenar,tokenEntero,tokenEntero, tokenEntero,tokenEntero,tokenEntero, tokenEntero, tokenEntero,tokenEntero,tokenEntero,concatenar, tokenEntero, tokenEntero, tokenEntero, tokenEntero, tokenEntero, tokenEntero, tokenEntero, tokenEntero},
                 {tokenEntero,concatenar,concatenar,tokenEntero,tokenEntero, tokenEntero, tokenEntero,tokenEntero,tokenEntero,tokenEntero,tokenEntero,tokenEntero, concatenar, tokenEntero,tokenEntero,tokenEntero,tokenEntero,tokenEntero,concatenar, tokenEntero,tokenEntero},
                 {concatenar, concatenar, concatenar, chequeoHexa, chequeoHexa, chequeoHexa,chequeoHexa,chequeoHexa,chequeoHexa,chequeoHexa, chequeoHexa,chequeoHexa, chequeoHexa,chequeoHexa,chequeoHexa,chequeoHexa,chequeoHexa,chequeoHexa,chequeoHexa,chequeoHexa,chequeoHexa},
-                {error, error,errorFlotanteEntera,concatenar,concatenar, concatenar, concatenar, concatenar, concatenar, concatenar, concatenar, concatenar, concatenar, concatenar, concatenar, concatenar, concatenar, errorFlotanteDecimal, concatenar, concatenar, concatenar},
-                {resetGenerarToken,resetGenerarToken,concatenar,resetGenerarToken,resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, concatenar, resetGenerarToken, resetGenerarToken, resetGenerarToken},
-                {error,error,concatenar,error,error, error, error, error, error, error, error, error, error, error, error, concatenar, concatenar, error, error, error, error},
-                {tokenFlotante,tokenFlotante,concatenar,concatenar,tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante,tokenFlotante,tokenFlotante,tokenFlotante,tokenFlotante,tokenFlotante,tokenFlotante},
-                {resetGenerarToken,resetGenerarToken,resetGenerarToken,resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, resetGenerarToken, concatenar, resetGenerarToken, resetGenerarToken},
-                {concatenar,tokenEntero,concatenar,tokenEntero,tokenEntero, tokenEntero, tokenEntero, tokenEntero, tokenEntero, tokenEntero, tokenEntero, tokenEntero, tokenEntero, tokenEntero, tokenEntero, tokenEntero, tokenEntero, tokenEntero, tokenEntero, tokenEntero, tokenEntero},
-                {generarASCII, generarASCII,generarASCII,generarASCII,generarASCII, generarASCII, generarASCII, generarASCII, generarASCII, generarASCII, generarASCII, generarASCII, generarASCII, generarASCII, ignorar, generarASCII, generarASCII, generarASCII, generarASCII, generarASCII, generarASCII},
+                {tokenFlotante, concatenar,concatenar,tokenFlotante,tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, concatenar, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, concatenar, tokenFlotante, tokenFlotante, tokenFlotante},
+                {tokenFlotante, concatenar,concatenar,tokenFlotante,tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, concatenar, tokenFlotante, tokenFlotante, tokenFlotante},
+                {tokenFlotante, concatenar,concatenar,tokenFlotante,tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, concatenar, concatenar, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante},
+                {tokenFlotante, concatenar,concatenar,tokenFlotante,tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante, tokenFlotante},
+                {resetGenerarASCII,concatenar,concatenar,resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII},
+                {resetGenerarASCII,resetGenerarASCII,resetGenerarASCII,resetGenerarASCII,resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, ignorar, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII},
                 {ignorar,ignorar,ignorar,ignorar,ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar},
-                {error, error,error,error,error, comentario, error, error, error, error, error, error,error,error, error, error, error, error, error, error, error}
+                {ignorar,ignorar,ignorar,ignorar,comentario, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, error},
+                {concatenar, concatenar,concatenar,concatenar,concatenar, concatenar, concatenar, concatenar, concatenar, concatenar, concatenar, concatenar,concatenar,cadena, concatenar, concatenar, concatenar, concatenar, concatenar, concatenar, error}
         };
     }
 

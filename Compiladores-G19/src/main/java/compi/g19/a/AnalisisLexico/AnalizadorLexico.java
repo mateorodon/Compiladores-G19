@@ -94,30 +94,25 @@ public class AnalizadorLexico {
             return 'd'; // Devuelve 'd' si es un dígito excepto '0'
         }
 
-        if (c >= 'a' && c <= 'f') {
-            return 'L'; // Devuelve 'L' si está entre A - F
+        if (Character.isLetter(c) && c!='s' && c!='x') {
+            return 'l'; // Devuelve 'L' si está entre A - F
         }
-
-        if (c >= 'g' && c <= 'z' && c != 'x' && c != 's') {
-            return 'l'; // Devuelve 'l' si está entre G - Z y no es 'x' ni 's'
-        }
-
         return c; // Devuelve el carácter propio en otro caso
     }
 
     private static int getCaracter(char c) {
         return switch (mapCaracter(c)) {
-            case 'L' -> 0;
-            case 'l' -> 1;
-            case 'd' -> 2;
-            case '0' -> 3;
-            case '_' -> 4;
-            case '/' -> 5;
-            case '*' -> 6;
-            case '{' -> 7;
-            case '!' -> 8;
-            case '<' -> 9;
-            case '>' -> 10;
+            case 'l' -> 0;
+            case 'd' -> 1;
+            case '0' -> 2;
+            case '_' -> 3;
+            case '/' -> 4;
+            case '*' -> 5;
+            case '{' -> 6;
+            case '!' -> 7;
+            case '<' -> 8;
+            case '>' -> 9;
+            case ':' -> 10;
             case '=' -> 11;
             case '.' -> 12;
             case '}' -> 13;
@@ -128,13 +123,9 @@ public class AnalizadorLexico {
             case 'x' -> 18;
             case '\n' -> 19;
             case '\r' -> 19;
-            case '\t' -> 20;
-            case ' ' -> 21;
-            default -> 22;
-            /*case 'o' -> 22;
-            //PONEMOS COMA DE PRUEBA
-            case ',' -> 22;
-            default -> -1; // Valor por defecto para caracteres no mapeados*/
+            case '\t' -> 19;
+            case ' ' -> 19;
+            default -> 20;
         };
     };
 

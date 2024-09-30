@@ -20,52 +20,6 @@ public abstract class AccionSemantica {
     protected static final short CONSTANTE = 261;
     protected static final short CADENA = 264;
 
-    private static void setId(StringBuilder lexema){
-        if (lexema.charAt(0) == '{') {
-            token.setId(CADENA);
-            lexema.deleteCharAt(0);
-            if (!TablaSimbolos.existeSimbolo(token.getLexema().toString())) {
-                TablaSimbolos.addNuevoSimbolo(token.getLexema().toString(), new Token(token));
-            } else {
-                TablaSimbolos.addSimbolo(token.getLexema().toString(), new Token(token));
-            }
-        }
-        else if (lexema.charAt(0) == 'u' ||lexema.charAt(0) == 'v' ||lexema.charAt(0) == 'w') {
-                token.setId(ULONGINT);
-                if ( ! TablaSimbolos.existeSimbolo(token.getLexema().toString()) ){
-                    TablaSimbolos.addNuevoSimbolo(token.getLexema().toString(), new Token(token));
-                } else {
-                    TablaSimbolos.addSimbolo(token.getLexema().toString(), new Token(token));
-                }
-        } else if (lexema.charAt(0) == 's'){
-            token.setId(FLOTANTE);
-            if ( ! TablaSimbolos.existeSimbolo(token.getLexema().toString()) ){
-                TablaSimbolos.addNuevoSimbolo(token.getLexema().toString(), new Token(token));
-            } else {
-                TablaSimbolos.addSimbolo(token.getLexema().toString(), new Token(token));
-            }
-        }
-        else {
-            switch (lexema.toString()) {
-                case ">=":
-                    token.setId(MAYORIGUAL);
-                    break;
-                case "<=":
-                    token.setId(MENORIGUAL);
-                    break;
-                case ":=":
-                    token.setId(ASIGNACION);
-                    break;
-                case "!=":
-                    token.setId(DISTINTO);
-                    break;
-                    //hay que ver el caso de las cadenas y los identificadore. Porque van a llegar Strings de la misma manera
-                    //Habria que hacer una AS distinta para generar el Token de las cadenas
-            }
-        }
-
-    }
-
     public abstract void ejecutar(StringBuilder lexema, Character c, Reader entrada) throws IOException;
 
     @AllArgsConstructor
@@ -97,7 +51,7 @@ public abstract class AccionSemantica {
     }
 
 
-
+    //LISTO
     static class generarASCII extends AccionSemantica {
         @Override
         public void ejecutar(StringBuilder lexema, Character c, Reader entrada) {
@@ -109,47 +63,65 @@ public abstract class AccionSemantica {
 
             //CHEQUEAR SI 'c' PERTENECE AL LENGUAJE, SI NO PERTENECE LANZA ERROR LEXICO: CARACTER NO CONOCIDO
             //PERTENECEN: '*', =', '}', '#', '+', '-', '/', ';', '(', ')', '.', '='
+
+            if (!perteneceAlLenguaje(c))
+                AnalizadorLexico.agregarErrorLexico("El character "+c+" no pertenece al lenguaje" );
+
+
             token = new Token();
             int ascii = (int) c;
             token.setId((short) ascii);
+
+            if (lexema.isEmpty())
+                lexema.append(c);
+
             token.setLexema(lexema);
         }
     }
 
+    //LISTO
     static class comentario extends AccionSemantica {
         @Override
         public void ejecutar(StringBuilder lexema, Character c, Reader entrada) {
-            System.out.println("SE RECONOCIO UN COMENTARIO");
+            System.out.println("SE RECONOCIO UN COMENTARIO EN LA LINEA "+lineaAct);
         }
     }
 
     static class ignorar extends AccionSemantica {
         @Override
         public void ejecutar(StringBuilder lexema, Character c, Reader entrada) {
-            ////TAMBIEN TIENE QUE CHEQUEAR SI PERTENECE AL LENGUAJE, SI NO PERTENECE LANZA ERROR LEXICO(es por los comentarios)
+            //if (!perteneceAlLenguaje(c))
+                //AnalizadorLexico.agregarErrorLexico("El character "+c+" no pertenece al lenguaje" );
             if (c.equals('\n')){
                 AnalizadorLexico.sumarLinea();
             }
         }
     }
 
+    //LISTO
     static class concatenar extends AccionSemantica {
         @Override
         public void ejecutar(StringBuilder lexema, Character c, Reader entrada) {
-            lexema.append(c);
+            if (perteneceAlLenguaje(c))
+                lexema.append(c);
+            else
+                AnalizadorLexico.agregarErrorLexico("El character "+c+" no pertenece al lenguaje" );
+
+
+            if (c.equals('\n') || c.equals('\r'))
+                AnalizadorLexico.agregarErrorLexico("Las cadenas deben ser de una unica linea");
         }
     }
 
+    //LISTO
     static class resetear extends AccionSemantica {
         @Override
         public void ejecutar(StringBuilder lexema, Character c, Reader entrada) throws IOException {
-            /*if (caracterEspecial(c)){
-                t.borrarUltimoCaracter();
-            }*/
             entrada.reset();
         }
     }
 
+    //LISTO
     static class compararOAsignar extends AccionSemantica { //VER CUANDO VAMOS A USAR ESTO, CAPAZ NI ES NECESARIO
         @Override
         public void ejecutar(StringBuilder lexema, Character c, Reader entrada){
@@ -176,30 +148,49 @@ public abstract class AccionSemantica {
     static class error extends AccionSemantica {
         @Override
         public void ejecutar(StringBuilder lexema, Character c, Reader entrada) throws IOException {
-            System.out.println("ERRORRRRRRRRR");
-            String erroLexema = "ERROR";
+            String errorLexema = "ERROR";
             lexema.setLength(0);
-            lexema.append(erroLexema);
+            lexema.append(errorLexema);
             token.setLexema(lexema);
             entrada.reset();
-
         }
     }
+
+    //LISTO
     static class chequeoHexa extends AccionSemantica {
         @Override
         public void ejecutar(StringBuilder lexema, Character c, Reader entrada) throws IOException {
-                entrada.reset();
-                StringBuilder valorEntero = null;
-                //DEBEMOS CHEQUEAR QUE 'lexema' NO TENGA CARACTERES INVALIDOS (solo entre A-F o digitos son validos)
-                //LANZAMOS ERROR SINTACTICO EN CASO DE Q LOS TENGA, LOS ELIMINAMOS.
-                //PARSEAMOS A ENTERO PARA CHEQUEAR EL RANGO
+            entrada.reset();
+            StringBuilder valorEntero = new StringBuilder(); // Inicializamos el StringBuilder
+            int index = 0;
 
+            // Chequeamos que 'lexema' no tenga caracteres inválidos
+            for (char caracter : lexema.toString().toCharArray()) {
+                if (!((caracter >= '0' && caracter <= '9') || (caracter >= 'A' && caracter <= 'F'))) {
+                    AnalizadorLexico.agregarErrorSintactico("Las constantes hexadecimales no pueden contener caracteres inválidos: " + caracter);
+                    lexema.deleteCharAt(index); // Eliminar carácter inválido
+                } else {
+                    index++; // Solo incrementamos el índice si el carácter es válido
+                }
+            }
 
-                AccionSemantica chequeoEntero = new chequeoEntero();
-                chequeoEntero.ejecutar(valorEntero,c,entrada);
+            // Intentamos parsear a entero
+            Integer parseado=0;
+            try {
+                parseado = Integer.parseInt(lexema.toString(), 16); // Usamos base 16 para parsear hexadecimales
+            } catch (NumberFormatException e) {
+                AnalizadorLexico.agregarErrorLexico("La constante hexadecimal no se pudo parsear correctamente");
+            }
+
+            valorEntero.append(parseado.toString());
+
+            // Creamos una instancia de chequeoEntero y ejecutamos su método
+            AccionSemantica chequeoEntero = new chequeoEntero();
+            chequeoEntero.ejecutar(valorEntero, c, entrada); // Pasamos valorEntero como lexema
         }
     }
 
+    //LISTO
     static class chequeoEntero extends AccionSemantica {
         @Override
         public void ejecutar(StringBuilder lexema, Character c, Reader entrada) {
@@ -232,6 +223,7 @@ public abstract class AccionSemantica {
                 token.setLexema(lexema);
             }
 
+            token.setId(CONSTANTE);
             if ( ! TablaSimbolos.existeSimbolo(token.getLexema().toString()) ){
                 TablaSimbolos.addNuevoSimbolo(token.getLexema().toString(), new Token(token));
             } else {
@@ -240,6 +232,7 @@ public abstract class AccionSemantica {
         }
     }
 
+    //LISTO
     static class truncar extends AccionSemantica {
         @Override
         public void ejecutar(StringBuilder lexema, Character c, Reader entrada){
@@ -259,6 +252,9 @@ public abstract class AccionSemantica {
                 token.setLexema(lexema);
             }
             else {
+                if (lexema.charAt(0)=='_')
+                    AnalizadorLexico.agregarErrorLexico("Cadena mal definida, no puede comenzar con \"_\"");
+
                 if (lexema.length() > TAMANIO_VAR) {
 
                     AnalizadorLexico.agregarWarning("Warning: El ID excedio el tamanio permitido");
@@ -273,17 +269,20 @@ public abstract class AccionSemantica {
                 } else {
                     token.setLexema(lexema);
                 }
+
                 token.setId(ID);
+
+                if ( ! TablaSimbolos.existeSimbolo(token.getLexema().toString()) ){
+                    TablaSimbolos.addNuevoSimbolo(token.getLexema().toString(), new Token(token));
+                } else {
+                    TablaSimbolos.addSimbolo(token.getLexema().toString(), new Token(token));
+                }
             }
 
-            if ( ! TablaSimbolos.existeSimbolo(token.getLexema().toString()) ){
-                TablaSimbolos.addNuevoSimbolo(token.getLexema().toString(), new Token(token));
-            } else {
-                TablaSimbolos.addSimbolo(token.getLexema().toString(), new Token(token));
-            }
         }
     }
 
+    //LISTO
     static class chequeoFlotante extends AccionSemantica {
         @Override
         public void ejecutar(StringBuilder lexema, Character c, Reader entrada) {
@@ -294,19 +293,32 @@ public abstract class AccionSemantica {
                 float base = 0;
                 float exponente = 0;
 
+                if (partes.length > 1) {
+                    exponente = Float.parseFloat(partes[1]);
+                } else {
+                    AnalizadorLexico.agregarWarning("Parte exponencial del flotante ausente");
+                }
+
+                String[] partesNoExponenciales = lexema.toString().split("\\.");
+
+                if (partesNoExponenciales[0].isEmpty()) {
+                    AnalizadorLexico.agregarWarning("Parte entera del flotante ausente");
+                }
+
+                if (partesNoExponenciales[1].isEmpty()) {
+                    AnalizadorLexico.agregarWarning("Parte decimal del flotante ausente");
+                }
+
                 try {
                     base = Float.parseFloat(partes[0]);
                 }catch (Exception e){
                     AnalizadorLexico.agregarWarning("Parte entera del flotante ausente");
                 }
 
-                if (partes.length > 1) {
-                    exponente = Float.parseFloat(partes[1]);
-                } else {
-                    AnalizadorLexico.agregarWarning("Parte decimal del flotante ausente");
-                }
+                float resultado = base;
+                if (exponente != 0.0)
+                     resultado = (float) Math.pow(base, exponente);
 
-                float resultado = (float) Math.pow(base, exponente);
                 if (resultado > Float.MAX_VALUE) {
                     AnalizadorLexico.agregarErrorLexico("Constante flotante fuera de rango");
                     resultado = Float.MAX_VALUE;
@@ -315,15 +327,33 @@ public abstract class AccionSemantica {
                 lexema.append(resultado);
 
                 token.setLexema(lexema);
+
+                token.setId(CONSTANTE);
+                if ( ! TablaSimbolos.existeSimbolo(token.getLexema().toString()) ){
+                    TablaSimbolos.addNuevoSimbolo(token.getLexema().toString(), new Token(token));
+                } else {
+                    TablaSimbolos.addSimbolo(token.getLexema().toString(), new Token(token));
+                }
             } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
                 // Si ocurre un error (como un formato no válido o falta de "s"), manejamos el error
                 AnalizadorLexico.agregarErrorLexico("Constante flotante mal deifinida");
                 lexema.setLength(0);
                 lexema.append("0.0");
+                token.setId(CONSTANTE);
                 token.setLexema(lexema); // Asignamos un valor por defecto en caso de error
             }
-            token.setId(FLOTANTE);
-            if ( ! TablaSimbolos.existeSimbolo(token.getLexema().toString()) ){
+
+        }
+    }
+
+    //LISTO
+    static class cadena extends AccionSemantica {
+        @Override
+        public void ejecutar(StringBuilder lexema, Character c, Reader entrada) {
+            token.setId(CADENA);
+            token.setLexema(lexema);
+
+            if (!TablaSimbolos.existeSimbolo(token.getLexema().toString())) {
                 TablaSimbolos.addNuevoSimbolo(token.getLexema().toString(), new Token(token));
             } else {
                 TablaSimbolos.addSimbolo(token.getLexema().toString(), new Token(token));
@@ -331,46 +361,10 @@ public abstract class AccionSemantica {
         }
     }
 
-    static class errorFlotanteDecimal extends AccionSemantica {
-        @Override
-        public void ejecutar(StringBuilder lexema, Character c, Reader entrada) {
-            lexema.append(c);
-            AnalizadorLexico.agregarErrorLexico("Constante flotante mal definida. Parte decimal esta ausente");
-        }
-    }
-
-    static class errorFlotanteEntera extends AccionSemantica {
-        @Override
-        public void ejecutar(StringBuilder lexema, Character c, Reader entrada) {
-            lexema.append(c);
-            if (lexema.charAt(0)=='.')
-                AnalizadorLexico.agregarErrorLexico("Constante flotante mal definida. Parte entera esta ausente");
-        }
-    }
-
-    static class errorIdentificador extends AccionSemantica {
-        @Override
-        public void ejecutar(StringBuilder lexema, Character c, Reader entrada) {
-            lexema.append(c);
-            if (lexema.charAt(0)=='_'){ //ESTO SE EJECUTA UNICAMENTE CON '_'. AL PEDO PREGUNTAR.
-                                        //HABRIA QUE CONCATENAR Y CUANDO SE RECONOCE UN IDENTIFICADOR CHEQUEAR SI INICIA CON '_'.
-                AnalizadorLexico.agregarErrorLexico("El identificador no puede comenzar con \"_\"");
-                lexema.deleteCharAt(0);
-            }
-
-        }
-    }
-
-    static class errorCadena extends AccionSemantica {
-        @Override
-        public void ejecutar(StringBuilder lexema, Character c, Reader entrada) {
-            if ((c.equals('\r') || c.equals('\n')))
-                lexema.append(c);
-            if (lexema.charAt(lexema.length()-1)!='}'){
-                AnalizadorLexico.agregarErrorLexico("La cadena debe finalizar con \"}\"");
-                setId(lexema);
-            }
-
-        }
+    private static boolean perteneceAlLenguaje(Character c) {
+        return c == '+' || c == '-' || c == '*' || c == '/' ||
+                c == '>' || c == '<' || c == '=' || c == '(' ||
+                c == ')' || c == ',' || c == '.' || c == ';' ||
+                Character.isLetter(c) || Character.isDigit(c);
     }
 }

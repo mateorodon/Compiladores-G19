@@ -58,9 +58,7 @@ public class Token {
         switch(id) {
             case AccionSemantica.ID -> { return "Identificador"; }
             case AccionSemantica.ASIGNACION -> { return "Asignación"; }
-            case AccionSemantica.ULONGINT-> { return "Constante entera";}
-            case AccionSemantica.FLOTANTE -> { return "Constante flotante";}
-            case AccionSemantica.HEXA -> {return "Constante hexadecimal";}
+            case AccionSemantica.CONSTANTE-> { return "Constante";}
             case AccionSemantica.CADENA -> {return "Cadena una línea";}
             case AccionSemantica.DISTINTO -> {return "Distinto";}
             case AccionSemantica.MAYORIGUAL -> {return "Mayor o igual";}
