@@ -1,4 +1,4 @@
-package compi.g19;
+package compi.g19.a.AnalisisLexico;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,31 +8,49 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static compi.g19.a.AnalisisLexico.AccionSemantica.token;
+
+
 @Getter
 @Setter
 public class AnalizadorLexico {
     private BufferedReader entrada;
     private int estadoAct;
-    @Getter
     public static int lineaAct = 1;
     private int[][] matrizEstados = GeneradorMatriz.matrizEstados;
     private AccionSemantica[][] matrizAS = GeneradorMatriz.matrizAS;
-    static List<Error> erroresLexicos = new ArrayList<Error>();
-    static List<Error> erroresSintacticos = new ArrayList<Error>();
+    static List<Error> warning = new ArrayList<Error>();
+    static List<Error> errorSintactico = new ArrayList<Error>();
+    static List<Error> errorLexico = new ArrayList<Error>();
 
     public AnalizadorLexico(BufferedReader entrada) {
         this.entrada = entrada;
         this.estadoAct = 0; // Estado inicial
     }
 
-    public static void agregarErrorLexico(String error){
-        Error e = new Error(error, getLineaAct());
-        erroresLexicos.add(e);
+    public static void agregarWarning(String error){
+        Error e = new Error(error, lineaAct);
+        warning.add(e);
+    }
+
+    public static void imprimirErrores(){
+        for (Error e : errorLexico)
+            System.out.println(e.toString());
+    }
+
+    public static void imprimirWarnings(){
+        for (Error e : warning)
+            System.out.println(e.toString());
     }
 
     public static void agregarErrorSintactico(String error){
-        Error e = new Error(error, getLineaAct());
-        erroresSintacticos.add(e);
+        Error e = new Error(error, lineaAct);
+        errorSintactico.add(e);
+    }
+
+    public static void agregarErrorLexico(String error){
+        Error e = new Error(error, lineaAct);
+        errorLexico.add(e);
     }
 
     public Token obtenerToken() throws IOException {
@@ -41,11 +59,13 @@ public class AnalizadorLexico {
         int valorLeido;
         int val = 0;
         entrada.mark(1);
-        Token token = new Token();
-        while (estadoAct != -1 && val != 100 && ((valorLeido = entrada.read()) != -1)) {
+        //Token token = new Token();
+        while (estadoAct != -1 && val != 100 && (valorLeido = entrada.read()) != -1) {
             Character caracter = (char) valorLeido;
+
             int valorCaracter = getCaracter(Character.toLowerCase(caracter));
-            matrizAS[estadoAct][valorCaracter].ejecutar(token, caracter, entrada);
+            matrizAS[estadoAct][valorCaracter].ejecutar(lexemaBuilder, caracter, entrada);
+
             estadoAct = matrizEstados[estadoAct][valorCaracter];
 
             entrada.mark(1);
@@ -55,15 +75,18 @@ public class AnalizadorLexico {
             }
 
             //Si es un espacio en blanco no generamos token
-            if (caracterEspecial(caracter)){
+            //Paso el LEXEMA porque si paso solo el token me seguiria concatenando con el siguiente TOKEN en caso de venir un caracter especial, ya que no cortaria la ejecucion
+            if (caracterEspecial(lexemaBuilder)){
                 val=0;
             }
         }
+
+        Token returnToken = new Token(token);
+
         lexemaBuilder.setLength(0);
-        Token salida = null;
-        if (token.getId() != 0)
-            salida = token;
-            return salida;
+
+        //Llegaria aca con LEXEMA vacio en caso de llegar al fin del archivo.
+        return (returnToken.getLexema().isEmpty()) ? null : returnToken;
     }
 
     private static char mapCaracter(char c) {
@@ -104,20 +127,21 @@ public class AnalizadorLexico {
             case 's' -> 17;
             case 'x' -> 18;
             case '\n' -> 19;
+            case '\r' -> 19;
             case '\t' -> 20;
-            case '\r' -> 21;
             case ' ' -> 21;
-            case 'o' -> 22;
+            default -> 22;
+            /*case 'o' -> 22;
             //PONEMOS COMA DE PRUEBA
             case ',' -> 22;
-            default -> -1; // Valor por defecto para caracteres no mapeados
+            default -> -1; // Valor por defecto para caracteres no mapeados*/
         };
-    }
+    };
 
-    public static boolean caracterEspecial(Character c) {
-        String caracterComoString = Character.toString(c);
-        return (caracterComoString.equals("\n")
-                || caracterComoString.equals("\t") || caracterComoString.isEmpty() || caracterComoString.equals("\r"));
+    public static boolean caracterEspecial(StringBuilder c) {
+        String caracterComoString = String.valueOf(c);
+        return ((caracterComoString.equals("\n") || caracterComoString.equals("\t")
+                || caracterComoString.isEmpty() || caracterComoString.equals("\r") || caracterComoString.isBlank()));
 
 
     }

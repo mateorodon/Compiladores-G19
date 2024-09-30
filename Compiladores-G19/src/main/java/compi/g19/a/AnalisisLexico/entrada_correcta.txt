@@ -1,0 +1,19 @@
+variable;
+variable_mas_de_quince_caracteres
+10.0s+3,
+/# comentario que
+nunca cierra # genera bucle infinito / fwhww #
+hoal2 $ 2.0
+ULONGINT
+SINGLE
+if,
+30 > 2
+>=
+!=
+0xFEEF
+else
+enD
+{¡Hola mundo !}
+/#comentario
+multilinea#/
+4

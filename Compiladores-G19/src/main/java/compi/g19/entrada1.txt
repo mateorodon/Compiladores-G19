@@ -1,3 +1,0 @@
-BEGIN,
-END
-IF 30 > 2
