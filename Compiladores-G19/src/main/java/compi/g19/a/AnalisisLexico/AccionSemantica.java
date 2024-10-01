@@ -65,14 +65,14 @@ public abstract class AccionSemantica {
             //PERTENECEN: '*', =', '}', '#', '+', '-', '/', ';', '(', ')', '.', '='
 
             if (!perteneceAlLenguaje(c))
-                AnalizadorLexico.agregarErrorLexico("El character "+c+" no pertenece al lenguaje" );
+                AnalizadorLexico.agregarErrorLexico("El caracter "+c+" no pertenece al lenguaje" );
 
 
             token = new Token();
             int ascii = (int) c;
             token.setId((short) ascii);
 
-            if (lexema.isEmpty())
+            if (lexema.length() == 0)
                 lexema.append(c);
 
             token.setLexema(lexema);
@@ -83,15 +83,15 @@ public abstract class AccionSemantica {
     static class comentario extends AccionSemantica {
         @Override
         public void ejecutar(StringBuilder lexema, Character c, Reader entrada) {
-            System.out.println("SE RECONOCIO UN COMENTARIO EN LA LINEA "+lineaAct);
+            System.out.println("SE RECONOCIO UN COMENTARIO EN LA LINEA " + lineaAct);
         }
     }
 
     static class ignorar extends AccionSemantica {
         @Override
         public void ejecutar(StringBuilder lexema, Character c, Reader entrada) {
-            //if (!perteneceAlLenguaje(c))
-                //AnalizadorLexico.agregarErrorLexico("El character "+c+" no pertenece al lenguaje" );
+            if (!perteneceAlLenguaje(c) && !AnalizadorLexico.caracterEspecial(new StringBuilder(c)))
+                AnalizadorLexico.agregarErrorLexico("El caracter "+c+" no pertenece al lenguaje" );
             if (c.equals('\n')){
                 AnalizadorLexico.sumarLinea();
             }
@@ -102,11 +102,10 @@ public abstract class AccionSemantica {
     static class concatenar extends AccionSemantica {
         @Override
         public void ejecutar(StringBuilder lexema, Character c, Reader entrada) {
-            if (perteneceAlLenguaje(c))
-                lexema.append(c);
+            if (!perteneceAlLenguaje(c) && !AnalizadorLexico.caracterEspecial(new StringBuilder(c)))
+                AnalizadorLexico.agregarErrorLexico("El caracter "+c+" no pertenece al lenguaje" );
             else
-                AnalizadorLexico.agregarErrorLexico("El character "+c+" no pertenece al lenguaje" );
-
+                lexema.append(c);
 
             if (c.equals('\n') || c.equals('\r'))
                 AnalizadorLexico.agregarErrorLexico("Las cadenas deben ser de una unica linea");
@@ -122,7 +121,7 @@ public abstract class AccionSemantica {
     }
 
     //LISTO
-    static class compararOAsignar extends AccionSemantica { //VER CUANDO VAMOS A USAR ESTO, CAPAZ NI ES NECESARIO
+    static class compararOAsignar extends AccionSemantica {
         @Override
         public void ejecutar(StringBuilder lexema, Character c, Reader entrada){
             //PRIMERO YA CONCATENE, AHORA TENGO QUE CHEQUEAR CUAL DE LOS SIGUIENTES ES: '!=', '>=', '<=', ':='
@@ -167,8 +166,10 @@ public abstract class AccionSemantica {
             // Chequeamos que 'lexema' no tenga caracteres inválidos
             for (char caracter : lexema.toString().toCharArray()) {
                 if (!((caracter >= '0' && caracter <= '9') || (caracter >= 'A' && caracter <= 'F'))) {
-                    AnalizadorLexico.agregarErrorSintactico("Las constantes hexadecimales no pueden contener caracteres inválidos: " + caracter);
-                    lexema.deleteCharAt(index); // Eliminar carácter inválido
+                    if (!(index == 1 && caracter == 'x')) {
+                        AnalizadorLexico.agregarErrorSintactico("Las constantes hexadecimales no pueden contener caracteres inválidos: " + caracter);
+                        lexema.deleteCharAt(index); // Eliminar carácter inválido
+                    }
                 } else {
                     index++; // Solo incrementamos el índice si el carácter es válido
                 }
@@ -177,7 +178,12 @@ public abstract class AccionSemantica {
             // Intentamos parsear a entero
             Integer parseado=0;
             try {
-                parseado = Integer.parseInt(lexema.toString(), 16); // Usamos base 16 para parsear hexadecimales
+                String lex = lexema.toString();
+                if (lex.startsWith("0x")) {
+                    lex = lex.substring(2); // Elimina el "0x"
+                }
+                parseado = Integer.parseInt(lex, 16); // Usamos base 16 para parsear hexadecimales
+
             } catch (NumberFormatException e) {
                 AnalizadorLexico.agregarErrorLexico("La constante hexadecimal no se pudo parsear correctamente");
             }
@@ -296,17 +302,18 @@ public abstract class AccionSemantica {
                 if (partes.length > 1) {
                     exponente = Float.parseFloat(partes[1]);
                 } else {
-                    AnalizadorLexico.agregarWarning("Parte exponencial del flotante ausente");
+                    //AnalizadorLexico.agregarWarning("Parte exponencial del flotante ausente");
                 }
 
-                String[] partesNoExponenciales = lexema.toString().split("\\.");
+                String[] partesNoExponenciales = partes[0].split("\\.", -1);
 
-                if (partesNoExponenciales[0].isEmpty()) {
-                    AnalizadorLexico.agregarWarning("Parte entera del flotante ausente");
+
+                if (partesNoExponenciales.length == 0 || partesNoExponenciales[0].isEmpty()) {
+                    AnalizadorLexico.agregarErrorSintactico("Parte entera del flotante ausente");
                 }
 
                 if (partesNoExponenciales[1].isEmpty()) {
-                    AnalizadorLexico.agregarWarning("Parte decimal del flotante ausente");
+                    AnalizadorLexico.agregarErrorSintactico("Parte decimal del flotante ausente");
                 }
 
                 try {
@@ -365,6 +372,7 @@ public abstract class AccionSemantica {
         return c == '+' || c == '-' || c == '*' || c == '/' ||
                 c == '>' || c == '<' || c == '=' || c == '(' ||
                 c == ')' || c == ',' || c == '.' || c == ';' ||
+                c == '_' || c == '{' || c == '}' || c == '#' ||
                 Character.isLetter(c) || Character.isDigit(c);
     }
 }

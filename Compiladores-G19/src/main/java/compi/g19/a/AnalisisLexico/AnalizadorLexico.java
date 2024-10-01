@@ -33,8 +33,12 @@ public class AnalizadorLexico {
         warning.add(e);
     }
 
-    public static void imprimirErrores(){
+    public static void imprimirErroresLexicos(){
         for (Error e : errorLexico)
+            System.out.println(e.toString());
+    }
+    public static void imprimirErroresSintacticos(){
+        for (Error e : errorSintactico)
             System.out.println(e.toString());
     }
 
@@ -86,7 +90,7 @@ public class AnalizadorLexico {
         lexemaBuilder.setLength(0);
 
         //Llegaria aca con LEXEMA vacio en caso de llegar al fin del archivo.
-        return (returnToken.getLexema().isEmpty()) ? null : returnToken;
+        return (returnToken.getLexema().length() == 0) ? null : returnToken;
     }
 
     private static char mapCaracter(char c) {
@@ -101,33 +105,54 @@ public class AnalizadorLexico {
     }
 
     private static int getCaracter(char c) {
-        return switch (mapCaracter(c)) {
-            case 'l' -> 0;
-            case 'd' -> 1;
-            case '0' -> 2;
-            case '_' -> 3;
-            case '/' -> 4;
-            case '*' -> 5;
-            case '{' -> 6;
-            case '!' -> 7;
-            case '<' -> 8;
-            case '>' -> 9;
-            case ':' -> 10;
-            case '=' -> 11;
-            case '.' -> 12;
-            case '}' -> 13;
-            case '#' -> 14;
-            case '+' -> 15;
-            case '-' -> 16;
-            case 's' -> 17;
-            case 'x' -> 18;
-            case '\n' -> 19;
-            case '\r' -> 19;
-            case '\t' -> 19;
-            case ' ' -> 19;
-            default -> 20;
-        };
-    };
+        switch (mapCaracter(c)) {
+            case 'l':
+                return 0;
+            case 'd':
+                return 1;
+            case '0':
+                return 2;
+            case '_':
+                return 3;
+            case '/':
+                return 4;
+            case '*':
+                return 5;
+            case '{':
+                return 6;
+            case '!':
+                return 7;
+            case '<':
+                return 8;
+            case '>':
+                return 9;
+            case ':':
+                return 10;
+            case '=':
+                return 11;
+            case '.':
+                return 12;
+            case '}':
+                return 13;
+            case '#':
+                return 14;
+            case '+':
+                return 15;
+            case '-':
+                return 16;
+            case 's':
+                return 17;
+            case 'x':
+                return 18;
+            case '\n': // Caída a través para los casos '\r', '\t', ' '
+            case '\r':
+            case '\t':
+            case ' ':
+                return 19;
+            default:
+                return 20;
+        }
+    }
 
     public static boolean caracterEspecial(StringBuilder c) {
         String caracterComoString = String.valueOf(c);

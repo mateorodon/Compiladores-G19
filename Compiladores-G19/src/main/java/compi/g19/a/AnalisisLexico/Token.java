@@ -55,22 +55,27 @@ public class Token {
     }
 
     private String mapId(int id) {
-        switch(id) {
-            case AccionSemantica.ID -> { return "Identificador"; }
-            case AccionSemantica.ASIGNACION -> { return "Asignación"; }
-            case AccionSemantica.CONSTANTE-> { return "Constante";}
-            case AccionSemantica.CADENA -> {return "Cadena una línea";}
-            case AccionSemantica.DISTINTO -> {return "Distinto";}
-            case AccionSemantica.MAYORIGUAL -> {return "Mayor o igual";}
-            case AccionSemantica.MENORIGUAL -> {return "Menor o igual";}
-            default -> {
+        switch (id) {
+            case AccionSemantica.ID:
+                return "Identificador";
+            case AccionSemantica.ASIGNACION:
+                return "Asignación";
+            case AccionSemantica.CONSTANTE:
+                return "Constante";
+            case AccionSemantica.CADENA:
+                return "Cadena una línea";
+            case AccionSemantica.DISTINTO:
+                return "Distinto";
+            case AccionSemantica.MAYORIGUAL:
+                return "Mayor o igual";
+            case AccionSemantica.MENORIGUAL:
+                return "Menor o igual";
+            default:
                 if (id >= 265 && id <= 280) {
                     return "Palabra reservada";
-                }
-                else {
+                } else {
                     return "Literal";
                 }
-            }
         }
     }
 }

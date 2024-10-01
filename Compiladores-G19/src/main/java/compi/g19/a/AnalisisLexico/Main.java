@@ -19,7 +19,9 @@ public class Main {
             System.out.println("----------TABLA DE SIMBOLOS-----------");
             TablaSimbolos.imprimirSimbolos();
             System.out.println("-----------ERRORES LEXICOS----------");
-            AnalizadorLexico.imprimirErrores();
+            AnalizadorLexico.imprimirErroresLexicos();
+            System.out.println("-----------ERRORES SINTACTICOS----------");
+            AnalizadorLexico.imprimirErroresSintacticos();
             System.out.println("----------WARNINGS-----------");
             AnalizadorLexico.imprimirWarnings();
         } catch (IOException e) {
