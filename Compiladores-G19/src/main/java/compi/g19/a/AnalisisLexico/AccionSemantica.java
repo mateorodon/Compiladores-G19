@@ -12,13 +12,13 @@ public abstract class AccionSemantica {
     public static Token token = new Token();
 
     protected static final int TAMANIO_VAR = 15;
-    protected static final short ID = 256;
-    protected static final short ASIGNACION = 257;
-    protected static final short MAYORIGUAL = 258;
-    protected static final short MENORIGUAL = 259;
-    protected static final short DISTINTO = 260;
-    protected static final short CONSTANTE = 261;
-    protected static final short CADENA = 264;
+    protected static final short ID = 257;
+    protected static final short ASIGNACION = 258;
+    protected static final short MAYORIGUAL = 259;
+    protected static final short MENORIGUAL = 260;
+    protected static final short DISTINTO = 261;
+    protected static final short CONSTANTE = 262;
+    protected static final short CADENA = 263;
 
     public abstract void ejecutar(StringBuilder lexema, Character c, Reader entrada) throws IOException;
 
@@ -84,13 +84,14 @@ public abstract class AccionSemantica {
         @Override
         public void ejecutar(StringBuilder lexema, Character c, Reader entrada) {
             System.out.println("SE RECONOCIO UN COMENTARIO EN LA LINEA " + lineaAct);
+            lexema.setLength(0);
         }
     }
 
     static class ignorar extends AccionSemantica {
         @Override
         public void ejecutar(StringBuilder lexema, Character c, Reader entrada) {
-            if (!perteneceAlLenguaje(c) && !AnalizadorLexico.caracterEspecial(new StringBuilder(c)))
+            if (!perteneceAlLenguaje(c) && !AnalizadorLexico.caracterEspecial(c.toString()))
                 AnalizadorLexico.agregarErrorLexico("El caracter "+c+" no pertenece al lenguaje" );
             if (c.equals('\n')){
                 AnalizadorLexico.sumarLinea();
@@ -102,7 +103,7 @@ public abstract class AccionSemantica {
     static class concatenar extends AccionSemantica {
         @Override
         public void ejecutar(StringBuilder lexema, Character c, Reader entrada) {
-            if (!perteneceAlLenguaje(c) && !AnalizadorLexico.caracterEspecial(new StringBuilder(c)))
+            if (!perteneceAlLenguaje(c) && !AnalizadorLexico.caracterEspecial(c.toString()))
                 AnalizadorLexico.agregarErrorLexico("El caracter "+c+" no pertenece al lenguaje" );
             else
                 lexema.append(c);
@@ -176,13 +177,13 @@ public abstract class AccionSemantica {
             }
 
             // Intentamos parsear a entero
-            Integer parseado=0;
+            Long parseado=0L;
             try {
                 String lex = lexema.toString();
                 if (lex.startsWith("0x")) {
                     lex = lex.substring(2); // Elimina el "0x"
                 }
-                parseado = Integer.parseInt(lex, 16); // Usamos base 16 para parsear hexadecimales
+                parseado = Long.parseLong(lex, 16); // Usamos base 16 para parsear hexadecimales
 
             } catch (NumberFormatException e) {
                 AnalizadorLexico.agregarErrorLexico("La constante hexadecimal no se pudo parsear correctamente");
@@ -219,9 +220,9 @@ public abstract class AccionSemantica {
                 lexema.setLength(0);
                 lexema.append(newLexema);
                 token.setLexema(lexema);
-            } else if (valueLong > Math.pow(2,31)-1) {
+            } else if (valueLong > Math.pow(2,32)-1) {
                 AnalizadorLexico.agregarErrorLexico("Constante entera fuera de rango");
-                newLexema = String.valueOf(Math.pow(2,31)-1);
+                newLexema = String.valueOf(Math.pow(2,32)-1);
                 lexema.setLength(0);
                 lexema.append(newLexema);
                 token.setLexema(lexema);
@@ -373,6 +374,7 @@ public abstract class AccionSemantica {
                 c == '>' || c == '<' || c == '=' || c == '(' ||
                 c == ')' || c == ',' || c == '.' || c == ';' ||
                 c == '_' || c == '{' || c == '}' || c == '#' ||
+                c == ':' ||
                 Character.isLetter(c) || Character.isDigit(c);
     }
 }

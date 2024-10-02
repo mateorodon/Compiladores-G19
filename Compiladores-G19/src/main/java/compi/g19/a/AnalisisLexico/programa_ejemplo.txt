@@ -1,0 +1,4 @@
+prog_prueba
+begin
+/#CODIGO DEL PROGRAMA #/
+end

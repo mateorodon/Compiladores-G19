@@ -1,0 +1,105 @@
+   0  $accept : programa $end
+
+   1  programa : nombre_programa statement_block
+
+   2  nombre_programa : ID
+
+   3  statement_block : BEGIN statement_list END
+
+   4  statement_list : statement ';'
+   5                 | statement statement_list
+
+   6  statement : ID
+
+state 0
+	$accept : . programa $end  (0)
+
+	ID  shift 1
+	.  error
+
+	programa  goto 2
+	nombre_programa  goto 3
+
+
+state 1
+	nombre_programa : ID .  (2)
+
+	.  reduce 2
+
+
+state 2
+	$accept : programa . $end  (0)
+
+	$end  accept
+
+
+state 3
+	programa : nombre_programa . statement_block  (1)
+
+	BEGIN  shift 4
+	.  error
+
+	statement_block  goto 5
+
+
+state 4
+	statement_block : BEGIN . statement_list END  (3)
+
+	ID  shift 6
+	.  error
+
+	statement_list  goto 7
+	statement  goto 8
+
+
+state 5
+	programa : nombre_programa statement_block .  (1)
+
+	.  reduce 1
+
+
+state 6
+	statement : ID .  (6)
+
+	.  reduce 6
+
+
+state 7
+	statement_block : BEGIN statement_list . END  (3)
+
+	END  shift 9
+	.  error
+
+
+state 8
+	statement_list : statement . ';'  (4)
+	statement_list : statement . statement_list  (5)
+
+	ID  shift 6
+	';'  shift 10
+	.  error
+
+	statement_list  goto 11
+	statement  goto 8
+
+
+state 9
+	statement_block : BEGIN statement_list END .  (3)
+
+	.  reduce 3
+
+
+state 10
+	statement_list : statement ';' .  (4)
+
+	.  reduce 4
+
+
+state 11
+	statement_list : statement statement_list .  (5)
+
+	.  reduce 5
+
+
+27 terminals, 6 nonterminals
+7 grammar rules, 12 states

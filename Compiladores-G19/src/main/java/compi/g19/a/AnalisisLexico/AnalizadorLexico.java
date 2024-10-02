@@ -63,12 +63,14 @@ public class AnalizadorLexico {
         int valorLeido;
         int val = 0;
         entrada.mark(1);
-        //Token token = new Token();
+
         while (estadoAct != -1 && val != 100 && (valorLeido = entrada.read()) != -1) {
             Character caracter = (char) valorLeido;
 
             int valorCaracter = getCaracter(Character.toLowerCase(caracter));
-            matrizAS[estadoAct][valorCaracter].ejecutar(lexemaBuilder, caracter, entrada);
+            AccionSemantica accion = matrizAS[estadoAct][valorCaracter];
+
+            accion.ejecutar(lexemaBuilder, caracter, entrada);
 
             estadoAct = matrizEstados[estadoAct][valorCaracter];
 
@@ -80,7 +82,7 @@ public class AnalizadorLexico {
 
             //Si es un espacio en blanco no generamos token
             //Paso el LEXEMA porque si paso solo el token me seguiria concatenando con el siguiente TOKEN en caso de venir un caracter especial, ya que no cortaria la ejecucion
-            if (caracterEspecial(lexemaBuilder)){
+            if (caracterEspecial(lexemaBuilder.toString())){
                 val=0;
             }
         }
@@ -154,10 +156,9 @@ public class AnalizadorLexico {
         }
     }
 
-    public static boolean caracterEspecial(StringBuilder c) {
-        String caracterComoString = String.valueOf(c);
-        return ((caracterComoString.equals("\n") || caracterComoString.equals("\t")
-                || caracterComoString.isEmpty() || caracterComoString.equals("\r") || caracterComoString.isBlank()));
+    public static boolean caracterEspecial(String c) {
+        return ((c.equals("\n") || c.equals("\t")
+                || c.isEmpty() || c.equals("\r") || c.isBlank()));
 
 
     }
