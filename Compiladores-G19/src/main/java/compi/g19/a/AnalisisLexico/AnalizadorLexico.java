@@ -22,6 +22,7 @@ public class AnalizadorLexico {
     static List<Error> warning = new ArrayList<Error>();
     static List<Error> errorSintactico = new ArrayList<Error>();
     static List<Error> errorLexico = new ArrayList<Error>();
+    static List<Error> estructuraReconocida = new ArrayList<Error>();
 
     public AnalizadorLexico(BufferedReader entrada) {
         this.entrada = entrada;
@@ -55,6 +56,11 @@ public class AnalizadorLexico {
     public static void agregarErrorLexico(String error){
         Error e = new Error(error, lineaAct);
         errorLexico.add(e);
+    }
+
+    public static void agregarEstructura(String error){
+        Error e = new Error(error, AnalizadorLexico.lineaAct);
+        estructuraReconocida.add(e);
     }
 
     public Token obtenerToken() throws IOException {

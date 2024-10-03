@@ -33,7 +33,12 @@ sentencia_ejecutable:
 //tema 16
 sentencia_control:
     FOR '(' encabezado_for ')' sentencia_ejecutable ';'
-    | FOR '(' encabezado_for ')' BEGIN bloque_sentencias_ejecutables END
+    | FOR '(' encabezado_for ')' BEGIN list_sentencias_ejecutables END
+
+/*
+nera: Modifique aca bloque_sentencias_ejecutables => list_sentencias_ejecutables
+porque tuve que tocar lo de los IFs
+*/
 
 encabezado_for:
     ID ASIGNACION CONSTANTE ';' condicion ';' UP CONSTANTE
@@ -98,24 +103,26 @@ declaracion_tipo:
 
 invocacion_funcion:
     ID '(' expresion ')'
-    | ID '(' tipo expresion ')'
+    | ID '(' tipo expresion ')' 
     ;
+
 
 bloque_if:
-    IF '(' condicion ')' THEN sentencia_ejecutable ';' ELSE sentencia_ejecutable ';' END_IF
-    | IF '(' condicion ')' THEN sentencia_ejecutable ';' END_IF
-    | IF '(' condicion ')' THEN BEGIN bloque_sentencias_ejecutables END ELSE BEGIN bloque_sentencias_ejecutables END END_IF
-    | IF '(' condicion ')' THEN BEGIN bloque_sentencias_ejecutables END END_IF
+    IF '(' condicion ')' THEN bloque_sentencias ELSE bloque_sentencias END_IF
+    | IF '(' condicion ')' THEN bloque_sentencias END_IF
     ;
 
-bloque_sentencias_ejecutables:
-    | list_sentencias_ejecutables sentencia_ejecutable ';'
+bloque_sentencias:
+    sentencia_ejecutable ';'
+    | BEGIN list_sentencias_ejecutables END
     ;
 
 list_sentencias_ejecutables:
     list_sentencias_ejecutables sentencia_ejecutable ';'
     | sentencia_ejecutable ';'
     ;
+
+//nera: Modifique estas tres ultimas reglas para que una sola sentencia ejecutable pueda estar dentro de BEGIN..END
 
 comparacion:
     MAYORIGUAL
