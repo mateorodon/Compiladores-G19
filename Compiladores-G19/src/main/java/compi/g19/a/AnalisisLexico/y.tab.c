@@ -28,32 +28,52 @@ static char yysccsid[] = "@(#)yaccpar	1.8 (Berkeley) 01/20/90";
 #define TRIPLE 280
 #define YYERRCODE 256
 short yylhs[] = {                                        -1,
-    0,    1,    2,    3,    3,    4,
+    0,    1,    1,    2,    2,    3,    3,    4,    5,    5,
+    6,    6,    7,    8,    9,    9,    9,   10,   10,   10,
+   11,   11,   11,   12,   12,
 };
 short yylen[] = {                                         2,
-    2,    1,    3,    2,    2,    1,
+    4,    3,    2,    1,    1,    2,    1,    0,    1,    1,
+    3,    1,    9,    2,    1,    5,    4,    3,    3,    1,
+    3,    3,    1,    1,    1,
 };
 short yydefred[] = {                                      0,
-    2,    0,    0,    0,    1,    6,    0,    0,    3,    4,
-    5,
+    0,    0,    0,    9,   10,    0,    0,    4,    5,    0,
+    7,    1,    0,    3,   12,    0,    0,    2,    0,    0,
+    0,   11,    0,    0,   14,    0,    0,    0,    0,    0,
+    0,    0,   13,   24,   25,    0,    0,   23,    0,   17,
+    0,    0,    0,    0,    0,    0,    0,   21,   22,   16,
 };
 short yydgoto[] = {                                       2,
-    3,    5,    7,    8,
+    6,    7,    8,    9,   10,   17,   11,   24,   30,   36,
+   37,   38,
 };
-short yysindex[] = {                                   -256,
-    0,    0, -265, -254,    0,    0, -264,  -59,    0,    0,
-    0,
+short yysindex[] = {                                   -249,
+ -254,    0, -270,    0,    0, -265,  -44,    0,    0, -255,
+    0,    0,  -39,    0,    0, -235,  -12,    0,   -6, -213,
+ -270,    0, -210,    7,    0, -218, -237,   10, -234, -217,
+ -251,   12,    0,    0,    0,  -27,  -35,    0, -251,    0,
+ -251, -251, -251, -251,  -22,  -35,  -35,    0,    0,    0,
 };
 short yyrindex[] = {                                      0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,
+    0,    0,   -4,    0,    0,   -4,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,   -3,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,   -4,    0,  -59,    0,
+    0,    0,    0,    0,    0,    0,  -16,    0,    0,    0,
+    0,    0,    0,    0,    0,  -15,  -10,    0,    0,    0,
 };
 short yygindex[] = {                                      0,
-    0,    0,   -3,    0,
+   26,   -5,    0,    0,   33,    0,    0,    0,    0,   18,
+    1,    2,
 };
-#define YYTABLESIZE 198
-short yytable[] = {                                      10,
-    1,    4,    6,    9,   11,    0,    0,    0,    0,    0,
+#define YYTABLESIZE 209
+short yytable[] = {                                       8,
+   13,   15,   12,    4,    5,   34,   43,    1,    4,    5,
+   35,   44,    3,   40,   14,   41,   16,   42,   50,   18,
+   41,   19,   42,   13,   20,   18,   20,   18,   20,   18,
+   19,   20,   19,   21,   19,   28,    4,    5,   32,    4,
+    5,   46,   47,   22,   48,   49,   25,   26,   27,   31,
+   33,   39,   29,   23,    8,    6,   45,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
@@ -68,14 +88,15 @@ short yytable[] = {                                      10,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    6,
+    0,    0,    0,    0,    0,    0,    0,    0,   15,
 };
 short yycheck[] = {                                      59,
-  257,  267,  257,  268,    8,   -1,   -1,   -1,   -1,   -1,
+    6,  257,  268,  274,  275,  257,   42,  257,  274,  275,
+  262,   47,  267,   41,   59,   43,  272,   45,   41,   59,
+   43,  257,   45,   29,   41,   41,   43,   43,   45,   45,
+   41,   44,   43,   40,   45,  273,  274,  275,  273,  274,
+  275,   41,   42,  257,   43,   44,  257,   41,  267,   40,
+  268,   40,   27,   21,   59,   59,   39,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
@@ -90,11 +111,7 @@ short yycheck[] = {                                      59,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,   -1,  257,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,  268,
 };
 #define YYFINAL 2
 #ifndef YYDEBUG
@@ -104,24 +121,43 @@ short yycheck[] = {                                      59,
 #if YYDEBUG
 char *yyname[] = {
 "end-of-file",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"';'",0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,"'('","')'","'*'","'+'","','","'-'",0,"'/'",0,0,0,0,0,0,0,0,0,0,0,
+"';'",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"ID","ASIGNACION",
-"MAYORIGUAL","MENORIGUAL","DISTINTO","CONSTANTE","CADENA","IF","THEN","ELSE",
-"BEGIN","END","END_IF","OUTF","TYPEDEF","FUN","RET","ULONGINT","SINGLE","FOR",
-"OR","UP","DOWN","TRIPLE",
+"ID","ASIGNACION","MAYORIGUAL","MENORIGUAL","DISTINTO","CONSTANTE","CADENA",
+"IF","THEN","ELSE","BEGIN","END","END_IF","OUTF","TYPEDEF","FUN","RET",
+"ULONGINT","SINGLE","FOR","OR","UP","DOWN","TRIPLE",
 };
 char *yyrule[] = {
 "$accept : programa",
-"programa : nombre_programa statement_block",
-"nombre_programa : ID",
-"statement_block : BEGIN statement_list END",
-"statement_list : statement ';'",
-"statement_list : statement statement_list",
-"statement : ID",
+"programa : ID BEGIN list_sentencias END",
+"list_sentencias : list_sentencias sentencia ';'",
+"list_sentencias : sentencia ';'",
+"sentencia : sentencia_declarativa",
+"sentencia : sentencia_ejecutable",
+"sentencia_declarativa : tipo list_variables",
+"sentencia_declarativa : declaracion_funcion",
+"sentencia_ejecutable :",
+"tipo : ULONGINT",
+"tipo : SINGLE",
+"list_variables : list_variables ',' ID",
+"list_variables : ID",
+"declaracion_funcion : tipo FUN ID '(' parametro ')' BEGIN cuerpo_funcion END",
+"parametro : tipo ID",
+"cuerpo_funcion : list_sentencias",
+"cuerpo_funcion : list_sentencias RET '(' expresion ')'",
+"cuerpo_funcion : RET '(' expresion ')'",
+"expresion : expresion '+' termino",
+"expresion : expresion '-' termino",
+"expresion : termino",
+"termino : termino '*' factor",
+"termino : termino '/' factor",
+"termino : factor",
+"factor : ID",
+"factor : CONSTANTE",
 };
 #endif
 #ifndef YYSTYPE
@@ -152,10 +188,10 @@ YYSTYPE yylval;
 short yyss[YYSTACKSIZE];
 YYSTYPE yyvs[YYSTACKSIZE];
 #define yystacksize YYSTACKSIZE
-#line 24 "gramatica.y"
+#line 58 "gramatica.y"
 
 //codigo
-#line 159 "y.tab.c"
+#line 195 "y.tab.c"
 #define YYABORT goto yyabort
 #define YYACCEPT goto yyaccept
 #define YYERROR goto yyerrlab
@@ -295,11 +331,6 @@ yyreduce:
     yyval = yyvsp[1-yym];
     switch (yyn)
     {
-case 2:
-#line 9 "gramatica.y"
-{ System.out.println("Nombre del programa: " + yyvsp[0]); }
-break;
-#line 303 "y.tab.c"
     }
     yyssp -= yym;
     yystate = *yyssp;

@@ -3,22 +3,56 @@
 
 %start programa
 
-programa: nombre_programa statement_block ;
+programa: ID BEGIN list_sentencias END
 
-nombre_programa:
-    ID { System.out.println("Nombre del programa: " + $1); }
+list_sentencias:
+    list_sentencias sentencia ';'
+    | sentencia ';'
     ;
 
-statement_block:
-    BEGIN statement_list END
+sentencia : sentencia_declarativa
+    | sentencia_ejecutable
     ;
 
-statement_list:
-    statement ';' ;
-    | statement statement_list
+sentencia_declarativa : tipo list_variables
+    | declaracion_funcion
     ;
 
-statement: ID ;
+sentencia_ejecutable : //ver sentencias ejecutables: asignaciones, invocacion a funcion, ifs, mensajes por pantalla
+    ;
+
+tipo : ULONGINT
+    | SINGLE
+    ;
+
+list_variables : list_variables ',' ID
+    | ID
+    ;
+
+declaracion_funcion : tipo FUN ID '(' parametro ')' BEGIN cuerpo_funcion END
+    ;
+
+parametro : tipo ID
+    ;
+
+cuerpo_funcion : list_sentencias
+    | list_sentencias RET '(' expresion ')'
+    | RET '(' expresion ')'
+    ;
+
+expresion: expresion '+' termino
+    | expresion '-' termino
+    | termino
+    ;
+
+termino: termino '*' factor
+    | termino '/' factor
+    | factor
+    ;
+
+factor: ID
+    | CONSTANTE
+    ;
 
 %%
 
