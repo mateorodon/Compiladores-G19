@@ -32,10 +32,15 @@ sentencia_ejecutable:
 
 //tema 16
 sentencia_control:
-    FOR '(' ID ASIGNACION CONSTANTE ';' condicion ';' UP CONSTANTE ')' sentencia_ejecutable ';'
-    | FOR '(' ID ASIGNACION CONSTANTE ';' condicion ';' DOWN CONSTANTE ')' sentencia_ejecutable ';'
-    | FOR '(' ID ASIGNACION CONSTANTE ';' condicion ';' UP CONSTANTE ')' BEGIN bloque_sentencias_ejecutables END
-    | FOR '(' ID ASIGNACION CONSTANTE ';' condicion ';' DOWN CONSTANTE ')' BEGIN bloque_sentencias_ejecutables END
+    FOR '(' encabezado_for ')' sentencia_ejecutable ';'
+    | FOR '(' encabezado_for ')' BEGIN bloque_sentencias_ejecutables END
+
+encabezado_for:
+    ID ASIGNACION CONSTANTE ';' condicion ';' UP CONSTANTE
+    | ID ASIGNACION CONSTANTE ';' condicion ';' DOWN CONSTANTE
+    | ID ASIGNACION CONSTANTE ';' condicion ';' UP CONSTANTE ';' '(' condicion ')'
+    | ID ASIGNACION CONSTANTE ';' condicion ';' DOWN CONSTANTE ';' '(' condicion ')'
+    ;
 
 asignacion:
     ID ASIGNACION expresion
@@ -93,6 +98,7 @@ declaracion_tipo:
 
 invocacion_funcion:
     ID '(' expresion ')'
+    | ID '(' tipo expresion ')'
     ;
 
 bloque_if:
