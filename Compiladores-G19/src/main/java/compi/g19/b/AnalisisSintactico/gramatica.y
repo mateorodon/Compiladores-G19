@@ -1,9 +1,15 @@
+%{
+package compi.g19.b.AnalisisSintactico;
+import java.io.*;
+import compi.g19.a.AnalisisLexico.*;
+%}
 %token ID ASIGNACION MAYORIGUAL MENORIGUAL DISTINTO CONSTANTE CADENA IF THEN ELSE BEGIN END END_IF OUTF TYPEDEF FUN RET ULONGINT SINGLE FOR OR UP DOWN TRIPLE
 %%
 
 %start programa
 
-programa: ID BEGIN list_sentencias END {AnalisisLexico.agregarEstructura("Se reconocio el programa");}
+programa: ID BEGIN list_sentencias END {AnalizadorLexico.agregarEstructura("Se reconocio el programa");}
+    | ID BEGIN END {yyerror("Programa sin cuerpo");}
     ;
 
 list_sentencias:
@@ -17,9 +23,9 @@ sentencia:
     ;
 
 sentencia_declarativa:
-    tipo list_variables
-    | declaracion_funcion
-    | declaracion_tipo
+    tipo list_variables {AnalizadorLexico.agregarEstructura("Se reconocio declaracion de variable/s");}
+    | declaracion_funcion {AnalizadorLexico.agregarEstructura("Se reconocio declaracion de funcion");}
+    | declaracion_tipo {AnalizadorLexico.agregarEstructura("Se reconocio declaracion de tipo");}
     ;
 
 sentencia_ejecutable:
@@ -32,8 +38,7 @@ sentencia_ejecutable:
 
 //tema 16
 sentencia_control:
-    FOR '(' encabezado_for ')' sentencia_ejecutable ';' {AnalisisLexico.agregarEstructura("Se reconocio un FOR");}
-    | FOR '(' encabezado_for ')' BEGIN list_sentencias_ejecutables END {AnalisisLexico.agregarEstructura("Se reconocio un FOR");}
+    FOR '(' encabezado_for ')' bloque_sentencias_ejecutables ';' {AnalizadorLexico.agregarEstructura("Se reconocio un FOR");}
 
 /*
 nera: Modifique aca bloque_sentencias_ejecutables => list_sentencias_ejecutables
@@ -48,8 +53,8 @@ encabezado_for:
     ;
 
 asignacion:
-    ID ASIGNACION expresion {AnalisisLexico.agregarEstructura("Se reconocio una asignacion");}
-    | ID '[' CONSTANTE ']' ASIGNACION expresion {AnalisisLexico.agregarEstructura("Se reconocio una asignacion ");}
+    ID ASIGNACION expresion {AnalizadorLexico.agregarEstructura("Se reconocio una asignacion");}
+    | ID '[' CONSTANTE ']' ASIGNACION expresion {AnalizadorLexico.agregarEstructura("Se reconocio una asignacion ");}
     ;
 
 tipo:
@@ -58,14 +63,18 @@ tipo:
     | ID
     ;
 
+tipo_base:
+    ULONGINT
+    | SINGLE
+    ;
+
 list_variables:
     list_variables ',' ID
     | ID
     ;
 
-//tema 22
 declaracion_funcion:
-    tipo FUN ID '(' parametro ')' BEGIN cuerpo_funcion END {AnalisisLexico.agregarEstructura("Se reconocio una declaracion de funcion");}
+    tipo FUN ID '(' parametro ')' BEGIN cuerpo_funcion END
     ;
 
 parametro:
@@ -93,26 +102,26 @@ termino:
 factor:
     ID
     | CONSTANTE
-    | invocacion_funcion {AnalisisLexico.agregarEstructura("Se reconocio una invocacion a funcion");}
+    | invocacion_funcion {AnalizadorLexico.agregarEstructura("Se reconocio una invocacion a funcion");}
     | ID '[' CONSTANTE ']' //nera: Si esto se utiliza en una expresion, no hace falta reconocerla, no? e daa; pero la invocacion a funcion si, porque es una invocacion pues
     ;
 
 declaracion_tipo:
-    | TYPEDEF TRIPLE '<' tipo '>' ID {AnalisisLexico.agregarEstructura("Se reconocio una declaracion de TRIPLE");}
+    | TYPEDEF TRIPLE '<' tipo_base '>' ID
     ;
 
 invocacion_funcion:
-    ID '(' expresion ')' {AnalisisLexico.agregarEstructura("Se reconocio una invocacion a funcion");}
-    | ID '(' tipo expresion ')' {AnalisisLexico.agregarEstructura("Se reconocio una invocacion a funcion");}
+    ID '(' expresion ')' {AnalizadorLexico.agregarEstructura("Se reconocio una invocacion a funcion");}
+    | ID '(' tipo_base '(' expresion ')' ')' {AnalizadorLexico.agregarEstructura("Se reconocio una invocacion a funcion");}
     ;
 
 
 bloque_if:
-    IF '(' condicion ')' THEN bloque_sentencias ELSE bloque_sentencias END_IF {AnalisisLexico.agregarEstructura("Se reconocio un IF_ELSE");}
-    | IF '(' condicion ')' THEN bloque_sentencias END_IF {AnalisisLexico.agregarEstructura("Se reconocio un IF");}
+    IF '(' condicion ')' THEN bloque_sentencias_ejecutables ELSE bloque_sentencias_ejecutables END_IF {AnalizadorLexico.agregarEstructura("Se reconocio un IF_ELSE");}
+    | IF '(' condicion ')' THEN bloque_sentencias_ejecutables END_IF {AnalizadorLexico.agregarEstructura("Se reconocio un IF");}
     ;
 
-bloque_sentencias:
+bloque_sentencias_ejecutables:
     sentencia_ejecutable ';'
     | BEGIN list_sentencias_ejecutables END
     ;
@@ -121,8 +130,6 @@ list_sentencias_ejecutables:
     list_sentencias_ejecutables sentencia_ejecutable ';'
     | sentencia_ejecutable ';'
     ;
-
-//nera: Modifique estas tres ultimas reglas para que una sola sentencia ejecutable pueda estar dentro de BEGIN..END
 
 comparacion:
     MAYORIGUAL
@@ -151,10 +158,20 @@ list_expresiones:
 //putiney: nosotros a las cadenas le seteamos el lexema sin las llaves, se lo agrego aca.
 //despues podemos ver si agregarselas en el Analisis Lexico
 salida_mensaje:
-    OUTF '(' '{' CADENA '}' ')' {AnalisisLexico.agregarEstructura("Se reconocio salida de mensaje por pantalla");}
-    | OUTF '(' expresion ')' {AnalisisLexico.agregarEstructura("Se reconocio salida de mensaje por pantalla");}
+    OUTF '(' '{' CADENA '}' ')' {AnalizadorLexico.agregarEstructura("Se reconocio salida de mensaje por pantalla");}
+    | OUTF '(' expresion ')' {AnalizadorLexico.agregarEstructura("Se reconocio salida de mensaje por pantalla");}
     ;
 
 %%
+public int yylex() throws IOException {
+    Token t = AnalizadorLexico.obtenerToken();
+    if (t!= null){
+      this.yylval = new ParserVal(t.getLexema());
+      return (int) t.getId();
+    }
+    return 0;
+}
 
-// código C asociado
+public static void yyerror(String error){
+    System.out.println(error);
+}

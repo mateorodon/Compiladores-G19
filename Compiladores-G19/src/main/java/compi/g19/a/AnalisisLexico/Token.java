@@ -48,7 +48,7 @@ public class Token {
     @Override
     public String toString() {
         return "Token{" +
-                mapId(this.id) +
+                "id=" + id +
                 ", lexema=" + lexema +
                 ", linea=" + linea +
                 '}';

@@ -14,11 +14,11 @@ import static compi.g19.a.AnalisisLexico.AccionSemantica.token;
 @Getter
 @Setter
 public class AnalizadorLexico {
-    private BufferedReader entrada;
-    private int estadoAct;
+    private static BufferedReader entrada;
+    private static int estadoAct;
     public static int lineaAct = 1;
-    private int[][] matrizEstados = GeneradorMatriz.matrizEstados;
-    private AccionSemantica[][] matrizAS = GeneradorMatriz.matrizAS;
+    private static int[][] matrizEstados = GeneradorMatriz.matrizEstados;
+    private static AccionSemantica[][] matrizAS = GeneradorMatriz.matrizAS;
     static List<Error> warning = new ArrayList<Error>();
     static List<Error> errorSintactico = new ArrayList<Error>();
     static List<Error> errorLexico = new ArrayList<Error>();
@@ -29,6 +29,10 @@ public class AnalizadorLexico {
         this.estadoAct = 0; // Estado inicial
     }
 
+    public static void setEntrada(BufferedReader entrada){
+        AnalizadorLexico.entrada = entrada;
+    }
+
     public static void agregarWarning(String error){
         Error e = new Error(error, lineaAct);
         warning.add(e);
@@ -36,6 +40,11 @@ public class AnalizadorLexico {
 
     public static void imprimirErroresLexicos(){
         for (Error e : errorLexico)
+            System.out.println(e.toString());
+    }
+
+    public static void imprimirEstructuras(){
+        for (Error e : estructuraReconocida)
             System.out.println(e.toString());
     }
     public static void imprimirErroresSintacticos(){
@@ -63,7 +72,7 @@ public class AnalizadorLexico {
         estructuraReconocida.add(e);
     }
 
-    public Token obtenerToken() throws IOException {
+    public static Token obtenerToken() throws IOException {
 
         StringBuilder lexemaBuilder = new StringBuilder();
         int valorLeido;

@@ -1,4 +1,17 @@
 prog_prueba
 begin
-/#CODIGO DEL PROGRAMA #/
+    ulongint x;
+    Single fun f3 (ulongint w)
+    begin
+        single x;
+        x := 1.2;
+    IF (x > 0.1) then
+        x := x + 2;
+    ELSE
+        begin
+            x := 2.0;
+            x:= 2.0 + 3.0;
+        end
+    END_IF;
+    end;
 end
