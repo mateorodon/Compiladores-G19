@@ -1,6 +1,7 @@
-prog_prueba
+prog_base
 begin
-    ulongint x;
+    ulongint identificadormuylargo;
+    _x := 3.0s-1;
     Single fun f3 (ulongint w)
     begin
         TYPEDEF TRIPLE <ulongint> t1;

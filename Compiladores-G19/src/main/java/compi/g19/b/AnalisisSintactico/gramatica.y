@@ -23,7 +23,9 @@ sentencia:
     ;
 
 sentencia_declarativa:
-    tipo list_variables {AnalizadorLexico.agregarEstructura("Se reconocio declaracion de variable/s");}
+    tipo list_variables {AnalizadorLexico.agregarEstructura("Se reconocio declaracion de variable/s");
+                           }
+
     | declaracion_funcion {AnalizadorLexico.agregarEstructura("Se reconocio declaracion de funcion");}
     | declaracion_tipo {AnalizadorLexico.agregarEstructura("Se reconocio declaracion de tipo");}
     ;
@@ -104,10 +106,9 @@ factor:
     | CONSTANTE
     | invocacion_funcion {AnalizadorLexico.agregarEstructura("Se reconocio una invocacion a funcion");}
     | ID '[' CONSTANTE ']' //nera: Si esto se utiliza en una expresion, no hace falta reconocerla, no? e daa; pero la invocacion a funcion si, porque es una invocacion pues
-    | '-' ID  {chequeoRangoNegativos}
-    | '-' CONSTANTE {chequeoRangoNegativos}
-    | '-' invocacion_funcion
-    | '-' ID '[' CONSTANTE ']' {chequeoRangoNegativos}
+    | '-' ID  {}
+    | '-' CONSTANTE {}
+    | '-' ID '[' CONSTANTE ']' {}
     ;
 
 declaracion_tipo:
@@ -170,6 +171,7 @@ salida_mensaje:
 public int yylex() throws IOException {
     Token t = AnalizadorLexico.obtenerToken();
     if (t!= null){
+      System.out.println(t);
       this.yylval = new ParserVal(t.getLexema());
       return (int) t.getId();
     }

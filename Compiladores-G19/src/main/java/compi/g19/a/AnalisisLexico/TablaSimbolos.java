@@ -10,9 +10,9 @@ public class TablaSimbolos {
 
     /*
     A la tabla de simbolos se deben agregar
-        - Identificadores (AS generarToken)
-        - Constantes enteras y flotantes (AS tokenEntero y AS tokenFlotante)
-        - Cadenas (AS setID solo la parte del IF donde reconoce cadena)
+        - Identificadores
+        - Constantes enteras y flotantes
+        - Cadenas
      */
 
     private static Map<String, Token> simbolos = new HashMap<>(); // <Lexema, Token>
@@ -22,7 +22,7 @@ public class TablaSimbolos {
     }
 
     public static void addNuevoSimbolo(String lexema, Token t){
-        Token nuevo = new Token(t.getId(), t.getLexema(), t.getLinea());
+        Token nuevo = new Token(t);
         simbolos.put(lexema, nuevo);
     }
     public static boolean existeSimbolo(String lexema) {

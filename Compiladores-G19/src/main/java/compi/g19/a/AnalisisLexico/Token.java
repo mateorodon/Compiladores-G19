@@ -41,6 +41,7 @@ public class Token {
                 "id=" + id +
                 ", lexema=" + lexema +
                 ", linea=" + linea +
+                ", tipo=" + tipo +
                 '}';
     }
 

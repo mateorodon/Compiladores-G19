@@ -19,9 +19,9 @@ public class AnalizadorLexico {
     public static int lineaAct = 1;
     private static int[][] matrizEstados = GeneradorMatriz.matrizEstados;
     private static AccionSemantica[][] matrizAS = GeneradorMatriz.matrizAS;
-    static List<Error> warning = new ArrayList<Error>();
-    static List<Error> errorSintactico = new ArrayList<Error>();
-    static List<Error> errorLexico = new ArrayList<Error>();
+    static List<String> warning = new ArrayList<>();
+    static List<String> errorSintactico = new ArrayList<>();
+    static List<String> errorLexico = new ArrayList<>();
     static List<String> estructuraReconocida = new ArrayList();
 
     public AnalizadorLexico(BufferedReader entrada) {
@@ -33,38 +33,36 @@ public class AnalizadorLexico {
         AnalizadorLexico.entrada = entrada;
     }
 
-    public static void agregarWarning(String error){
-        Error e = new Error(error, lineaAct);
-        warning.add(e);
-    }
-
     public static void imprimirErroresLexicos(){
-        for (Error e : errorLexico)
-            System.out.println(e.toString());
+        for (String e : errorLexico)
+            System.out.println(e);
     }
 
     public static void imprimirEstructuras(){
         for (String e : estructuraReconocida)
             System.out.println(e);
     }
+
     public static void imprimirErroresSintacticos(){
-        for (Error e : errorSintactico)
-            System.out.println(e.toString());
+        for (String e : errorSintactico)
+            System.out.println(e);
+    }
+    public static void imprimirWarnings(){
+        for (String e : warning)
+            System.out.println(e);
     }
 
-    public static void imprimirWarnings(){
-        for (Error e : warning)
-            System.out.println(e.toString());
+    public static void agregarWarning(String error){
+        warning.add("WARNING: " + error + " en la línea " + lineaAct);
     }
 
     public static void agregarErrorSintactico(String error){
-        Error e = new Error(error, lineaAct);
-        errorSintactico.add(e);
+        errorSintactico.add("ERROR SINTACTICO: " + error + " en la línea " + lineaAct);
+
     }
 
     public static void agregarErrorLexico(String error){
-        Error e = new Error(error, lineaAct);
-        errorLexico.add(e);
+        errorLexico.add("ERROR LEXICO: " + error + " en la línea " + lineaAct);
     }
 
     public static void agregarEstructura(String estructura){
