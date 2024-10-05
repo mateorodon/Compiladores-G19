@@ -3,15 +3,21 @@ begin
     ulongint x;
     Single fun f3 (ulongint w)
     begin
+        TYPEDEF TRIPLE <ulongint> t1;
         single x;
-        x := 1.2;
-    IF (x > 0.1) then
-        x := x + 2;
+        x := 1.2s;
+    IF (x < 1.0) then
+        FOR (i := 1; i < 10 ; up 1 ; (a> 10))
+        begin
+            Outf ({en el for});
+        end;
     ELSE
         begin
-            x := 2.0;
-            x:= 2.0 + 3.0;
+            t1[1] := 2;
+            x := t1[1];
+            x:= 2.0 + 3.0s-1;
         end
     END_IF;
     end;
+    f3(ulongint(x));
 end

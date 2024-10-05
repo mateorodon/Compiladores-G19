@@ -69,11 +69,15 @@ public abstract class AccionSemantica {
 
 
             token = new Token();
-            int ascii = (int) c;
-            token.setId((short) ascii);
-
-            if (lexema.length() == 0)
+            if (lexema.length() == 0) {
+                int ascii = (int) c;
+                token.setId((short) ascii);
                 lexema.append(c);
+            }
+            else {
+                int ascii = (int) lexema.charAt(0);
+                token.setId((short) ascii);
+            }
 
             token.setLexema(lexema);
         }
@@ -231,6 +235,7 @@ public abstract class AccionSemantica {
             }
 
             token.setId(CONSTANTE);
+            token.setTipo("ENTERO");
             if ( ! TablaSimbolos.existeSimbolo(token.getLexema().toString()) ){
                 TablaSimbolos.addNuevoSimbolo(token.getLexema().toString(), new Token(token));
             } else {
@@ -303,7 +308,7 @@ public abstract class AccionSemantica {
                 if (partes.length > 1) {
                     exponente = Float.parseFloat(partes[1]);
                 } else {
-                    //AnalizadorLexico.agregarWarning("Parte exponencial del flotante ausente");
+                    AnalizadorLexico.agregarWarning("Parte exponencial del flotante ausente");
                 }
 
                 String[] partesNoExponenciales = partes[0].split("\\.", -1);
@@ -337,6 +342,7 @@ public abstract class AccionSemantica {
                 token.setLexema(lexema);
 
                 token.setId(CONSTANTE);
+                token.setTipo("FLOTANTE");
                 if ( ! TablaSimbolos.existeSimbolo(token.getLexema().toString()) ){
                     TablaSimbolos.addNuevoSimbolo(token.getLexema().toString(), new Token(token));
                 } else {
@@ -349,6 +355,7 @@ public abstract class AccionSemantica {
                 lexema.append("0.0");
                 token.setId(CONSTANTE);
                 token.setLexema(lexema); // Asignamos un valor por defecto en caso de error
+                token.setTipo("FLOTANTE");
             }
 
         }
@@ -374,7 +381,7 @@ public abstract class AccionSemantica {
                 c == '>' || c == '<' || c == '=' || c == '(' ||
                 c == ')' || c == ',' || c == '.' || c == ';' ||
                 c == '_' || c == '{' || c == '}' || c == '#' ||
-                c == ':' ||
+                c == ':' || c == ' ' || c == '[' || c == ']' ||
                 Character.isLetter(c) || Character.isDigit(c);
     }
 }

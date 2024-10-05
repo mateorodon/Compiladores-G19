@@ -38,7 +38,7 @@ sentencia_ejecutable:
 
 //tema 16
 sentencia_control:
-    FOR '(' encabezado_for ')' bloque_sentencias_ejecutables ';' {AnalizadorLexico.agregarEstructura("Se reconocio un FOR");}
+    FOR '(' encabezado_for ')' bloque_sentencias_ejecutables
 
 /*
 nera: Modifique aca bloque_sentencias_ejecutables => list_sentencias_ejecutables
@@ -46,10 +46,10 @@ porque tuve que tocar lo de los IFs
 */
 
 encabezado_for:
-    ID ASIGNACION CONSTANTE ';' condicion ';' UP CONSTANTE
-    | ID ASIGNACION CONSTANTE ';' condicion ';' DOWN CONSTANTE
-    | ID ASIGNACION CONSTANTE ';' condicion ';' UP CONSTANTE ';' '(' condicion ')'
-    | ID ASIGNACION CONSTANTE ';' condicion ';' DOWN CONSTANTE ';' '(' condicion ')'
+    ID ASIGNACION CONSTANTE ';' condicion ';' UP CONSTANTE {AnalizadorLexico.agregarEstructura("Se reconocio un FOR");}
+    | ID ASIGNACION CONSTANTE ';' condicion ';' DOWN CONSTANTE {AnalizadorLexico.agregarEstructura("Se reconocio un FOR");}
+    | ID ASIGNACION CONSTANTE ';' condicion ';' UP CONSTANTE ';' '(' condicion ')' {AnalizadorLexico.agregarEstructura("Se reconocio un FOR");}
+    | ID ASIGNACION CONSTANTE ';' condicion ';' DOWN CONSTANTE ';' '(' condicion ')' {AnalizadorLexico.agregarEstructura("Se reconocio un FOR");}
     ;
 
 asignacion:
@@ -104,6 +104,10 @@ factor:
     | CONSTANTE
     | invocacion_funcion {AnalizadorLexico.agregarEstructura("Se reconocio una invocacion a funcion");}
     | ID '[' CONSTANTE ']' //nera: Si esto se utiliza en una expresion, no hace falta reconocerla, no? e daa; pero la invocacion a funcion si, porque es una invocacion pues
+    | '-' ID  {chequeoRangoNegativos}
+    | '-' CONSTANTE {chequeoRangoNegativos}
+    | '-' invocacion_funcion
+    | '-' ID '[' CONSTANTE ']' {chequeoRangoNegativos}
     ;
 
 declaracion_tipo:
@@ -111,8 +115,8 @@ declaracion_tipo:
     ;
 
 invocacion_funcion:
-    ID '(' expresion ')' {AnalizadorLexico.agregarEstructura("Se reconocio una invocacion a funcion");}
-    | ID '(' tipo_base '(' expresion ')' ')' {AnalizadorLexico.agregarEstructura("Se reconocio una invocacion a funcion");}
+    ID '(' expresion ')'
+    | ID '(' tipo_base '(' expresion ')' ')' {AnalizadorLexico.agregarEstructura("Se reconocio conversion");}
     ;
 
 
@@ -158,7 +162,7 @@ list_expresiones:
 //putiney: nosotros a las cadenas le seteamos el lexema sin las llaves, se lo agrego aca.
 //despues podemos ver si agregarselas en el Analisis Lexico
 salida_mensaje:
-    OUTF '(' '{' CADENA '}' ')' {AnalizadorLexico.agregarEstructura("Se reconocio salida de mensaje por pantalla");}
+    OUTF '(' CADENA ')' {AnalizadorLexico.agregarEstructura("Se reconocio salida de mensaje por pantalla");}
     | OUTF '(' expresion ')' {AnalizadorLexico.agregarEstructura("Se reconocio salida de mensaje por pantalla");}
     ;
 

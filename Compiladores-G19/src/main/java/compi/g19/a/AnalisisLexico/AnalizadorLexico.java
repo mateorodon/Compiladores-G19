@@ -22,7 +22,7 @@ public class AnalizadorLexico {
     static List<Error> warning = new ArrayList<Error>();
     static List<Error> errorSintactico = new ArrayList<Error>();
     static List<Error> errorLexico = new ArrayList<Error>();
-    static List<Error> estructuraReconocida = new ArrayList<Error>();
+    static List<String> estructuraReconocida = new ArrayList();
 
     public AnalizadorLexico(BufferedReader entrada) {
         this.entrada = entrada;
@@ -44,8 +44,8 @@ public class AnalizadorLexico {
     }
 
     public static void imprimirEstructuras(){
-        for (Error e : estructuraReconocida)
-            System.out.println(e.toString());
+        for (String e : estructuraReconocida)
+            System.out.println(e);
     }
     public static void imprimirErroresSintacticos(){
         for (Error e : errorSintactico)
@@ -67,9 +67,8 @@ public class AnalizadorLexico {
         errorLexico.add(e);
     }
 
-    public static void agregarEstructura(String error){
-        Error e = new Error(error, AnalizadorLexico.lineaAct);
-        estructuraReconocida.add(e);
+    public static void agregarEstructura(String estructura){
+        estructuraReconocida.add(estructura + " en la línea " + AnalizadorLexico.lineaAct);
     }
 
     public static Token obtenerToken() throws IOException {
