@@ -18,8 +18,10 @@ public abstract class AccionSemantica {
     protected static final short DISTINTO = 261;
     protected static final short CONSTANTE = 262;
     protected static final short CADENA = 263;
-    protected static final String ENTERO = "ENTERO";
-    protected static final String FLOTANTE = "FLOTANTE";
+    private static final String ENTERO = "ulongint";
+    private static final String FLOTANTE = "single";
+    public static final float SINGLE_POSITIVE_MIN = 1.17549435e-38f;
+    public static final float SINGLE_POSITIVE_MAX = 3.40282347e+38f;
 
     public abstract void ejecutar(StringBuilder lexema, Character c, Reader entrada) throws IOException;
 
@@ -222,7 +224,65 @@ public abstract class AccionSemantica {
         }
     }
 
-    //LISTO
+    static class chequeoFlotante extends AccionSemantica {
+        @Override
+        public void ejecutar(StringBuilder lexema, Character c, Reader entrada) {
+            token = new Token();
+
+            float resultado = parsearLexema(lexema.toString());
+
+            if ((resultado != 0f) && ((resultado <= SINGLE_POSITIVE_MIN) || (resultado >= SINGLE_POSITIVE_MAX))) {
+                AnalizadorLexico.agregarErrorLexico("Constante flotante fuera de rango");
+                resultado = Float.MAX_VALUE;
+            }
+
+            lexema.setLength(0);
+            lexema.append(resultado);
+            token.setLexema(lexema);
+            token.setId(CONSTANTE);
+            token.setTipo(FLOTANTE);
+
+            if (!TablaSimbolos.existeSimbolo(token.getLexema().toString())) {
+                TablaSimbolos.addNuevoSimbolo(token.getLexema().toString(), new Token(token));
+            } else {
+                TablaSimbolos.addSimbolo(token.getLexema().toString(), new Token(token));
+            }
+        }
+
+        private static float parsearLexema(String lexema) {
+            if (lexema.contains("s")) {
+                String[] partes = lexema.split("s");
+
+                if (partes.length != 2) {
+                    AnalizadorLexico.agregarErrorLexico("Falta el exponente de la constante flotante");
+                    return 0f;
+                }
+                String base = partes[0];
+                String exponente = partes[1];
+
+                if (!base.contains(".")) {
+                    AnalizadorLexico.agregarErrorLexico("Falta el punto decimal en la base de la constante flotante");
+                }
+
+                String[] basePartes = base.split("\\.");
+                if (basePartes[0].isEmpty()) {
+                    AnalizadorLexico.agregarErrorLexico("Parte entera del flotante ausente");
+                    return 0f;
+                }
+                if (basePartes.length < 2 || basePartes[1].isEmpty()) {
+                    AnalizadorLexico.agregarErrorLexico("Parte decimal del flotante ausente");
+                    return 0f;
+                }
+
+                float baseNumero = Float.parseFloat(base);
+                int exponenteNumero = Integer.parseInt(exponente);
+
+                return (float) (baseNumero * Math.pow(10, exponenteNumero));
+            } else
+                return Float.parseFloat(lexema);
+        }
+    }
+
     static class truncar extends AccionSemantica {
         @Override
         public void ejecutar(StringBuilder lexema, Character c, Reader entrada){
@@ -276,69 +336,7 @@ public abstract class AccionSemantica {
 
         }
     }
-
     //LISTO
-    static class chequeoFlotante extends AccionSemantica {
-        @Override
-        public void ejecutar(StringBuilder lexema, Character c, Reader entrada) {
-            token = new Token();
-            try {
-                String[] partes = lexema.toString().split("s");
-
-                float base = 0;
-                float exponente = 0;
-
-                if (partes.length > 1) {
-                    base = Float.parseFloat(partes[0]);
-                    exponente = Float.parseFloat(partes[1]);
-                } else {
-                    AnalizadorLexico.agregarWarning("Parte exponencial del flotante ausente");
-                }
-
-                String[] partesNoExponenciales = partes[0].split("\\.", -1);
-
-
-                if (partesNoExponenciales.length == 0 || partesNoExponenciales[0].isEmpty()) {
-                    AnalizadorLexico.agregarErrorSintactico("Parte entera del flotante ausente");
-                }
-
-                if (partesNoExponenciales[1].isEmpty()) {
-                    AnalizadorLexico.agregarErrorSintactico("Parte decimal del flotante ausente");
-                }
-
-                float resultado = base;
-                if (exponente != 0.0)
-                     resultado = (float) Math.pow(base, exponente);
-
-                if (resultado > Float.MAX_VALUE) {
-                    AnalizadorLexico.agregarErrorLexico("Constante flotante fuera de rango");
-                    resultado = Float.MAX_VALUE;
-                }
-
-                lexema.setLength(0);
-                lexema.append(resultado);
-                token.setLexema(lexema);
-                token.setId(CONSTANTE);
-                token.setTipo(FLOTANTE);
-
-                if ( ! TablaSimbolos.existeSimbolo(token.getLexema().toString()) ){
-                    TablaSimbolos.addNuevoSimbolo(token.getLexema().toString(), new Token(token));
-                } else {
-                    TablaSimbolos.addSimbolo(token.getLexema().toString(), new Token(token));
-                }
-            } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-                // Si ocurre un error (como un formato no válido o falta de "s"), manejamos el error
-                AnalizadorLexico.agregarErrorLexico("Constante flotante mal deifinida");
-                lexema.setLength(0);
-                lexema.append("0.0");
-                token.setId(CONSTANTE);
-                token.setLexema(lexema); // Asignamos un valor por defecto en caso de error
-                token.setTipo(FLOTANTE);
-            }
-
-        }
-    }
-
     //LISTO
     static class cadena extends AccionSemantica {
         @Override

@@ -36,5 +36,9 @@ public class TablaSimbolos {
         }
     }
 
+    public static Token getToken(String lexema){
+        return simbolos.get(lexema);
+    }
+
 
 }
