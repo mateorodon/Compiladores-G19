@@ -17,8 +17,9 @@ begin
             t1[1] := -2;
             x := t1[1];
             x:= 2.0 + 3.0s-1;
-        end;
+        end
     END_IF;
+    /# Deberia haber return #/
     end;
     f3(ulongint(x));
 end

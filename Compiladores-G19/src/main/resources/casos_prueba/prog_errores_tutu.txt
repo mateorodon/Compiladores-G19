@@ -1,5 +1,6 @@
 prog_base
 begin
+    x := 2 + ;
     ulongint identificadormuylargo;
     _x := 3.0s-1;
     Single fun f3 (w)
@@ -21,5 +22,5 @@ begin
     END_IF;
     /# Deberia haber return #/
     end;
-    f3(ulongint(x));
-end     
+    f3();
+end              

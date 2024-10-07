@@ -125,12 +125,16 @@ expresion:
     expresion '+' termino
     | expresion '-' termino
     | termino
+    | expresion '+' error
+    | expresion '-' error
     ;
 
 termino:
     termino '*' factor
     | termino '/' factor
     | factor
+    | termino '*' error
+    | termino '/' error
     ;
 
 factor:
@@ -150,7 +154,6 @@ factor:
                                             yyerror("Las constantes de tipo ulongint no pueden ser negativas");
                     }
     | '-' ID '[' CONSTANTE ']' {}
-    | error {yyerror("Falta operando en la expresión");}
     ;
 
 declaracion_tipo:
@@ -163,6 +166,7 @@ declaracion_tipo:
 invocacion_funcion:
     ID '(' expresion ')'
     | ID '(' bloque_list_expresiones ')' {yyerror("La funcion no puede tener mas de un parametro");}
+    | ID '(' ')' {yyerror("La funcion debe tener un parametro");}
     | ID '(' tipo_base '(' expresion ')' ')' {AnalizadorLexico.agregarEstructura("Se reconocio conversion");}
     ;
 
