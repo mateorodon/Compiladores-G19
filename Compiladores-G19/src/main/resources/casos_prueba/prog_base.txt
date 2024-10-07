@@ -2,7 +2,7 @@ prog_base
 begin
     ulongint identificadormuylargo;
     _x := 3.0s-1;
-    Single fun f3 (ulongint w)
+    Single fun f3 (w)
     begin
         TYPEDEF TRIPLE <ulongint> t1;
         single x;
@@ -14,10 +14,10 @@ begin
         end;
     ELSE
         begin
-            t1[1] := 2;
+            t1[1] := -2;
             x := t1[1];
             x:= 2.0 + 3.0s-1;
-        end
+        end;
     END_IF;
     end;
     f3(ulongint(x));

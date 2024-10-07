@@ -8,17 +8,15 @@ import compi.g19.a.AnalisisLexico.*;
 
 %start programa
 
-programa: ID BEGIN list_sentencias fin_programa {AnalizadorLexico.agregarEstructura("Se reconocio el programa");}
-    | error BEGIN list_sentencias END {yyerror("El programa debe tener nombre");}
+programa: ID BEGIN list_sentencias END {AnalizadorLexico.agregarEstructura("Se reconocio el programa");}
+    | BEGIN list_sentencias END {yyerror("El programa debe tener un nombre");}
+    | ID BEGIN list_sentencias {yyerror("Falta delimitador END del programa");}
+    | ID list_sentencias END {yyerror("Falta delimitador BEGIN del programa");}
     ;
-
-fin_programa:
-     END
-     | error {yyerror("El programa debe tener delimitador");}
-     ;
 
 list_sentencias:
     list_sentencias sentencia ';'
+    | list_sentencias sentencia error {yyerror("Las sentencias deben terminar con ;");}
     | sentencia ';'
     | sentencia error {yyerror("Las sentencias deben terminar con ;");}
     ;
@@ -76,7 +74,7 @@ tipo_base:
 
 list_variables:
     list_variables ',' ID
-    |list_variables  ID {yyerror("Las variables deben estar separados por coma");}
+    | list_variables ID {yyerror("Las variables deben estar separados por coma");}
     | ID
     ;
 
@@ -89,7 +87,7 @@ declaracion_funcion:
 
 parametro:
     tipo ID
-    | error ID {yyerror("El parametro debe tener su tipo");}
+    | ID {yyerror("El parametro debe tener su tipo");}
     ;
 
 bloque_list_parametro:

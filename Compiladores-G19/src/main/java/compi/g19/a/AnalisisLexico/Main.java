@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 
@@ -17,7 +18,11 @@ public class Main {
                 System.err.println("Debe proporcionar el path del archivo de entrada como argumento.");
                 return;
             }
-
+            try (FileWriter fileWriter = new FileWriter(args[0], true)) {
+                fileWriter.write(" ");
+            } catch (IOException e) {
+                System.out.println("Ocurrió un error al intentar escribir en el archivo: " + e.getMessage());
+            }
             BufferedReader reader = new BufferedReader(new FileReader(args[0]));
             AnalizadorLexico.setEntrada(reader);
 
