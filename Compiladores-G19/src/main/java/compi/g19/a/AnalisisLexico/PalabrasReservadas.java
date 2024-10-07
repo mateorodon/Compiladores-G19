@@ -24,8 +24,4 @@ public class PalabrasReservadas {
         palabrasReservadas.put("down", 279);
         palabrasReservadas.put("triple", 280);
     }
-
-    public Integer getId(String lexema){
-        return palabrasReservadas.get(lexema);
-    }
 }

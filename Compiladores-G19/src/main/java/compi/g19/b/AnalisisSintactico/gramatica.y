@@ -33,7 +33,7 @@ sentencia_declarativa:
     ;
 
 sentencia_ejecutable:
-    asignacion
+    asignacion {AnalizadorLexico.agregarEstructura("Se reconocio una asignacion");}
     | invocacion_funcion {AnalizadorLexico.agregarEstructura("Se reconocio una invocacion a funcion");}
     | bloque_if
     | salida_mensaje
@@ -44,13 +44,24 @@ sentencia_ejecutable:
 sentencia_control:
     FOR '(' encabezado_for ')' bloque_sentencias_ejecutables
     |FOR '(' encabezado_for ')' error {yyerror("Falta cuerpo del FOR");}
-    |FOR error encabezado_for ')' bloque_sentencias_ejecutables {yyerror("Falta parentensis en el FOR");}
+    |FOR encabezado_for ')' bloque_sentencias_ejecutables {yyerror("Falta parentensis en el FOR");}
     |FOR '(' encabezado_for bloque_sentencias_ejecutables {yyerror("Falta parentensis en el FOR");}
     ;
 
 encabezado_for:
-    ID ASIGNACION CONSTANTE ';' condicion ';' up_down CONSTANTE {AnalizadorLexico.agregarEstructura("Se reconocio un FOR");}
-    | ID ASIGNACION CONSTANTE ';' condicion ';' up_down CONSTANTE ';' '(' condicion ')' {AnalizadorLexico.agregarEstructura("Se reconocio un FOR");}
+    encabezado_for1
+    | encabezado_for2
+    ;
+
+encabezado_for1:
+    ID ASIGNACION CONSTANTE ';' condicion ';' up_down CONSTANTE {AnalizadorLexico.agregarEstructura("Se reconocio un FOR de 3");}
+    | ID ASIGNACION CONSTANTE ';' condicion ';'  CONSTANTE {yyerror("Falta UP/DOWN en el FOR");}
+    | ID ASIGNACION CONSTANTE condicion ';' up_down CONSTANTE {yyerror("Falta ; en el FOR");}
+    | ID ASIGNACION CONSTANTE ';' condicion up_down CONSTANTE {yyerror("Falta ; en el FOR");}
+    ;
+
+encabezado_for2:
+    ID ASIGNACION CONSTANTE ';' condicion ';' up_down CONSTANTE ';' '(' condicion ')' {AnalizadorLexico.agregarEstructura("Se reconocio un FOR con condicion");}
     | ID ASIGNACION CONSTANTE ';' condicion ';'  CONSTANTE ';' '(' condicion ')' {yyerror("Falta UP/DOWN en el FOR");}
     | ID ASIGNACION CONSTANTE condicion ';' up_down CONSTANTE ';' '(' condicion ')' {yyerror("Falta ; en el FOR");}
     | ID ASIGNACION CONSTANTE ';' condicion up_down CONSTANTE ';' '(' condicion ')' {yyerror("Falta ; en el FOR");}
@@ -63,8 +74,8 @@ up_down:
     ;
 
 asignacion:
-    ID ASIGNACION expresion {AnalizadorLexico.agregarEstructura("Se reconocio una asignacion");}
-    | ID '[' CONSTANTE ']' ASIGNACION expresion {AnalizadorLexico.agregarEstructura("Se reconocio una asignacion ");}
+    ID ASIGNACION expresion
+    | ID '[' CONSTANTE ']' ASIGNACION expresion
     ;
 
 tipo:
@@ -125,16 +136,12 @@ expresion:
     expresion '+' termino
     | expresion '-' termino
     | termino
-    | expresion '+' error
-    | expresion '-' error
     ;
 
 termino:
     termino '*' factor
     | termino '/' factor
     | factor
-    | termino '*' error
-    | termino '/' error
     ;
 
 factor:
@@ -148,19 +155,20 @@ factor:
                  }
     | invocacion_funcion {AnalizadorLexico.agregarEstructura("Se reconocio una invocacion a funcion");}
     | ID '[' CONSTANTE ']'
-    | '-' ID  {}
+    | '-' ID
     | '-' CONSTANTE {Token t = TablaSimbolos.getToken($1.sval);
                                         if (t != null && t.getTipo().equals(ENTERO))
                                             yyerror("Las constantes de tipo ulongint no pueden ser negativas");
                     }
     | '-' ID '[' CONSTANTE ']' {}
+    | error {yyerror("Falta termino en la expresion");}
     ;
 
 declaracion_tipo:
     | TYPEDEF TRIPLE '<' tipo_base '>' ID
-    | TYPEDEF TRIPLE '<' tipo_base '>' error {yyerror("Falta ID al final de la declaracion");}
-    | TYPEDEF TRIPLE error {yyerror("Falta diamante (<) en la declaracion");}
-    | TYPEDEF TRIPLE '<' tipo_base error {yyerror("Falta diamante (>) en la declaracion");}
+    | TYPEDEF TRIPLE '<' tipo_base '>' error {yyerror("Falta ID al final de la declaracion de tipo");}
+    | TYPEDEF TRIPLE tipo_base '>' ID {yyerror("Falta diamante (<) en la declaracion de tipo");}
+    | TYPEDEF TRIPLE '<' tipo_base ID {yyerror("Falta diamante (>) en la declaracion de tipo");}
     ;
 
 invocacion_funcion:
@@ -201,8 +209,6 @@ cuerpo_if:
 list_sentencias_ejecutables:
     list_sentencias_ejecutables sentencia_ejecutable ';'
     | sentencia_ejecutable ';'
-    | sentencia_ejecutable error {yyerror("Las sentencias deben terminar con ;");}
-    | list_sentencias_ejecutables sentencia_ejecutable error {yyerror("Las sentencias deben terminar con ;");}
     ;
 
 comparacion:
@@ -217,7 +223,7 @@ comparacion:
 
 condicion:
     expresion comparacion expresion
-    | '(' bloque_list_expresiones ')' comparacion '(' bloque_list_expresiones ')'
+    | '(' bloque_list_expresiones ')' comparacion '(' bloque_list_expresiones ')' {AnalizadorLexico.agregarEstructura("Se reconocio pattern matching");}
     ;
 
 //tema 19

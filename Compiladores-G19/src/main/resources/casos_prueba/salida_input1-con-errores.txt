@@ -1,0 +1,145 @@
+----------TOKENS DETECTADOS -----------
+Token{id=257, lexema=prog_base, linea=1, tipo=null}
+Token{id=267, lexema=begin, linea=2, tipo=null}
+Token{id=274, lexema=ulongint, linea=3, tipo=null}
+Token{id=257, lexema=identificadormu, linea=3, tipo=null}
+Token{id=59, lexema=;, linea=3, tipo=null}
+Token{id=257, lexema=_x, linea=4, tipo=ulongint}
+Token{id=258, lexema=:=, linea=4, tipo=ulongint}
+Token{id=262, lexema=0.3, linea=4, tipo=single}
+Token{id=59, lexema=;, linea=4, tipo=null}
+Token{id=275, lexema=Single, linea=5, tipo=null}
+Token{id=272, lexema=fun, linea=5, tipo=null}
+Token{id=257, lexema=f3, linea=5, tipo=null}
+Token{id=40, lexema=(, linea=5, tipo=null}
+Token{id=257, lexema=w, linea=5, tipo=null}
+Token{id=41, lexema=), linea=5, tipo=null}
+Token{id=267, lexema=begin, linea=6, tipo=null}
+Token{id=271, lexema=TYPEDEF, linea=7, tipo=null}
+Token{id=280, lexema=TRIPLE, linea=7, tipo=null}
+Token{id=60, lexema=<, linea=7, tipo=null}
+Token{id=274, lexema=ulongint, linea=7, tipo=null}
+Token{id=62, lexema=>, linea=7, tipo=null}
+Token{id=257, lexema=t1, linea=7, tipo=null}
+Token{id=59, lexema=;, linea=7, tipo=null}
+Token{id=275, lexema=single, linea=8, tipo=null}
+Token{id=257, lexema=x, linea=8, tipo=ulongint}
+Token{id=59, lexema=;, linea=8, tipo=null}
+Token{id=257, lexema=x, linea=9, tipo=ulongint}
+Token{id=258, lexema=:=, linea=9, tipo=ulongint}
+Token{id=262, lexema=0.0, linea=9, tipo=single}
+Token{id=59, lexema=;, linea=9, tipo=null}
+Token{id=264, lexema=IF, linea=10, tipo=null}
+Token{id=40, lexema=(, linea=10, tipo=null}
+Token{id=257, lexema=x, linea=10, tipo=ulongint}
+Token{id=60, lexema=<, linea=10, tipo=null}
+Token{id=262, lexema=1.0, linea=10, tipo=single}
+Token{id=41, lexema=), linea=10, tipo=null}
+Token{id=265, lexema=then, linea=10, tipo=null}
+Token{id=276, lexema=FOR, linea=11, tipo=null}
+Token{id=40, lexema=(, linea=11, tipo=null}
+Token{id=257, lexema=i, linea=11, tipo=null}
+Token{id=258, lexema=:=, linea=11, tipo=null}
+Token{id=262, lexema=1, linea=11, tipo=ulongint}
+Token{id=59, lexema=;, linea=11, tipo=null}
+Token{id=257, lexema=i, linea=11, tipo=null}
+Token{id=60, lexema=<, linea=11, tipo=null}
+Token{id=262, lexema=10, linea=11, tipo=ulongint}
+Token{id=59, lexema=;, linea=11, tipo=null}
+Token{id=278, lexema=up, linea=11, tipo=null}
+Token{id=262, lexema=1, linea=11, tipo=ulongint}
+Token{id=59, lexema=;, linea=11, tipo=null}
+Token{id=40, lexema=(, linea=11, tipo=null}
+Token{id=257, lexema=a, linea=11, tipo=null}
+Token{id=62, lexema=>, linea=11, tipo=null}
+Token{id=262, lexema=10, linea=11, tipo=ulongint}
+Token{id=41, lexema=), linea=11, tipo=null}
+Token{id=41, lexema=), linea=11, tipo=null}
+Token{id=267, lexema=begin, linea=12, tipo=null}
+Token{id=270, lexema=Outf, linea=13, tipo=null}
+Token{id=40, lexema=(, linea=13, tipo=null}
+Token{id=263, lexema=en el for, linea=13, tipo=null}
+Token{id=41, lexema=), linea=13, tipo=null}
+Token{id=59, lexema=;, linea=13, tipo=null}
+Token{id=268, lexema=end, linea=14, tipo=null}
+Token{id=59, lexema=;, linea=14, tipo=null}
+Token{id=266, lexema=ELSE, linea=15, tipo=null}
+Token{id=267, lexema=begin, linea=16, tipo=null}
+Token{id=257, lexema=t1, linea=17, tipo=null}
+Token{id=91, lexema=[, linea=17, tipo=null}
+Token{id=262, lexema=1, linea=17, tipo=ulongint}
+Token{id=93, lexema=], linea=17, tipo=null}
+Token{id=258, lexema=:=, linea=17, tipo=null}
+Token{id=45, lexema=-, linea=17, tipo=null}
+Token{id=262, lexema=2, linea=17, tipo=ulongint}
+Token{id=59, lexema=;, linea=17, tipo=null}
+Token{id=257, lexema=x, linea=18, tipo=ulongint}
+Token{id=258, lexema=:=, linea=18, tipo=ulongint}
+Token{id=257, lexema=t1, linea=18, tipo=null}
+Token{id=91, lexema=[, linea=18, tipo=null}
+Token{id=262, lexema=1, linea=18, tipo=ulongint}
+Token{id=93, lexema=], linea=18, tipo=null}
+Token{id=59, lexema=;, linea=18, tipo=null}
+Token{id=257, lexema=x, linea=19, tipo=ulongint}
+Token{id=258, lexema=:=, linea=19, tipo=ulongint}
+Token{id=262, lexema=2.0, linea=19, tipo=single}
+Token{id=43, lexema=+, linea=19, tipo=null}
+Token{id=262, lexema=0.3, linea=19, tipo=single}
+Token{id=59, lexema=;, linea=19, tipo=null}
+Token{id=268, lexema=end, linea=20, tipo=null}
+Token{id=269, lexema=END_IF, linea=21, tipo=null}
+Token{id=59, lexema=;, linea=21, tipo=null}
+SE RECONOCIO UN COMENTARIO EN LA LINEA 22
+Token{id=268, lexema=end, linea=23, tipo=null}
+Token{id=59, lexema=;, linea=23, tipo=null}
+Token{id=257, lexema=f3, linea=24, tipo=null}
+Token{id=40, lexema=(, linea=24, tipo=null}
+Token{id=274, lexema=ulongint, linea=24, tipo=null}
+Token{id=40, lexema=(, linea=24, tipo=null}
+Token{id=257, lexema=x, linea=24, tipo=ulongint}
+Token{id=41, lexema=), linea=24, tipo=null}
+Token{id=41, lexema=), linea=24, tipo=null}
+Token{id=59, lexema=;, linea=24, tipo=null}
+Token{id=268, lexema=end, linea=25, tipo=null}
+----------ESTRUCTURAS RECONOCIDAS-----------
+Se reconocio declaracion de variable/s en la línea 3
+Se reconocio una asignacion en la línea 4
+Se reconocio declaracion de tipo en la línea 7
+Se reconocio declaracion de variable/s en la línea 8
+Se reconocio una asignacion en la línea 9
+Se reconocio un FOR en la línea 11
+Se reconocio salida de mensaje por pantalla en la línea 13
+Se reconocio una asignacion  en la línea 17
+Se reconocio una asignacion en la línea 18
+Se reconocio una asignacion en la línea 19
+Se reconocio un IF_ELSE en la línea 21
+Se reconocio declaracion de funcion en la línea 23
+Se reconocio conversion en la línea 24
+Se reconocio una invocacion a funcion en la línea 24
+Se reconocio el programa en la línea 25
+----------TABLA DE SIMBOLOS-----------
+Token{id=257, lexema=prog_base, linea=1, tipo=null}
+Token{id=257, lexema=a, linea=11, tipo=null}
+Token{id=263, lexema=en el for, linea=13, tipo=null}
+Token{id=257, lexema=i, linea=11, tipo=null}
+Token{id=257, lexema=f3, linea=24, tipo=null}
+Token{id=262, lexema=1, linea=18, tipo=ulongint}
+Token{id=262, lexema=0.0, linea=9, tipo=single}
+Token{id=262, lexema=2, linea=17, tipo=ulongint}
+Token{id=262, lexema=1.0, linea=10, tipo=single}
+Token{id=262, lexema=2.0, linea=19, tipo=single}
+Token{id=262, lexema=0.3, linea=19, tipo=single}
+Token{id=257, lexema=w, linea=5, tipo=null}
+Token{id=257, lexema=x, linea=24, tipo=ulongint}
+Token{id=257, lexema=identificadormu, linea=3, tipo=null}
+Token{id=257, lexema=_x, linea=4, tipo=ulongint}
+Token{id=257, lexema=t1, linea=18, tipo=null}
+Token{id=262, lexema=10, linea=11, tipo=ulongint}
+-----------ERRORES LEXICOS----------
+ERROR LEXICO: Variable mal definida, no puede comenzar con "_" en la línea 4
+ERROR LEXICO: Falta el exponente de la constante flotante en la línea 9
+-----------ERRORES SINTACTICOS----------
+ERROR SINTACTICO: El parametro debe tener su tipo en la línea 5
+ERROR SINTACTICO: Falta sentencia RET en la función en la línea 23
+----------WARNINGS-----------
+WARNING: El identificador 'identificadormuylargo' fue truncado a 'identificadormu' en la línea 3

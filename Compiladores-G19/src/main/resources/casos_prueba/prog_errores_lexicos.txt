@@ -1,4 +1,0 @@
-nombre_programa
-BEGIN
-    ulongint x;
-END           

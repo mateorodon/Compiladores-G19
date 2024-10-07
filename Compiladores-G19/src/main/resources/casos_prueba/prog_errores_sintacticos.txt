@@ -1,5 +1,0 @@
-BEGIN
-    ulongint x,y;
-    x := 2;
-    y := 4;
-END

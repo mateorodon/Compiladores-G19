@@ -40,5 +40,4 @@ public class TablaSimbolos {
         return simbolos.get(lexema);
     }
 
-
 }
