@@ -84,10 +84,14 @@ list_variables:
     ;
 
 declaracion_funcion:
-    tipo FUN ID '(' parametro ')' BEGIN {inFunction = true;} cuerpo_funcion END {inFunction = false;}
-    | tipo FUN ID '(' bloque_list_parametro ')' BEGIN cuerpo_funcion END {yyerror("La funcione no puede tener mas de un parametro");}
+    tipo FUN ID '(' parametro ')' BEGIN {inFunction = true; hasReturn = false;} cuerpo_funcion { if (!hasReturn) {
+                                                                                                 	yyerror("Falta sentencia RET en la función");
+                                                                                                 }
+                                                                                                 inFunction = false;
+                                                                                                 } END
+    | tipo FUN ID '(' bloque_list_parametro ')' BEGIN cuerpo_funcion END {yyerror("La funcione no puede tener más de un parámetro");}
     | tipo FUN '(' parametro ')' BEGIN cuerpo_funcion END {yyerror("La funcione debe tener nombre");}
-    | tipo FUN ID '('')' BEGIN cuerpo_funcion END {yyerror("La funcion debe tener parametro");}
+    | tipo FUN ID '(' ')' BEGIN cuerpo_funcion END {yyerror("La función debe tener parámetro");}
     ;
 
 parametro:
@@ -104,7 +108,8 @@ list_parametro:
     ;
 
 cuerpo_funcion:
-    | list_sentencias sentencia_return ';'
+    list_sentencias sentencia_return ';'
+    | list_sentencias
     | sentencia_return ';'
     ;
 
@@ -112,6 +117,7 @@ sentencia_return:
     RET '(' expresion ')' {if (!inFunction) {
                                 yyerror("No puede haber una sentencia de retorno fuera de una funcion");
                            }
+                           hasReturn = true;
                            AnalizadorLexico.agregarEstructura("Se reconocio sentencia de retorno");}
     ;
 
@@ -162,7 +168,7 @@ invocacion_funcion:
 
 fin_if:
     END_IF
-    | error {yyerror("Las sentencias deben terminar con ;");}
+    | error {yyerror("La sentencia IF deben terminar con END_IF");}
     ;
 
 bloque_sentencias_ejecutables:
@@ -233,6 +239,7 @@ private static final String FLOTANTE = "single";
 private static final float NEGATIVE_MIN = 1.17549435e-38f;
 private static final float NEGATIVE_MAX = 3.40282347e+38f;
 static boolean inFunction = false;
+static boolean hasReturn = false;
 
 public int yylex() throws IOException {
     Token t = AnalizadorLexico.obtenerToken();
