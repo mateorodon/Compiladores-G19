@@ -143,7 +143,7 @@ factor:
                                  }
                  }
     | invocacion_funcion {AnalizadorLexico.agregarEstructura("Se reconocio una invocacion a funcion");}
-    | ID '[' CONSTANTE ']' //nera: Si esto se utiliza en una expresion, no hace falta reconocerla, no? e daa; pero la invocacion a funcion si, porque es una invocacion pues
+    | ID '[' CONSTANTE ']'
     | '-' ID  {}
     | '-' CONSTANTE {Token t = TablaSimbolos.getToken($1.sval);
                                         if (t != null && t.getTipo().equals(ENTERO))
@@ -194,12 +194,11 @@ cuerpo_if:
     | sentencia_return ';'
     ;
 
-
 list_sentencias_ejecutables:
     list_sentencias_ejecutables sentencia_ejecutable ';'
     | sentencia_ejecutable ';'
     | sentencia_ejecutable error {yyerror("Las sentencias deben terminar con ;");}
-    |  list_sentencias_ejecutables sentencia_ejecutable error {yyerror("Las sentencias deben terminar con ;");}
+    | list_sentencias_ejecutables sentencia_ejecutable error {yyerror("Las sentencias deben terminar con ;");}
     ;
 
 comparacion:
@@ -219,7 +218,7 @@ condicion:
 
 //tema 19
 bloque_list_expresiones:
-    list_expresiones ',' expresion
+    list_expresiones ',' expresion {}
     ;
 
 list_expresiones:
@@ -257,7 +256,7 @@ public static void yyerror(String error){
 
 private void chequeoFlotantesPositivos(String lexema){
     float valor = Float.parseFloat(lexema);
-    if (valor < AccionSemantica.SINGLE_POSITIVE_MIN || valor >= Float.POSITIVE_INFINITY) {
+    if  ((valor != 0f) && (valor < AccionSemantica.SINGLE_POSITIVE_MIN || valor >= Float.POSITIVE_INFINITY)) {
         yyerror("Constante flotante fuera de rango");
     }
 }

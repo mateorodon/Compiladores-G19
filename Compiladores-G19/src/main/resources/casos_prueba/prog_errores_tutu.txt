@@ -6,7 +6,7 @@ begin
     begin
         TYPEDEF TRIPLE <ulongint> t1;
         single x;
-        x := 1.2;
+        x := 1.2s;
     IF (x < 1.0) then
         FOR (i := 1; i < 10 ; up 1 ; (a> 10))
         begin
@@ -19,6 +19,7 @@ begin
             x:= 2.0 + 3.0s-1;
         end
     END_IF;
+    /# Deberia haber return #/
     end;
     f3(ulongint(x));
-end
+end     

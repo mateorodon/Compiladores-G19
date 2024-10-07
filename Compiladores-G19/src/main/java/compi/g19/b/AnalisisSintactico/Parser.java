@@ -563,7 +563,7 @@ final static String yyrule[] = {
 "salida_mensaje : OUTF '(' ')'",
 };
 
-//#line 237 "gramatica.y"
+//#line 236 "gramatica.y"
 private static final String ENTERO = "ulongint";
 private static final String FLOTANTE = "single";
 private static final float NEGATIVE_MIN = 1.17549435e-38f;
@@ -587,7 +587,7 @@ public static void yyerror(String error){
 
 private void chequeoFlotantesPositivos(String lexema){
     float valor = Float.parseFloat(lexema);
-    if (valor < AccionSemantica.SINGLE_POSITIVE_MIN || valor >= Float.POSITIVE_INFINITY) {
+    if  ((valor != 0f) && (valor < AccionSemantica.SINGLE_POSITIVE_MIN || valor >= Float.POSITIVE_INFINITY)) {
         yyerror("Constante flotante fuera de rango");
     }
 }
@@ -963,30 +963,34 @@ case 89:
 {yyerror("Falta paréntesis ')' en la condición del IF");}
 break;
 case 95:
-//#line 201 "gramatica.y"
+//#line 200 "gramatica.y"
 {yyerror("Las sentencias deben terminar con ;");}
 break;
 case 96:
-//#line 202 "gramatica.y"
+//#line 201 "gramatica.y"
 {yyerror("Las sentencias deben terminar con ;");}
 break;
 case 103:
-//#line 212 "gramatica.y"
+//#line 211 "gramatica.y"
 {yyerror("Falta comparador en la comparación");}
 break;
+case 106:
+//#line 221 "gramatica.y"
+{}
+break;
 case 109:
-//#line 231 "gramatica.y"
+//#line 230 "gramatica.y"
 {AnalizadorLexico.agregarEstructura("Se reconocio salida de mensaje por pantalla");}
 break;
 case 110:
-//#line 232 "gramatica.y"
+//#line 231 "gramatica.y"
 {AnalizadorLexico.agregarEstructura("Se reconocio salida de mensaje por pantalla");}
 break;
 case 111:
-//#line 233 "gramatica.y"
+//#line 232 "gramatica.y"
 {yyerror("Falta de parametro en funcion OUTF");}
 break;
-//#line 914 "Parser.java"
+//#line 918 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####
