@@ -12,11 +12,11 @@ programa: ID BEGIN list_sentencias END {AnalizadorLexico.agregarEstructura("Se r
     | BEGIN list_sentencias END {yyerror("El programa debe tener un nombre");}
     | ID BEGIN list_sentencias {yyerror("Falta delimitador END del programa");}
     | ID list_sentencias END {yyerror("Falta delimitador BEGIN del programa");}
+    | ID BEGIN END {yyerror("Programa vacío");}
     ;
 
 list_sentencias:
     list_sentencias sentencia ';'
-    | list_sentencias sentencia error {yyerror("Las sentencias deben terminar con ;");}
     | sentencia ';'
     | sentencia error {yyerror("Las sentencias deben terminar con ;");}
     ;
@@ -58,7 +58,7 @@ encabezado_for:
     ;
 
 up_down:
-     UP
+    UP
     |DOWN
     ;
 
@@ -68,8 +68,7 @@ asignacion:
     ;
 
 tipo:
-    ULONGINT
-    | SINGLE
+    tipo_base
     | ID
     ;
 
