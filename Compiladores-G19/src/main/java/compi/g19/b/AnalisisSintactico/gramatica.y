@@ -45,15 +45,21 @@ sentencia_control:
     FOR '(' encabezado_for ')' bloque_sentencias_ejecutables
     |FOR '(' encabezado_for ')' error {yyerror("Falta cuerpo del FOR");}
     |FOR error encabezado_for ')' bloque_sentencias_ejecutables {yyerror("Falta parentensis en el FOR");}
-    |FOR '(' encabezado_for error bloque_sentencias_ejecutables {yyerror("Falta parentensis en el FOR");}
+    |FOR '(' encabezado_for bloque_sentencias_ejecutables {yyerror("Falta parentensis en el FOR");}
     ;
 
 encabezado_for:
-    ID ASIGNACION CONSTANTE ';' condicion ';' UP CONSTANTE {AnalizadorLexico.agregarEstructura("Se reconocio un FOR");}
-    | ID ASIGNACION CONSTANTE ';' condicion ';' DOWN CONSTANTE {AnalizadorLexico.agregarEstructura("Se reconocio un FOR");}
-    | ID ASIGNACION CONSTANTE ';' condicion ';' UP CONSTANTE ';' '(' condicion ')' {AnalizadorLexico.agregarEstructura("Se reconocio un FOR");}
-    | ID ASIGNACION CONSTANTE ';' condicion ';' DOWN CONSTANTE ';' '(' condicion ')' {AnalizadorLexico.agregarEstructura("Se reconocio un FOR");}
-    | ID ASIGNACION CONSTANTE error {yyerror("Falta ';' en encabezado del FOR");}
+    ID ASIGNACION CONSTANTE ';' condicion ';' up_down CONSTANTE {AnalizadorLexico.agregarEstructura("Se reconocio un FOR");}
+    | ID ASIGNACION CONSTANTE ';' condicion ';' up_down CONSTANTE ';' '(' condicion ')' {AnalizadorLexico.agregarEstructura("Se reconocio un FOR");}
+    | ID ASIGNACION CONSTANTE ';' condicion ';'  CONSTANTE ';' '(' condicion ')' {yyerror("Falta UP/DOWN en el FOR");}
+    | ID ASIGNACION CONSTANTE condicion ';' up_down CONSTANTE ';' '(' condicion ')' {yyerror("Falta ; en el FOR");}
+    | ID ASIGNACION CONSTANTE ';' condicion up_down CONSTANTE ';' '(' condicion ')' {yyerror("Falta ; en el FOR");}
+    | ID ASIGNACION CONSTANTE ';' condicion ';' up_down CONSTANTE  '(' condicion ')' {yyerror("Falta ; en el FOR");}
+    ;
+
+up_down:
+     UP
+    |DOWN
     ;
 
 asignacion:
@@ -81,8 +87,8 @@ list_variables:
 declaracion_funcion:
     tipo FUN ID '(' parametro ')' BEGIN {inFunction = true;} cuerpo_funcion END {inFunction = false;}
     | tipo FUN ID '(' bloque_list_parametro ')' BEGIN cuerpo_funcion END {yyerror("La funcione no puede tener mas de un parametro");}
-    | tipo FUN error '(' parametro ')' BEGIN cuerpo_funcion END {yyerror("La funcione debe tener nombre");}
-    | tipo FUN ID '(' error ')' BEGIN cuerpo_funcion END {yyerror("La funcion debe tener parametro");}
+    | tipo FUN '(' parametro ')' BEGIN cuerpo_funcion END {yyerror("La funcione debe tener nombre");}
+    | tipo FUN ID '('')' BEGIN cuerpo_funcion END {yyerror("La funcion debe tener parametro");}
     ;
 
 parametro:
@@ -168,11 +174,13 @@ bloque_sentencias_ejecutables:
 
 bloque_if:
     IF '(' condicion ')' THEN cuerpo_if ELSE cuerpo_if fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF_ELSE");}
-    |IF '(' condicion ')' THEN cuerpo_if ELSE error fin_if {yyerror("Falta contenido en el bloque ELSE");}
     | IF '(' condicion ')' THEN cuerpo_if fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF");}
+    | IF '(' condicion ')' THEN cuerpo_if ELSE error fin_if {yyerror("Falta contenido en el bloque ELSE");}
     | IF '(' condicion ')' THEN error fin_if {yyerror("Falta contenido en el bloque THEN");}
-    | IF error condicion ')' THEN cuerpo_if END_IF {yyerror("Falta paréntesis '(' en la condición del IF");}
-    | IF '(' condicion error THEN cuerpo_if ELSE cuerpo_if fin_if {yyerror("Falta paréntesis ')' en la condición del IF");}
+    | IF  condicion ')' THEN cuerpo_if fin_if {yyerror("Falta paréntesis '(' en la condición del IF");}
+    | IF '(' condicion THEN cuerpo_if fin_if {yyerror("Falta paréntesis ')' en la condición del IF");}
+    | IF  condicion ')' THEN cuerpo_if ELSE cuerpo_if fin_if {yyerror("Falta paréntesis '(' en la condición del IF");}
+    | IF '(' condicion  THEN cuerpo_if ELSE cuerpo_if fin_if {yyerror("Falta paréntesis ')' en la condición del IF");}
     ;
 
 cuerpo_if:
@@ -214,8 +222,6 @@ list_expresiones:
     | expresion
     ;
 
-//putiney: nosotros a las cadenas le seteamos el lexema sin las llaves, se lo agrego aca.
-//despues podemos ver si agregarselas en el Analisis Lexico
 salida_mensaje:
     OUTF '(' CADENA ')' {AnalizadorLexico.agregarEstructura("Se reconocio salida de mensaje por pantalla");}
     | OUTF '(' expresion ')' {AnalizadorLexico.agregarEstructura("Se reconocio salida de mensaje por pantalla");}
