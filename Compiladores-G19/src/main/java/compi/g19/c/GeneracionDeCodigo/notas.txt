@@ -1,0 +1,13 @@
+Habria que hacer en gramatica.y las siguientes variables y estructuras:
+Si me olvido de algo, agregar porfiss
+
+
+- Lista de funciones declaradas, para sobrecarga de metodos
+    Pueden haber funciones en el mismo ambito, con el mismo nombre, pero el parametro de distinto tipo
+
+- Variable de ambito actual, para luego manejar name-mangling chungling hoo lee shit
+
+- Ahora en asignaciones, hay que controlar los tipos de los nodos
+
+- Controlar conversiones y tipos predominantes (si opero con un int y un long, se pasa a long, etc)
+
