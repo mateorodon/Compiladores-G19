@@ -11,6 +11,7 @@ public class Token {
     private StringBuilder lexema;
     private Integer linea;
     private String tipo;
+    private String uso;
 
     public Token() {
         this.id = 0;
