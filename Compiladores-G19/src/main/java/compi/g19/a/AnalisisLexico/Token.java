@@ -1,17 +1,21 @@
 package compi.g19.a.AnalisisLexico;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import static compi.g19.a.AnalisisLexico.AnalizadorLexico.lineaAct;
 import static compi.g19.a.AnalisisLexico.PalabrasReservadas.palabrasReservadas;
 
 @Data
+@AllArgsConstructor
 public class Token {
     private int id;
     private StringBuilder lexema;
     private Integer linea;
     private String tipo;
     private String uso;
+    private String ambito;
+    private String valor;
 
     public Token() {
         this.id = 0;
