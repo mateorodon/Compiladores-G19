@@ -1,0 +1,7 @@
+prog
+
+begin
+
+lala := 3
+
+end 

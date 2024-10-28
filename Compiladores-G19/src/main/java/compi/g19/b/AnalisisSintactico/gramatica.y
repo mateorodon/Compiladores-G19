@@ -12,18 +12,17 @@ programa: ID BEGIN list_sentencias END {AnalizadorLexico.agregarEstructura("Se r
     | BEGIN list_sentencias END {yyerror("El programa debe tener un nombre");}
     | ID BEGIN list_sentencias {yyerror("Falta delimitador END del programa");}
     | ID list_sentencias END {yyerror("Falta delimitador BEGIN del programa");}
-    | ID BEGIN END {yyerror("Programa vacío");}
     ;
 
-list_sentencias:
-    list_sentencias sentencia ';'
-    | sentencia ';'
-    | sentencia error {yyerror("Las sentencias deben terminar con ;");}
+list_sentencias: list_sentencias sentencia
+    | sentencia
     ;
 
 sentencia:
-    sentencia_declarativa
-    | sentencia_ejecutable
+    sentencia_declarativa ';'
+    | sentencia_ejecutable ';'
+    | sentencia_ejecutable {yyerror("Las sentencias deben terminar con ;");}
+    | sentencia_declarativa {yyerror("Las sentencias deben terminar con ;");}
     ;
 
 sentencia_declarativa:
@@ -136,19 +135,20 @@ expresion:
     expresion '+' termino
     | expresion '-' termino
     | termino
+    | expresion '+' error {yyerror("Se esperaba un termino");}
+    | expresion '-' error {yyerror("Se esperaba un termino");}
     ;
 
 termino:
     termino '*' factor
     | termino '/' factor
     | factor
+    | termino '*' error {yyerror("Se esperaba un factor");}
+    | termino '/' error {yyerror("Se esperaba un factor");}
     ;
 
 factor:
-    ID {Nodo nodo = new NodoHoja($1.sval);
-        TablaSimbolos.removeToken($1.sval);
-        String nuevoAmbito = 
-        }
+    ID
     | CONSTANTE {Token t = TablaSimbolos.getToken($1.sval);
                                  if (t != null && (t.getTipo().equals(FLOTANTE))) {
                                      String lexema = t.getLexema().toString();
@@ -163,12 +163,11 @@ factor:
                                         if (t != null && t.getTipo().equals(ENTERO))
                                             yyerror("Las constantes de tipo ulongint no pueden ser negativas");
                     }
-    | '-' ID '[' CONSTANTE ']' {}
-    | error {yyerror("Falta termino en la expresion");}
+    | '-' ID '[' CONSTANTE ']'
     ;
 
 declaracion_tipo:
-    | TYPEDEF TRIPLE '<' tipo_base '>' ID
+    TYPEDEF TRIPLE '<' tipo_base '>' ID
     | TYPEDEF TRIPLE '<' tipo_base '>' error {yyerror("Falta ID al final de la declaracion de tipo");}
     | TYPEDEF TRIPLE tipo_base '>' ID {yyerror("Falta diamante (<) en la declaracion de tipo");}
     | TYPEDEF TRIPLE '<' tipo_base ID {yyerror("Falta diamante (>) en la declaracion de tipo");}
@@ -264,7 +263,8 @@ public int yylex() throws IOException {
 }
 
 public static void yyerror(String error){
-    AnalizadorLexico.agregarErrorSintactico(error);
+    if (!error.contains("syntax error"))
+        AnalizadorLexico.agregarErrorSintactico(error);
 }
 
 private void chequeoFlotantesPositivos(String lexema){
