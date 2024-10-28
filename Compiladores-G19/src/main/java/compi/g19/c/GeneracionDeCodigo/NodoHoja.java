@@ -12,4 +12,9 @@ public class NodoHoja extends Nodo {
     public NodoHoja(Token t) {
         super(t);
     }
+
+    @Override
+    public void recorrerArbol() {
+        //
+    }
 }

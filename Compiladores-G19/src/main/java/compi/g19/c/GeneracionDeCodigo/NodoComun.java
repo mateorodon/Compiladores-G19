@@ -24,4 +24,8 @@ public class NodoComun extends Nodo{
         this.der = der;
     }
 
+    @Override
+    public void recorrerArbol() {
+        //
+    }
 }

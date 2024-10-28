@@ -6,7 +6,7 @@ import compi.g19.a.AnalisisLexico.*;
 %token ID ASIGNACION MAYORIGUAL MENORIGUAL DISTINTO CONSTANTE CADENA IF THEN ELSE BEGIN END END_IF OUTF TYPEDEF FUN RET ULONGINT SINGLE FOR OR UP DOWN TRIPLE
 %%
 
-%start programa
+%start programa;
 
 programa: ID BEGIN list_sentencias END {AnalizadorLexico.agregarEstructura("Se reconocio el programa");}
     | BEGIN list_sentencias END {yyerror("El programa debe tener un nombre");}
@@ -145,7 +145,10 @@ termino:
     ;
 
 factor:
-    ID
+    ID {Nodo nodo = new NodoHoja($1.sval);
+        TablaSimbolos.removeToken($1.sval);
+        String nuevoAmbito = 
+        }
     | CONSTANTE {Token t = TablaSimbolos.getToken($1.sval);
                                  if (t != null && (t.getTipo().equals(FLOTANTE))) {
                                      String lexema = t.getLexema().toString();

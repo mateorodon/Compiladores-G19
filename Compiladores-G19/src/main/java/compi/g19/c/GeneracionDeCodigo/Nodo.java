@@ -12,6 +12,9 @@ public abstract class Nodo extends ParserVal {
         this.t = t;
     }
 
+
+    public abstract void recorrerArbol();
+
     //Getters y setters del Token
     public String getTipo(){
         return t.getTipo();
