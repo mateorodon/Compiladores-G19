@@ -148,6 +148,9 @@ public abstract class AccionSemantica {
     }
 
     static class chequeoHexa extends AccionSemantica {
+
+        private AccionSemantica chequeoEntero = new chequeoEntero();
+
         @Override
         public void ejecutar(StringBuilder lexema, Character c, Reader entrada) throws IOException {
             entrada.reset();
@@ -180,8 +183,7 @@ public abstract class AccionSemantica {
             }
 
             valorEntero.append(parseado.toString());
-            AccionSemantica chequeoEntero = new chequeoEntero();
-            chequeoEntero.ejecutar(valorEntero, c, entrada);
+            this.chequeoEntero.ejecutar(valorEntero, c, entrada);
         }
     }
 
@@ -336,8 +338,7 @@ public abstract class AccionSemantica {
 
         }
     }
-    //LISTO
-    //LISTO
+
     static class cadena extends AccionSemantica {
         @Override
         public void ejecutar(StringBuilder lexema, Character c, Reader entrada) {
