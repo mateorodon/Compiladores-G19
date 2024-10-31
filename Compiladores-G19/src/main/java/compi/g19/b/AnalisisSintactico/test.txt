@@ -1,7 +1,14 @@
 prog
-
 begin
+IF (x * y 4) THEN
 
-lala := 3
+              outf(z);
 
-end 
+ELSE
+
+              begin
+
+                             z := 1;
+    end
+END_IF;
+end     

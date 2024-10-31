@@ -12,6 +12,7 @@ programa: ID BEGIN list_sentencias END {AnalizadorLexico.agregarEstructura("Se r
     | BEGIN list_sentencias END {yyerror("El programa debe tener un nombre");}
     | ID BEGIN list_sentencias {yyerror("Falta delimitador END del programa");}
     | ID list_sentencias END {yyerror("Falta delimitador BEGIN del programa");}
+    | ID list_sentencias {yyerror("Faltan los delimitadores del programa");}
     ;
 
 list_sentencias: list_sentencias sentencia
@@ -75,6 +76,7 @@ up_down:
 asignacion:
     ID ASIGNACION expresion
     | ID '[' CONSTANTE ']' ASIGNACION expresion
+    | ID ASIGNACION error {yyerror("Falta parte derecha de la asignacion");}
     ;
 
 tipo:
@@ -88,8 +90,7 @@ tipo_base:
     ;
 
 list_variables:
-    list_variables ',' ID
-    | list_variables ID {yyerror("Las variables deben estar separados por coma");}
+    list_variables ',' ID //Podriamos probar precedencia en este
     | ID
     ;
 
@@ -118,10 +119,16 @@ list_parametro:
     ;
 
 cuerpo_funcion:
-    list_sentencias sentencia_return ';'
-    | list_sentencias
+    list_sentencias_funcion sentencia_return ';'
+    | list_sentencias_funcion
     | sentencia_return ';'
     ;
+
+list_sentencias_funcion:
+    list_sentencias_funcion sentencia
+    | sentencia
+    ;
+
 
 sentencia_return:
     RET '(' expresion ')' {if (!inFunction) {
@@ -167,7 +174,7 @@ factor:
     ;
 
 declaracion_tipo:
-    TYPEDEF TRIPLE '<' tipo_base '>' ID
+    TYPEDEF TRIPLE '<' tipo_base '>' ID //ID ES TIPO (AS)
     | TYPEDEF TRIPLE '<' tipo_base '>' error {yyerror("Falta ID al final de la declaracion de tipo");}
     | TYPEDEF TRIPLE tipo_base '>' ID {yyerror("Falta diamante (<) en la declaracion de tipo");}
     | TYPEDEF TRIPLE '<' tipo_base ID {yyerror("Falta diamante (>) en la declaracion de tipo");}
@@ -220,17 +227,17 @@ comparacion:
     | '='
     | '>'
     | '<'
-    | error {yyerror("Falta comparador en la comparación");}
     ;
 
 condicion:
     expresion comparacion expresion
     | '(' bloque_list_expresiones ')' comparacion '(' bloque_list_expresiones ')' {AnalizadorLexico.agregarEstructura("Se reconocio pattern matching");}
+    | error {yyerror("Falta comparador en la condicion");}
     ;
 
 //tema 19
 bloque_list_expresiones:
-    list_expresiones ',' expresion {}
+    list_expresiones ',' expresion
     ;
 
 list_expresiones:
@@ -263,8 +270,7 @@ public int yylex() throws IOException {
 }
 
 public static void yyerror(String error){
-    if (!error.contains("syntax error"))
-        AnalizadorLexico.agregarErrorSintactico(error);
+    AnalizadorLexico.agregarErrorSintactico(error);
 }
 
 private void chequeoFlotantesPositivos(String lexema){

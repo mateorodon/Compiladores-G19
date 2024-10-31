@@ -1,18 +1,39 @@
 ----------TOKENS DETECTADOS -----------
 Token{id=257, lexema=prog, linea=1, tipo=null}
-Token{id=267, lexema=begin, linea=3, tipo=null}
-Token{id=257, lexema=lala, linea=5, tipo=null}
-Token{id=258, lexema=:=, linea=5, tipo=null}
-Token{id=262, lexema=3, linea=5, tipo=ulongint}
-Token{id=268, lexema=end, linea=7, tipo=null}
+Token{id=267, lexema=begin, linea=2, tipo=null}
+Token{id=264, lexema=IF, linea=3, tipo=null}
+Token{id=40, lexema=(, linea=3, tipo=null}
+Token{id=257, lexema=x, linea=3, tipo=ulongint}
+Token{id=42, lexema=*, linea=3, tipo=null}
+Token{id=257, lexema=y, linea=3, tipo=ulongint}
+Token{id=262, lexema=4, linea=3, tipo=ulongint}
+Token{id=41, lexema=), linea=3, tipo=null}
+Token{id=265, lexema=THEN, linea=3, tipo=null}
+Token{id=270, lexema=outf, linea=5, tipo=null}
+Token{id=40, lexema=(, linea=5, tipo=null}
+Token{id=257, lexema=z, linea=5, tipo=ulongint}
+Token{id=41, lexema=), linea=5, tipo=null}
+Token{id=59, lexema=;, linea=5, tipo=null}
+Token{id=266, lexema=ELSE, linea=7, tipo=null}
+Token{id=267, lexema=begin, linea=9, tipo=null}
+Token{id=257, lexema=z, linea=11, tipo=ulongint}
+Token{id=258, lexema=:=, linea=11, tipo=ulongint}
+Token{id=262, lexema=1, linea=11, tipo=ulongint}
+Token{id=59, lexema=;, linea=11, tipo=null}
+Token{id=268, lexema=end, linea=12, tipo=null}
+Token{id=269, lexema=END_IF, linea=13, tipo=null}
+Token{id=59, lexema=;, linea=13, tipo=null}
+Token{id=268, lexema=end, linea=14, tipo=null}
 ----------ESTRUCTURAS RECONOCIDAS-----------
-Se reconocio una asignacion en la línea 7
-Se reconocio el programa en la línea 7
 ----------TABLA DE SIMBOLOS-----------
-Token{id=262, lexema=3, linea=5, tipo=ulongint}
-Token{id=257, lexema=lala, linea=5, tipo=null}
+Token{id=262, lexema=1, linea=11, tipo=ulongint}
+Token{id=262, lexema=4, linea=3, tipo=ulongint}
+Token{id=257, lexema=x, linea=3, tipo=ulongint}
+Token{id=257, lexema=y, linea=3, tipo=ulongint}
+Token{id=257, lexema=z, linea=11, tipo=ulongint}
 Token{id=257, lexema=prog, linea=1, tipo=null}
 -----------ERRORES LEXICOS----------
 -----------ERRORES SINTACTICOS----------
-ERROR SINTACTICO: Las sentencias deben terminar con ; en la línea 7
+ERROR SINTACTICO: syntax error en la línea 3
+ERROR SINTACTICO: Se esperaba un factor en la línea 3
 ----------WARNINGS-----------

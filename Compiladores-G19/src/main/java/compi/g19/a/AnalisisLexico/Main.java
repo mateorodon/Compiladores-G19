@@ -18,6 +18,12 @@ public class Main {
                 System.err.println("Debe proporcionar el path del archivo de entrada como argumento.");
                 return;
             }
+            armarArchivoSalida(args[0]);
+            File inputFile = new File(args[0]);
+            if (inputFile.length() == 0) {
+                System.out.println("El archivo proporcionado está vacío.");
+                return;
+            }
             try (FileWriter fileWriter = new FileWriter(args[0], true)) {
                 fileWriter.write(" ");
             } catch (IOException e) {

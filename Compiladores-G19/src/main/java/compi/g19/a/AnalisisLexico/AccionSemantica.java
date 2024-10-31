@@ -161,7 +161,7 @@ public abstract class AccionSemantica {
             for (char caracter : lexema.toString().toCharArray()) {
                 if (!((caracter >= '0' && caracter <= '9') || (caracter >= 'A' && caracter <= 'F'))) {
                     if (!(index == 1 && caracter == 'x')) {
-                        AnalizadorLexico.agregarErrorSintactico("Las constantes hexadecimales no pueden contener caracteres inválidos: " + caracter);
+                        AnalizadorLexico.agregarErrorLexico("Las constantes hexadecimales no pueden contener caracteres inválidos: " + caracter);
                         lexema.deleteCharAt(index); // Eliminar carácter inválido
                     }
                 } else {

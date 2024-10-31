@@ -62,7 +62,7 @@ public class AnalizadorLexico {
     }
 
     public static void agregarErrorLexico(String error){
-        errorLexico.add("ERROR LEXICO: " + error + " en la línea " + lineaAct);
+                                    errorLexico.add("ERROR LEXICO: " + error + " en la línea " + lineaAct);
     }
 
     public static void agregarEstructura(String estructura){

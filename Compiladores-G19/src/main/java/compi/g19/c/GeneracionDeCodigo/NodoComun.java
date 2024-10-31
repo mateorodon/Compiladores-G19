@@ -1,7 +1,9 @@
 package compi.g19.c.GeneracionDeCodigo;
 
-import compi.g19.a.AnalisisLexico.Token;
 
+import lombok.Data;
+
+@Data
 public class NodoComun extends Nodo{
 
     /*
@@ -16,13 +18,7 @@ public class NodoComun extends Nodo{
     */
 
     private Nodo izq;
-    private Nodo der;
-
-    public NodoComun(Token t, Nodo izq, Nodo der) {
-        super(t);
-        this.izq = izq;
-        this.der = der;
-    }
+    private Nodo der; //Si tiene un solo hijo, der es null
 
     @Override
     public void recorrerArbol() {
