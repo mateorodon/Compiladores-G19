@@ -56,8 +56,12 @@ public abstract class AccionSemantica {
     static class generarASCII extends AccionSemantica {
         @Override
         public void ejecutar(StringBuilder lexema, Character c, Reader entrada) {
-            if (!perteneceAlLenguaje(c) && !AnalizadorLexico.caracterEspecial(c.toString()))
-                AnalizadorLexico.agregarErrorLexico("El caracter " + c + " no pertenece al lenguaje" );
+            //Este IF-ELSE es nuevo para devolver lexema vacio; antes era solo IF
+            if (!perteneceAlLenguaje(c) && !AnalizadorLexico.caracterEspecial(c.toString())) {
+                AnalizadorLexico.agregarErrorLexico("El caracter " + c + " no pertenece al lenguaje");
+                token = new Token();
+                token.setLexema(new StringBuilder());
+            } else {
 
             //Caso 1: Estoy en e0 y viene un '+'. Ejecuto esta AS y seteo 'c' como lexema.
             token = new Token();
@@ -72,7 +76,8 @@ public abstract class AccionSemantica {
                 int ascii = lexema.charAt(0);
                 token.setId((short) ascii);
             }
-            token.setLexema(lexema);
+                token.setLexema(lexema);
+            }
         }
     }
 

@@ -1,64 +1,20 @@
 ----------TOKENS DETECTADOS -----------
 Token{id=257, lexema=prog, linea=1, tipo=null}
 Token{id=267, lexema=begin, linea=2, tipo=null}
-Token{id=264, lexema=IF, linea=3, tipo=null}
-Token{id=40, lexema=(, linea=3, tipo=null}
-Token{id=40, lexema=(, linea=3, tipo=null}
-Token{id=257, lexema=x, linea=3, tipo=ulongint}
-Token{id=44, lexema=,, linea=3, tipo=null}
-Token{id=262, lexema=4, linea=3, tipo=ulongint}
-Token{id=41, lexema=), linea=3, tipo=null}
+Token{id=271, lexema=TYPEDEF, linea=3, tipo=null}
 Token{id=60, lexema=<, linea=3, tipo=null}
-Token{id=40, lexema=(, linea=3, tipo=null}
-Token{id=257, lexema=a, linea=3, tipo=null}
-Token{id=44, lexema=,, linea=3, tipo=null}
-Token{id=257, lexema=v, linea=3, tipo=null}
-Token{id=41, lexema=), linea=3, tipo=null}
-Token{id=41, lexema=), linea=3, tipo=null}
-Token{id=265, lexema=THEN, linea=3, tipo=null}
-Token{id=270, lexema=outf, linea=4, tipo=null}
-Token{id=40, lexema=(, linea=4, tipo=null}
-Token{id=257, lexema=z, linea=4, tipo=ulongint}
-Token{id=41, lexema=), linea=4, tipo=null}
-Token{id=59, lexema=;, linea=4, tipo=null}
-Token{id=270, lexema=outf, linea=5, tipo=null}
-Token{id=40, lexema=(, linea=5, tipo=null}
-Token{id=257, lexema=z, linea=5, tipo=ulongint}
-Token{id=41, lexema=), linea=5, tipo=null}
-Token{id=59, lexema=;, linea=5, tipo=null}
-Token{id=268, lexema=END, linea=6, tipo=null}
-Token{id=266, lexema=ELSE, linea=7, tipo=null}
-Token{id=270, lexema=outf, linea=8, tipo=null}
-Token{id=40, lexema=(, linea=8, tipo=null}
-Token{id=257, lexema=z, linea=8, tipo=ulongint}
-Token{id=41, lexema=), linea=8, tipo=null}
-Token{id=59, lexema=;, linea=8, tipo=null}
-Token{id=270, lexema=outf, linea=9, tipo=null}
-Token{id=40, lexema=(, linea=9, tipo=null}
-Token{id=257, lexema=z, linea=9, tipo=ulongint}
-Token{id=41, lexema=), linea=9, tipo=null}
-Token{id=59, lexema=;, linea=9, tipo=null}
-Token{id=269, lexema=END_IF, linea=10, tipo=null}
-Token{id=59, lexema=;, linea=10, tipo=null}
-Token{id=268, lexema=end, linea=11, tipo=null}
+Token{id=275, lexema=SINGLE, linea=3, tipo=null}
+Token{id=62, lexema=>, linea=3, tipo=null}
+Token{id=257, lexema=t1, linea=3, tipo=null}
+Token{id=59, lexema=;, linea=3, tipo=null}
+Token{id=268, lexema=end, linea=4, tipo=null}
 ----------ESTRUCTURAS RECONOCIDAS-----------
-Se reconocio pattern matching en la línea 3
-Se reconocio salida de mensaje por pantalla en la línea 4
-Se reconocio salida de mensaje por pantalla en la línea 5
-Se reconocio salida de mensaje por pantalla en la línea 8
-Se reconocio salida de mensaje por pantalla en la línea 9
-Se reconocio un IF_ELSE con múltiples sentencias en cada bloque en la línea 10
-Se reconocio el programa en la línea 11
+Se reconocio declaracion de tipo en la línea 3
+Se reconocio el programa en la línea 4
 ----------TABLA DE SIMBOLOS-----------
-Token{id=257, lexema=a, linea=3, tipo=null}
-Token{id=262, lexema=4, linea=3, tipo=ulongint}
-Token{id=257, lexema=v, linea=3, tipo=null}
-Token{id=257, lexema=x, linea=3, tipo=ulongint}
-Token{id=257, lexema=z, linea=9, tipo=ulongint}
+Token{id=257, lexema=t1, linea=3, tipo=null}
 Token{id=257, lexema=prog, linea=1, tipo=null}
 -----------ERRORES LEXICOS----------
 -----------ERRORES SINTACTICOS----------
-ERROR SINTACTICO: Se encontró 'END' sin un bloque BEGIN correspondiente en el cuerpo IF/ELSE en la línea 6
-ERROR SINTACTICO: syntax error en la línea 10
-ERROR SINTACTICO: Se esperaba BEGIN y END por sentencias multiples en la línea 10
+ERROR SINTACTICO: Falta TRIPLE en la declaracion de tipo en la línea 3
 ----------WARNINGS-----------

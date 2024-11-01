@@ -1,9 +1,0 @@
-prog
-begin
-    IF ((x , 4) < (a, v)) THEN
-        outf(z);
-        begin
-            z := 1;
-        end
-    END_IF;
-end

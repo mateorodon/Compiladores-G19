@@ -54,18 +54,19 @@ encabezado_for:
     ;
 
 encabezado_for1:
-    ID ASIGNACION CONSTANTE ';' condicion ';' up_down CONSTANTE {AnalizadorLexico.agregarEstructura("Se reconocio un FOR de 3");}
-    | ID ASIGNACION CONSTANTE ';' condicion ';'  CONSTANTE {yyerror("Falta UP/DOWN en el FOR");}
-    | ID ASIGNACION CONSTANTE condicion ';' up_down CONSTANTE {yyerror("Falta ; en el FOR");}
-    | ID ASIGNACION CONSTANTE ';' condicion up_down CONSTANTE {yyerror("Falta ; en el FOR");}
+    ID ASIGNACION CONSTANTE ';' condicion ';' up_down CONSTANTE {AnalizadorLexico.agregarEstructura("Se reconoció un FOR de 3");}
+    | ID ASIGNACION CONSTANTE ';' condicion ';' CONSTANTE {yyerror("Falta UP/DOWN en el FOR");}
+    | ID ASIGNACION CONSTANTE condicion ';' up_down CONSTANTE {yyerror("Falta ';' en el FOR");}
+    | ID ASIGNACION CONSTANTE ';' condicion up_down CONSTANTE {yyerror("Falta ';' en el FOR");}
+    | ID ASIGNACION CONSTANTE ';' condicion ';' up_down {yyerror("Falta constante después de UP/DOWN en el FOR");}
     ;
 
 encabezado_for2:
-    ID ASIGNACION CONSTANTE ';' condicion ';' up_down CONSTANTE ';' '(' condicion ')' {AnalizadorLexico.agregarEstructura("Se reconocio un FOR con condicion");}
-    | ID ASIGNACION CONSTANTE ';' condicion ';'  CONSTANTE ';' '(' condicion ')' {yyerror("Falta UP/DOWN en el FOR");}
-    | ID ASIGNACION CONSTANTE condicion ';' up_down CONSTANTE ';' '(' condicion ')' {yyerror("Falta ; en el FOR");}
-    | ID ASIGNACION CONSTANTE ';' condicion up_down CONSTANTE ';' '(' condicion ')' {yyerror("Falta ; en el FOR");}
-    | ID ASIGNACION CONSTANTE ';' condicion ';' up_down CONSTANTE  '(' condicion ')' {yyerror("Falta ; en el FOR");}
+    ID ASIGNACION CONSTANTE ';' condicion ';' up_down CONSTANTE ';' '(' condicion ')' {AnalizadorLexico.agregarEstructura("Se reconoció un FOR con condición");}
+    | ID ASIGNACION CONSTANTE ';' condicion ';' CONSTANTE ';' '(' condicion ')' {yyerror("Falta UP/DOWN en el FOR");}
+    | ID ASIGNACION CONSTANTE condicion ';' up_down CONSTANTE ';' '(' condicion ')' {yyerror("Falta ';' en el FOR");}
+    | ID ASIGNACION CONSTANTE ';' condicion up_down CONSTANTE ';' '(' condicion ')' {yyerror("Falta ';' en el FOR");}
+    | ID ASIGNACION CONSTANTE ';' condicion ';' up_down '(' condicion ')' {yyerror("Falta constante después de UP/DOWN en el FOR");}
     ;
 
 up_down:
@@ -178,6 +179,7 @@ declaracion_tipo:
     | TYPEDEF TRIPLE '<' tipo_base '>' error {yyerror("Falta ID al final de la declaracion de tipo");}
     | TYPEDEF TRIPLE tipo_base '>' ID {yyerror("Falta diamante (<) en la declaracion de tipo");}
     | TYPEDEF TRIPLE '<' tipo_base ID {yyerror("Falta diamante (>) en la declaracion de tipo");}
+    | TYPEDEF '<' tipo_base '>' ID {yyerror("Falta TRIPLE en la declaracion de tipo");}
     ;
 
 invocacion_funcion:
@@ -194,8 +196,8 @@ fin_if:
 
 bloque_sentencias_ejecutables:
     sentencia_ejecutable ';'
-    | sentencia_ejecutable error {yyerror("Las sentencias deben terminar con ;");}
     | BEGIN list_sentencias_ejecutables END
+    | BEGIN error {yyerror("Se esperaba 'END' después del bloque BEGIN en el cuerpo FOR");}
     ;
 
 bloque_if:
