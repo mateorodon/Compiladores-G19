@@ -1,4 +1,4 @@
 prog
 begin
-   TYPEDEF<SINGLE> t1;
-end           
+   TYPEDEF TRIPLE SINGLE t1;
+end             
