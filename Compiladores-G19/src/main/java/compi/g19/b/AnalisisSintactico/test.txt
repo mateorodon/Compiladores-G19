@@ -1,14 +1,9 @@
 prog
 begin
-IF (x * y 4) THEN
-
-              outf(z);
-
-ELSE
-
-              begin
-
-                             z := 1;
-    end
-END_IF;
-end     
+    IF ((x , 4) < (a, v)) THEN
+        outf(z);
+        begin
+            z := 1;
+        end
+    END_IF;
+end

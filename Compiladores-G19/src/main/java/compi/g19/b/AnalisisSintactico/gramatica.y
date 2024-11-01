@@ -243,6 +243,7 @@ bloque_list_expresiones:
 list_expresiones:
     list_expresiones ',' expresion
     | expresion
+    | error {yyerror("Falta expresion en pattern matching");}
     ;
 
 salida_mensaje:
