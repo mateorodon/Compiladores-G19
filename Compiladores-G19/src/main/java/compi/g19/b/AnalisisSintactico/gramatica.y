@@ -199,26 +199,31 @@ bloque_sentencias_ejecutables:
     ;
 
 bloque_if:
-    IF '(' condicion ')' THEN cuerpo_if ELSE cuerpo_if fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF_ELSE");}
-    | IF '(' condicion ')' THEN cuerpo_if fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF");}
-    | IF '(' condicion ')' THEN cuerpo_if ELSE error fin_if {yyerror("Falta contenido en el bloque ELSE");}
-    | IF '(' condicion ')' THEN error fin_if {yyerror("Falta contenido en el bloque THEN");}
-    | IF  condicion ')' THEN cuerpo_if fin_if {yyerror("Falta paréntesis '(' en la condición del IF");}
-    | IF '(' condicion THEN cuerpo_if fin_if {yyerror("Falta paréntesis ')' en la condición del IF");}
-    | IF  condicion ')' THEN cuerpo_if ELSE cuerpo_if fin_if {yyerror("Falta paréntesis '(' en la condición del IF");}
-    | IF '(' condicion  THEN cuerpo_if ELSE cuerpo_if fin_if {yyerror("Falta paréntesis ')' en la condición del IF");}
+    IF '(' condicion ')' THEN cuerpo_if_unico fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF con una sola sentencia en THEN");}
+    | IF '(' condicion ')' THEN cuerpo_if_bloque fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF con múltiples sentencias en THEN");}
+    | IF '(' condicion ')' THEN cuerpo_if_unico ELSE cuerpo_if_unico fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF_ELSE con una sola sentencia en cada bloque");}
+    | IF '(' condicion ')' THEN cuerpo_if_bloque ELSE cuerpo_if_bloque fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF_ELSE con múltiples sentencias en cada bloque");}
+    | IF '(' condicion ')' THEN cuerpo_if_unico ELSE cuerpo_if_bloque fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF_ELSE con una sola sentencia en THEN y múltiples sentencias en ELSE");}
+    | IF '(' condicion ')' THEN cuerpo_if_bloque ELSE cuerpo_if_unico fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF_ELSE con múltiples sentencias en THEN y una sola sentencia en ELSE");}
     ;
 
-cuerpo_if:
-    bloque_sentencias_ejecutables
-    | BEGIN list_sentencias_ejecutables sentencia_return ';' END
+cuerpo_if_unico:
+    sentencia_ejecutable ';'
     | sentencia_return ';'
+    ;
+
+cuerpo_if_bloque:
+    BEGIN list_sentencias_ejecutables END
+    | BEGIN error {yyerror("Se esperaba 'END' después del bloque BEGIN en el cuerpo IF/ELSE");}
+    | list_sentencias_ejecutables END {yyerror("Se encontró 'END' sin un bloque BEGIN correspondiente en el cuerpo IF/ELSE");}
+    | error {yyerror("Se esperaba BEGIN y END por sentencias multiples");}
     ;
 
 list_sentencias_ejecutables:
     list_sentencias_ejecutables sentencia_ejecutable ';'
     | sentencia_ejecutable ';'
     ;
+
 
 comparacion:
     MAYORIGUAL
