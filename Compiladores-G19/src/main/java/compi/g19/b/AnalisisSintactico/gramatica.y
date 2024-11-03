@@ -95,15 +95,19 @@ list_variables:
     | ID
     ;
 
+encabezado_funcion:
+    tipo FUN ID {addAmbito($3.sval); hasReturn = false;}
+    |tipo FUN {yyerror("La funcione debe tener nombre"); hasReturn = false;}
+    ;
+
 declaracion_funcion:
-    tipo FUN ID '(' parametro ')' BEGIN {inFunction = true; hasReturn = false;} cuerpo_funcion { if (!hasReturn) {
-                                                                                                 	yyerror("Falta sentencia RET en la función");
-                                                                                                 }
-                                                                                                 inFunction = false;
-                                                                                                 } END
-    | tipo FUN ID '(' bloque_list_parametro ')' BEGIN cuerpo_funcion END {yyerror("La funcione no puede tener más de un parámetro");}
-    | tipo FUN '(' parametro ')' BEGIN cuerpo_funcion END {yyerror("La funcione debe tener nombre");}
-    | tipo FUN ID '(' ')' BEGIN cuerpo_funcion END {yyerror("La función debe tener parámetro");}
+    encabezado_funcion '(' parametro ')' BEGIN cuerpo_funcion { if (!hasReturn) {
+                                                            yyerror("Falta sentencia RET en la función");
+                                                         }
+                                                         removeAmbito();
+                                                         } END
+    | encabezado_funcion '(' bloque_list_parametro ')' BEGIN cuerpo_funcion END {yyerror("La funcione no puede tener más de un parámetro");removeAmbito();}
+    | encabezado_funcion '(' ')' BEGIN cuerpo_funcion END {yyerror("La función debe tener parámetro");removeAmbito();}
     ;
 
 parametro:
@@ -113,6 +117,7 @@ parametro:
 
 bloque_list_parametro:
      list_parametro ',' parametro
+     ;
 
 list_parametro:
     parametro
@@ -123,7 +128,9 @@ cuerpo_funcion:
     list_sentencias_funcion sentencia_return ';'
     | list_sentencias_funcion
     | sentencia_return ';'
+    |  {yyerror("El cuerpo de la funcion no puede ser vacio");}
     ;
+
 
 list_sentencias_funcion:
     list_sentencias_funcion sentencia
@@ -132,10 +139,12 @@ list_sentencias_funcion:
 
 
 sentencia_return:
-    RET '(' expresion ')' {if (!inFunction) {
+    RET '(' expresion ')' {if (ambito.length() < 5){  //si es menor es que es main
                                 yyerror("No puede haber una sentencia de retorno fuera de una funcion");
                            }
-                           hasReturn = true;
+                           if (!inIF){
+                                hasReturn = true;
+                           }
                            AnalizadorLexico.agregarEstructura("Se reconocio sentencia de retorno");}
     ;
 
@@ -201,13 +210,17 @@ bloque_sentencias_ejecutables:
     | BEGIN error {yyerror("Se esperaba 'END' después del bloque BEGIN en el cuerpo FOR");}
     ;
 
+encabezado_if:
+    IF {inIF=true;}
+    ;
+
 bloque_if:
-    IF '(' condicion ')' THEN cuerpo_if_unico fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF con una sola sentencia en THEN");}
-    | IF '(' condicion ')' THEN cuerpo_if_bloque fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF con múltiples sentencias en THEN");}
-    | IF '(' condicion ')' THEN cuerpo_if_unico ELSE cuerpo_if_unico fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF_ELSE con una sola sentencia en cada bloque");}
-    | IF '(' condicion ')' THEN cuerpo_if_bloque ELSE cuerpo_if_bloque fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF_ELSE con múltiples sentencias en cada bloque");}
-    | IF '(' condicion ')' THEN cuerpo_if_unico ELSE cuerpo_if_bloque fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF_ELSE con una sola sentencia en THEN y múltiples sentencias en ELSE");}
-    | IF '(' condicion ')' THEN cuerpo_if_bloque ELSE cuerpo_if_unico fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF_ELSE con múltiples sentencias en THEN y una sola sentencia en ELSE");}
+    encabezado_if '(' condicion ')' THEN cuerpo_if_unico fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF con una sola sentencia en THEN");inIF=false;}
+    | encabezado_if '(' condicion ')' THEN cuerpo_if_bloque fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF con múltiples sentencias en THEN"); inIF=false;}
+    | encabezado_if '(' condicion ')' THEN cuerpo_if_unico ELSE cuerpo_if_unico fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF_ELSE con una sola sentencia en cada bloque");inIF=false;}
+    | encabezado_if '(' condicion ')' THEN cuerpo_if_bloque ELSE cuerpo_if_bloque fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF_ELSE con múltiples sentencias en cada bloque");inIF=false;}
+    | encabezado_if '(' condicion ')' THEN cuerpo_if_unico ELSE cuerpo_if_bloque fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF_ELSE con una sola sentencia en THEN y múltiples sentencias en ELSE");inIF=false;}
+    | encabezado_if '(' condicion ')' THEN cuerpo_if_bloque ELSE cuerpo_if_unico fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF_ELSE con múltiples sentencias en THEN y una sola sentencia en ELSE");inIF=false;}
     ;
 
 cuerpo_if_unico:
@@ -216,15 +229,15 @@ cuerpo_if_unico:
     ;
 
 cuerpo_if_bloque:
-    BEGIN list_sentencias_ejecutables END
-    | BEGIN error {yyerror("Se esperaba 'END' después del bloque BEGIN en el cuerpo IF/ELSE");}
-    | list_sentencias_ejecutables END {yyerror("Se encontró 'END' sin un bloque BEGIN correspondiente en el cuerpo IF/ELSE");}
+    BEGIN list_sentencias_ejecutables END {inIF=true;}
+    | BEGIN error {yyerror("Se esperaba 'END' después del bloque BEGIN en el cuerpo IF/ELSE"); inIF=true;}
+    | list_sentencias_ejecutables END  {yyerror("Se encontró 'END' sin un bloque BEGIN correspondiente en el cuerpo IF/ELSE");inIF=true; }
     | error {yyerror("Se esperaba BEGIN y END por sentencias multiples");}
     ;
 
 list_sentencias_ejecutables:
-    list_sentencias_ejecutables sentencia_ejecutable ';'
-    | sentencia_ejecutable ';'
+    list_sentencias_ejecutables sentencia_ejecutable ';' {inIF=true;}
+    | sentencia_ejecutable ';'{inIF=true;}
     ;
 
 
@@ -265,8 +278,22 @@ private static final String ENTERO = "ulongint";
 private static final String FLOTANTE = "single";
 private static final float NEGATIVE_MIN = 1.17549435e-38f;
 private static final float NEGATIVE_MAX = 3.40282347e+38f;
-static boolean inFunction = false;
+
+static String ambito = "main";
+static boolean inIF = false;
 static boolean hasReturn = false;
+
+public void addAmbito(String ambitoActual){
+    ambito = ambito.concat(":" + ambitoActual);
+}
+
+public void removeAmbito(){
+        int index = ambito.lastIndexOf(':');
+
+        if (index != -1) {
+            ambito = ambito.substring(0, index);
+        }
+}
 
 public int yylex() throws IOException {
     Token t = AnalizadorLexico.obtenerToken();

@@ -1,4 +1,6 @@
 prog
 begin
-   TYPEDEF TRIPLE SINGLE t1;
-end             
+    SINGLE FUN F3 (ULONGINT z)
+    BEGIN
+    END
+end    
