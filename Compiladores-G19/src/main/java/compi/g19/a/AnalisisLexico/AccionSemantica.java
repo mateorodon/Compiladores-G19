@@ -71,7 +71,7 @@ public abstract class AccionSemantica {
                 lexema.append(c);
             }
             //Caso 2: Estoy en e2 ('lexema' ya tiene '!', '>', '<', ':') y viene algo que no es '='.
-            // Ejecuto esta AS y seteo 'lexema' como lexema y despues voy a resetaer.
+            // Ejecuto esta AS y seteo 'lexema' como lexema y despues voy a resetear.
             else {
                 int ascii = lexema.charAt(0);
                 token.setId((short) ascii);
@@ -141,17 +141,6 @@ public abstract class AccionSemantica {
         }
     }
 
-    static class error extends AccionSemantica {
-        @Override
-        public void ejecutar(StringBuilder lexema, Character c, Reader entrada) throws IOException {
-            String errorLexema = "ERROR";
-            lexema.setLength(0);
-            lexema.append(errorLexema);
-            token.setLexema(lexema);
-            entrada.reset();
-        }
-    }
-
     static class chequeoHexa extends AccionSemantica {
 
         private AccionSemantica chequeoEntero = new chequeoEntero();
@@ -159,7 +148,7 @@ public abstract class AccionSemantica {
         @Override
         public void ejecutar(StringBuilder lexema, Character c, Reader entrada) throws IOException {
             entrada.reset();
-            StringBuilder valorEntero = new StringBuilder(); // Inicializamos el StringBuilder
+            StringBuilder valorEntero = new StringBuilder();
             int index = 0;
 
             // Chequeamos que 'lexema' no tenga caracteres inválidos
@@ -172,7 +161,7 @@ public abstract class AccionSemantica {
                     }
                     else {index++;}
                 } else {
-                    index++; // Solo incrementamos el índice si el carácter es válido
+                    index++;
                 }
             }
 
@@ -189,7 +178,7 @@ public abstract class AccionSemantica {
                 AnalizadorLexico.agregarErrorLexico("La constante hexadecimal no se pudo parsear correctamente");
             }
 
-            valorEntero.append(parseado.toString());
+            valorEntero.append(parseado);
             this.chequeoEntero.ejecutar(valorEntero, c, entrada);
         }
     }

@@ -12,7 +12,6 @@ public class GeneradorMatriz {
     private static final AccionSemantica truncar = new AccionSemantica.truncar();
     private static final AccionSemantica comentario = new AccionSemantica.comentario();
     private static final AccionSemantica compararOAsignar = new AccionSemantica.compararOAsignar();
-    private static final AccionSemantica error = new AccionSemantica.error();
     private static final AccionSemantica cadena = new AccionSemantica.cadena();
 
 
@@ -67,8 +66,8 @@ public class GeneradorMatriz {
                 {resetGenerarASCII,concatenar,concatenar,resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII},
                 {resetGenerarASCII,resetGenerarASCII,resetGenerarASCII,resetGenerarASCII,resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, ignorar, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII, resetGenerarASCII},
                 {ignorar,ignorar,ignorar,ignorar,ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar},
-                {ignorar,ignorar,ignorar,ignorar,comentario, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, error},
-                {concatenar, concatenar,concatenar,concatenar,concatenar, concatenar, concatenar, concatenar, concatenar, concatenar, concatenar, concatenar,concatenar,cadena, concatenar, concatenar, concatenar, concatenar, concatenar, concatenar, error}
+                {ignorar,ignorar,ignorar,ignorar,comentario, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar, ignorar},
+                {concatenar, concatenar,concatenar,concatenar,concatenar, concatenar, concatenar, concatenar, concatenar, concatenar, concatenar, concatenar,concatenar,cadena, concatenar, concatenar, concatenar, concatenar, concatenar, concatenar, concatenar}
         };
     }
 
