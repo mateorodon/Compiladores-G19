@@ -167,8 +167,10 @@ public abstract class AccionSemantica {
                 if (!((caracter >= '0' && caracter <= '9') || (caracter >= 'A' && caracter <= 'F'))) {
                     if (!(index == 1 && caracter == 'x')) {
                         AnalizadorLexico.agregarErrorLexico("Las constantes hexadecimales no pueden contener caracteres inválidos: " + caracter);
-                        lexema.deleteCharAt(index); // Eliminar carácter inválido
+                        lexema.deleteCharAt(index);// Eliminar carácter inválido
+                        index++;
                     }
+                    else {index++;}
                 } else {
                     index++; // Solo incrementamos el índice si el carácter es válido
                 }
@@ -223,10 +225,11 @@ public abstract class AccionSemantica {
 
             token.setId(CONSTANTE);
             token.setTipo(ENTERO);
-            if ( ! TablaSimbolos.existeSimbolo(token.getLexema().toString()) ){
-                TablaSimbolos.addNuevoSimbolo(token.getLexema().toString(), new Token(token));
-            } else {
+            if (!TablaSimbolos.existeSimbolo(token.getLexema().toString())) {
                 TablaSimbolos.addSimbolo(token.getLexema().toString(), new Token(token));
+            } else {
+                Token t = TablaSimbolos.getToken(token.getLexema().toString());
+                TablaSimbolos.addSimbolo(token.getLexema().toString(), t);
             }
         }
     }
@@ -250,9 +253,10 @@ public abstract class AccionSemantica {
             token.setTipo(FLOTANTE);
 
             if (!TablaSimbolos.existeSimbolo(token.getLexema().toString())) {
-                TablaSimbolos.addNuevoSimbolo(token.getLexema().toString(), new Token(token));
-            } else {
                 TablaSimbolos.addSimbolo(token.getLexema().toString(), new Token(token));
+            } else {
+                Token t = TablaSimbolos.getToken(token.getLexema().toString());
+                TablaSimbolos.addSimbolo(token.getLexema().toString(), t);
             }
         }
 
@@ -335,9 +339,10 @@ public abstract class AccionSemantica {
                 token.setId(ID);
 
                 if ( ! TablaSimbolos.existeSimbolo(token.getLexema().toString()) ){
-                    TablaSimbolos.addNuevoSimbolo(token.getLexema().toString(), new Token(token));
-                } else {
                     TablaSimbolos.addSimbolo(token.getLexema().toString(), new Token(token));
+                } else {
+                    Token t = TablaSimbolos.getToken(token.getLexema().toString());
+                    TablaSimbolos.addSimbolo(token.getLexema().toString(),t);
                 }
             }
 
@@ -351,9 +356,10 @@ public abstract class AccionSemantica {
             token.setLexema(lexema);
 
             if (!TablaSimbolos.existeSimbolo(token.getLexema().toString())) {
-                TablaSimbolos.addNuevoSimbolo(token.getLexema().toString(), new Token(token));
-            } else {
                 TablaSimbolos.addSimbolo(token.getLexema().toString(), new Token(token));
+            } else {
+                Token t = TablaSimbolos.getToken(token.getLexema().toString());
+                TablaSimbolos.addSimbolo(token.getLexema().toString(), t);
             }
         }
     }
