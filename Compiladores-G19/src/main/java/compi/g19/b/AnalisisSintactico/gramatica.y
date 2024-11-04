@@ -4,6 +4,9 @@ import java.io.*;
 import compi.g19.a.AnalisisLexico.*;
 %}
 %token ID ASIGNACION MAYORIGUAL MENORIGUAL DISTINTO CONSTANTE CADENA IF THEN ELSE BEGIN END END_IF OUTF TYPEDEF FUN RET ULONGINT SINGLE FOR OR UP DOWN TRIPLE
+
+%left ','
+
 %%
 
 %start programa;
@@ -82,7 +85,14 @@ asignacion:
 
 tipo:
     tipo_base
-    | ID
+    | ID {Token t = TablaSimbolos.getToken($1.sval);
+            if (t!= null){
+                if (t.getUso() == null || !t.getUso().equals("tipo"))
+                    yyerror("El identificador '" + $1.sval + "' no es un tipo definido");
+            }
+            else {
+                yyerror("El identificador '" + $1.sval + "' no es un tipo definido");}
+            }
     ;
 
 tipo_base:
@@ -92,6 +102,7 @@ tipo_base:
 
 list_variables:
     list_variables ',' ID //Podriamos probar precedencia en este
+    | list_variables ID {yyerror("Las variables deben estar separadas por comas");}
     | ID
     ;
 
@@ -184,7 +195,8 @@ factor:
     ;
 
 declaracion_tipo:
-    TYPEDEF TRIPLE '<' tipo_base '>' ID //ID ES TIPO (AS)
+    TYPEDEF TRIPLE '<' tipo_base '>' ID {Token t = TablaSimbolos.getToken($6.sval);
+                                          t.setUso("tipo");}
     | TYPEDEF TRIPLE '<' tipo_base '>' error {yyerror("Falta ID al final de la declaracion de tipo");}
     | TYPEDEF TRIPLE tipo_base '>' ID {yyerror("Falta diamante (<) en la declaracion de tipo");}
     | TYPEDEF TRIPLE '<' tipo_base ID {yyerror("Falta diamante (>) en la declaracion de tipo");}
@@ -215,12 +227,12 @@ encabezado_if:
     ;
 
 bloque_if:
-    encabezado_if '(' condicion ')' THEN cuerpo_if_unico fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF con una sola sentencia en THEN");inIF=false;}
-    | encabezado_if '(' condicion ')' THEN cuerpo_if_bloque fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF con múltiples sentencias en THEN"); inIF=false;}
-    | encabezado_if '(' condicion ')' THEN cuerpo_if_unico ELSE cuerpo_if_unico fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF_ELSE con una sola sentencia en cada bloque");inIF=false;}
-    | encabezado_if '(' condicion ')' THEN cuerpo_if_bloque ELSE cuerpo_if_bloque fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF_ELSE con múltiples sentencias en cada bloque");inIF=false;}
-    | encabezado_if '(' condicion ')' THEN cuerpo_if_unico ELSE cuerpo_if_bloque fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF_ELSE con una sola sentencia en THEN y múltiples sentencias en ELSE");inIF=false;}
-    | encabezado_if '(' condicion ')' THEN cuerpo_if_bloque ELSE cuerpo_if_unico fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF_ELSE con múltiples sentencias en THEN y una sola sentencia en ELSE");inIF=false;}
+    encabezado_if '(' condicion ')' THEN cuerpo_if_unico fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF");inIF=false;}
+    | encabezado_if '(' condicion ')' THEN cuerpo_if_bloque fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF"); inIF=false;}
+    | encabezado_if '(' condicion ')' THEN cuerpo_if_unico ELSE cuerpo_if_unico fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false;}
+    | encabezado_if '(' condicion ')' THEN cuerpo_if_bloque ELSE cuerpo_if_bloque fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false;}
+    | encabezado_if '(' condicion ')' THEN cuerpo_if_unico ELSE cuerpo_if_bloque fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false;}
+    | encabezado_if '(' condicion ')' THEN cuerpo_if_bloque ELSE cuerpo_if_unico fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false;}
     ;
 
 cuerpo_if_unico:
