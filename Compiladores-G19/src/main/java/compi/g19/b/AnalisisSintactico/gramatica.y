@@ -1,7 +1,11 @@
 %{
 package compi.g19.b.AnalisisSintactico;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+
 import compi.g19.a.AnalisisLexico.*;
+import compi.g19.c.GeneracionDeCodigo.*;
 %}
 %token ID ASIGNACION MAYORIGUAL MENORIGUAL DISTINTO CONSTANTE CADENA IF THEN ELSE BEGIN END END_IF OUTF TYPEDEF FUN RET ULONGINT SINGLE FOR OR UP DOWN TRIPLE
 
@@ -23,14 +27,36 @@ list_sentencias: list_sentencias sentencia
     ;
 
 sentencia:
-    sentencia_declarativa ';'
+    sentencia_declarativa ';' {$$= new NodoHoja("Sentencia Declarativa");}
     | sentencia_ejecutable ';'
     | sentencia_ejecutable {yyerror("Las sentencias deben terminar con ;");}
     | sentencia_declarativa {yyerror("Las sentencias deben terminar con ;");}
     ;
 
 sentencia_declarativa:
-    tipo list_variables {AnalizadorLexico.agregarEstructura("Se reconocio declaracion de variable/s");}
+    tipo list_variables {AnalizadorLexico.agregarEstructura("Se reconocio declaracion de variable/s");
+                         for (String var: varDeclaradas){
+                            Token t = TablaSimbolos.getToken(var);
+                            if (!TablaSimbolos.existeSimbolo(var + ":" + ambito)){
+                                t.getLexema().setLength(0);
+                                t.getLexema().append(var).append(":").append(ambito);
+                                t.setAmbito(ambito);
+                                t.setUso("Variable");
+                                t.setTipo(tipoActual);
+                                TablaSimbolos.removeToken(var);
+                                TablaSimbolos.addSimbolo(t.getLexema().toString(),t);
+
+                            }
+                            else {
+                                TablaSimbolos.removeToken(var);
+                                agregarErrorSemantico("Ya existe una variable '" + var +"' definida en este ambito");
+                            }
+                         }
+                         varDeclaradas = new ArrayList<>();
+
+
+
+                         }
     | declaracion_funcion {AnalizadorLexico.agregarEstructura("Se reconocio declaracion de funcion");}
     | declaracion_tipo {AnalizadorLexico.agregarEstructura("Se reconocio declaracion de tipo");}
     ;
@@ -78,7 +104,11 @@ up_down:
     ;
 
 asignacion:
-    ID ASIGNACION expresion
+    ID ASIGNACION expresion { Token t = TablaSimbolos.getToken($1.sval + ":" + ambito);
+
+
+                            }
+    }
     | ID '[' CONSTANTE ']' ASIGNACION expresion
     | ID ASIGNACION error {yyerror("Falta parte derecha de la asignacion");}
     ;
@@ -92,18 +122,19 @@ tipo:
             }
             else {
                 yyerror("El identificador '" + $1.sval + "' no es un tipo definido");}
+            tipoActual = $1.sval;
             }
     ;
 
 tipo_base:
-    ULONGINT
-    | SINGLE
+    ULONGINT {tipoActual = $1.sval;}
+    | SINGLE {tipoActual = $1.sval;}
     ;
 
 list_variables:
-    list_variables ',' ID //Podriamos probar precedencia en este
+    list_variables ',' ID {varDeclaradas.add($3.sval);}
     | list_variables ID {yyerror("Las variables deben estar separadas por comas");}
-    | ID
+    | ID {varDeclaradas.add($1.sval);}
     ;
 
 encabezado_funcion:
@@ -294,6 +325,9 @@ private static final float NEGATIVE_MAX = 3.40282347e+38f;
 static String ambito = "main";
 static boolean inIF = false;
 static boolean hasReturn = false;
+static List<String> varDeclaradas = new ArrayList<>();
+static String tipoActual;
+static List<String> erroresSemanticos = new ArrayList<>();
 
 public void addAmbito(String ambitoActual){
     ambito = ambito.concat(":" + ambitoActual);
@@ -319,6 +353,15 @@ public int yylex() throws IOException {
 
 public static void yyerror(String error){
     AnalizadorLexico.agregarErrorSintactico(error);
+}
+
+public static void agregarErrorSemantico(String error){
+    erroresSemanticos.add(error + " en la linea " + AnalizadorLexico.lineaAct);
+}
+
+public static void imprimirErroresSemanticos(){
+    for (String e : erroresSemanticos)
+        System.out.println(e);
 }
 
 private void chequeoFlotantesPositivos(String lexema){

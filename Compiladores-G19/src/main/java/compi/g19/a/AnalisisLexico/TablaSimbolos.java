@@ -40,7 +40,7 @@ public class TablaSimbolos {
         return simbolos.get(lexema);
     }
 
-    public void removeToken (String lexema){
+    public static void removeToken (String lexema){
         simbolos.remove(lexema);
     }
 

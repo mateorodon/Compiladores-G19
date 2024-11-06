@@ -70,6 +70,8 @@ public class Main {
         AnalizadorLexico.imprimirErroresLexicos();
         System.out.println("-----------ERRORES SINTACTICOS----------");
         AnalizadorLexico.imprimirErroresSintacticos();
+        System.out.println("-----------ERRORES SEMANTICOS----------");
+        Parser.imprimirErroresSemanticos();
         System.out.println("----------WARNINGS-----------");
         AnalizadorLexico.imprimirWarnings();
     }

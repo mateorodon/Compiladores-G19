@@ -1,9 +1,5 @@
 package compi.g19.c.GeneracionDeCodigo;
 
-
-import lombok.Data;
-
-@Data
 public class NodoComun extends Nodo{
 
     /*
@@ -20,6 +16,11 @@ public class NodoComun extends Nodo{
     private Nodo izq;
     private Nodo der; //Si tiene un solo hijo, der es null
 
+    public NodoComun(String nombre){
+        super(nombre);
+        izq = null;
+        der = null;
+    }
     @Override
     public void recorrerArbol() {
         //

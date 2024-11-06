@@ -19,8 +19,12 @@
 //#line 2 "gramatica.y"
 package compi.g19.b.AnalisisSintactico;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+
 import compi.g19.a.AnalisisLexico.*;
-//#line 21 "Parser.java"
+import compi.g19.c.GeneracionDeCodigo.*;
+//#line 25 "Parser.java"
 
 
 
@@ -616,7 +620,7 @@ final static String yyrule[] = {
 "salida_mensaje : OUTF '(' ')'",
 };
 
-//#line 288 "gramatica.y"
+//#line 316 "gramatica.y"
 private static final String ENTERO = "ulongint";
 private static final String FLOTANTE = "single";
 private static final float NEGATIVE_MIN = 1.17549435e-38f;
@@ -625,6 +629,9 @@ private static final float NEGATIVE_MAX = 3.40282347e+38f;
 static String ambito = "main";
 static boolean inIF = false;
 static boolean hasReturn = false;
+static List<String> varDeclaradas = new ArrayList<>();
+static String tipoActual;
+static List<String> erroresSemanticos = new ArrayList<>();
 
 public void addAmbito(String ambitoActual){
     ambito = ambito.concat(":" + ambitoActual);
@@ -652,6 +659,15 @@ public static void yyerror(String error){
     AnalizadorLexico.agregarErrorSintactico(error);
 }
 
+public static void agregarErrorSemantico(String error){
+    erroresSemanticos.add(error + " en la linea " + AnalizadorLexico.lineaAct);
+}
+
+public static void imprimirErroresSemanticos(){
+    for (String e : erroresSemanticos)
+        System.out.println(e);
+}
+
 private void chequeoFlotantesPositivos(String lexema){
     float valor = Float.parseFloat(lexema);
     if  ((valor != 0f) && (valor < AccionSemantica.SINGLE_POSITIVE_MIN || valor >= Float.POSITIVE_INFINITY)) {
@@ -659,7 +675,7 @@ private void chequeoFlotantesPositivos(String lexema){
     }
 }
 
-//#line 591 "Parser.java"
+//#line 607 "Parser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -813,111 +829,137 @@ boolean doaction;
       {
 //########## USER-SUPPLIED ACTIONS ##########
 case 1:
-//#line 13 "gramatica.y"
+//#line 18 "gramatica.y"
 {AnalizadorLexico.agregarEstructura("Se reconocio el programa");}
 break;
 case 2:
-//#line 14 "gramatica.y"
+//#line 19 "gramatica.y"
 {yyerror("El programa debe tener un nombre");}
 break;
 case 3:
-//#line 15 "gramatica.y"
+//#line 20 "gramatica.y"
 {yyerror("Falta delimitador END del programa");}
 break;
 case 4:
-//#line 16 "gramatica.y"
+//#line 21 "gramatica.y"
 {yyerror("Falta delimitador BEGIN del programa");}
 break;
 case 5:
-//#line 17 "gramatica.y"
+//#line 22 "gramatica.y"
 {yyerror("Faltan los delimitadores del programa");}
 break;
+case 8:
+//#line 30 "gramatica.y"
+{yyval= new NodoHoja("Sentencia Declarativa");}
+break;
 case 10:
-//#line 27 "gramatica.y"
+//#line 32 "gramatica.y"
 {yyerror("Las sentencias deben terminar con ;");}
 break;
 case 11:
-//#line 28 "gramatica.y"
+//#line 33 "gramatica.y"
 {yyerror("Las sentencias deben terminar con ;");}
 break;
 case 12:
-//#line 32 "gramatica.y"
-{AnalizadorLexico.agregarEstructura("Se reconocio declaracion de variable/s");}
+//#line 37 "gramatica.y"
+{AnalizadorLexico.agregarEstructura("Se reconocio declaracion de variable/s");
+                         for (String var: varDeclaradas){
+                            Token t = TablaSimbolos.getToken(var);
+                            if (!TablaSimbolos.existeSimbolo(var + ":" + ambito)){
+                                t.getLexema().setLength(0);
+                                t.getLexema().append(var).append(":").append(ambito);
+                                t.setAmbito(ambito);
+                                t.setUso("Variable");
+                                t.setTipo(tipoActual);
+                                TablaSimbolos.removeToken(var);
+                                TablaSimbolos.addSimbolo(t.getLexema().toString(),t);
+
+                            }
+                            else {
+                                TablaSimbolos.removeToken(var);
+                                agregarErrorSemantico("Ya existe una variable '" + var +"' definida en este ambito");
+                            }
+                         }
+                         varDeclaradas = new ArrayList<>();
+
+
+
+                         }
 break;
 case 13:
-//#line 33 "gramatica.y"
+//#line 60 "gramatica.y"
 {AnalizadorLexico.agregarEstructura("Se reconocio declaracion de funcion");}
 break;
 case 14:
-//#line 34 "gramatica.y"
+//#line 61 "gramatica.y"
 {AnalizadorLexico.agregarEstructura("Se reconocio declaracion de tipo");}
 break;
 case 15:
-//#line 38 "gramatica.y"
+//#line 65 "gramatica.y"
 {AnalizadorLexico.agregarEstructura("Se reconocio una asignacion");}
 break;
 case 16:
-//#line 39 "gramatica.y"
+//#line 66 "gramatica.y"
 {AnalizadorLexico.agregarEstructura("Se reconocio una invocacion a funcion");}
 break;
 case 21:
-//#line 48 "gramatica.y"
+//#line 75 "gramatica.y"
 {yyerror("Falta cuerpo del FOR");}
 break;
 case 22:
-//#line 49 "gramatica.y"
+//#line 76 "gramatica.y"
 {yyerror("Falta parentensis en el FOR");}
 break;
 case 23:
-//#line 50 "gramatica.y"
+//#line 77 "gramatica.y"
 {yyerror("Falta parentensis en el FOR");}
 break;
 case 26:
-//#line 59 "gramatica.y"
+//#line 86 "gramatica.y"
 {AnalizadorLexico.agregarEstructura("Se reconoció un FOR de 3");}
 break;
 case 27:
-//#line 60 "gramatica.y"
+//#line 87 "gramatica.y"
 {yyerror("Falta UP/DOWN en el FOR");}
 break;
 case 28:
-//#line 61 "gramatica.y"
+//#line 88 "gramatica.y"
 {yyerror("Falta ';' en el FOR");}
 break;
 case 29:
-//#line 62 "gramatica.y"
+//#line 89 "gramatica.y"
 {yyerror("Falta ';' en el FOR");}
 break;
 case 30:
-//#line 63 "gramatica.y"
+//#line 90 "gramatica.y"
 {yyerror("Falta constante después de UP/DOWN en el FOR");}
 break;
 case 31:
-//#line 67 "gramatica.y"
+//#line 94 "gramatica.y"
 {AnalizadorLexico.agregarEstructura("Se reconoció un FOR con condición");}
 break;
 case 32:
-//#line 68 "gramatica.y"
+//#line 95 "gramatica.y"
 {yyerror("Falta UP/DOWN en el FOR");}
 break;
 case 33:
-//#line 69 "gramatica.y"
+//#line 96 "gramatica.y"
 {yyerror("Falta ';' en el FOR");}
 break;
 case 34:
-//#line 70 "gramatica.y"
+//#line 97 "gramatica.y"
 {yyerror("Falta ';' en el FOR");}
 break;
 case 35:
-//#line 71 "gramatica.y"
+//#line 98 "gramatica.y"
 {yyerror("Falta constante después de UP/DOWN en el FOR");}
 break;
 case 40:
-//#line 82 "gramatica.y"
+//#line 109 "gramatica.y"
 {yyerror("Falta parte derecha de la asignacion");}
 break;
 case 42:
-//#line 87 "gramatica.y"
+//#line 114 "gramatica.y"
 {Token t = TablaSimbolos.getToken(val_peek(0).sval);
             if (t!= null){
                 if (t.getUso() == null || !t.getUso().equals("tipo"))
@@ -925,22 +967,39 @@ case 42:
             }
             else {
                 yyerror("El identificador '" + val_peek(0).sval + "' no es un tipo definido");}
+            tipoActual = val_peek(0).sval;
             }
 break;
+case 43:
+//#line 126 "gramatica.y"
+{tipoActual = val_peek(0).sval;}
+break;
+case 44:
+//#line 127 "gramatica.y"
+{tipoActual = val_peek(0).sval;}
+break;
+case 45:
+//#line 131 "gramatica.y"
+{varDeclaradas.add(val_peek(0).sval);}
+break;
 case 46:
-//#line 104 "gramatica.y"
+//#line 132 "gramatica.y"
 {yyerror("Las variables deben estar separadas por comas");}
 break;
+case 47:
+//#line 133 "gramatica.y"
+{varDeclaradas.add(val_peek(0).sval);}
+break;
 case 48:
-//#line 109 "gramatica.y"
+//#line 137 "gramatica.y"
 {addAmbito(val_peek(0).sval); hasReturn = false;}
 break;
 case 49:
-//#line 110 "gramatica.y"
+//#line 138 "gramatica.y"
 {yyerror("La funcione debe tener nombre"); hasReturn = false;}
 break;
 case 50:
-//#line 114 "gramatica.y"
+//#line 142 "gramatica.y"
 { if (!hasReturn) {
                                                             yyerror("Falta sentencia RET en la función");
                                                          }
@@ -948,23 +1007,23 @@ case 50:
                                                          }
 break;
 case 52:
-//#line 119 "gramatica.y"
+//#line 147 "gramatica.y"
 {yyerror("La funcione no puede tener más de un parámetro");removeAmbito();}
 break;
 case 53:
-//#line 120 "gramatica.y"
+//#line 148 "gramatica.y"
 {yyerror("La función debe tener parámetro");removeAmbito();}
 break;
 case 55:
-//#line 125 "gramatica.y"
+//#line 153 "gramatica.y"
 {yyerror("El parametro debe tener su tipo");}
 break;
 case 62:
-//#line 141 "gramatica.y"
+//#line 169 "gramatica.y"
 {yyerror("El cuerpo de la funcion no puede ser vacio");}
 break;
 case 65:
-//#line 152 "gramatica.y"
+//#line 180 "gramatica.y"
 {if (ambito.length() < 5){  /*si es menor es que es main*/
                                 yyerror("No puede haber una sentencia de retorno fuera de una funcion");
                            }
@@ -974,23 +1033,23 @@ case 65:
                            AnalizadorLexico.agregarEstructura("Se reconocio sentencia de retorno");}
 break;
 case 69:
-//#line 165 "gramatica.y"
+//#line 193 "gramatica.y"
 {yyerror("Se esperaba un termino");}
 break;
 case 70:
-//#line 166 "gramatica.y"
+//#line 194 "gramatica.y"
 {yyerror("Se esperaba un termino");}
 break;
 case 74:
-//#line 173 "gramatica.y"
+//#line 201 "gramatica.y"
 {yyerror("Se esperaba un factor");}
 break;
 case 75:
-//#line 174 "gramatica.y"
+//#line 202 "gramatica.y"
 {yyerror("Se esperaba un factor");}
 break;
 case 77:
-//#line 179 "gramatica.y"
+//#line 207 "gramatica.y"
 {Token t = TablaSimbolos.getToken(val_peek(0).sval);
                                  if (t != null && (t.getTipo().equals(FLOTANTE))) {
                                      String lexema = t.getLexema().toString();
@@ -1000,138 +1059,138 @@ case 77:
                  }
 break;
 case 78:
-//#line 186 "gramatica.y"
+//#line 214 "gramatica.y"
 {AnalizadorLexico.agregarEstructura("Se reconocio una invocacion a funcion");}
 break;
 case 81:
-//#line 189 "gramatica.y"
+//#line 217 "gramatica.y"
 {Token t = TablaSimbolos.getToken(val_peek(1).sval);
                                         if (t != null && t.getTipo().equals(ENTERO))
                                             yyerror("Las constantes de tipo ulongint no pueden ser negativas");
                     }
 break;
 case 83:
-//#line 197 "gramatica.y"
+//#line 225 "gramatica.y"
 {Token t = TablaSimbolos.getToken(val_peek(0).sval);
                                           t.setUso("tipo");}
 break;
 case 84:
-//#line 199 "gramatica.y"
+//#line 227 "gramatica.y"
 {yyerror("Falta ID al final de la declaracion de tipo");}
 break;
 case 85:
-//#line 200 "gramatica.y"
+//#line 228 "gramatica.y"
 {yyerror("Falta diamante (<) en la declaracion de tipo");}
 break;
 case 86:
-//#line 201 "gramatica.y"
+//#line 229 "gramatica.y"
 {yyerror("Falta diamante (>) en la declaracion de tipo");}
 break;
 case 87:
-//#line 202 "gramatica.y"
+//#line 230 "gramatica.y"
 {yyerror("Faltan diamantes (</>) en la declaracion de tipo");}
 break;
 case 88:
-//#line 203 "gramatica.y"
+//#line 231 "gramatica.y"
 {yyerror("Falta TRIPLE en la declaracion de tipo");}
 break;
 case 90:
-//#line 208 "gramatica.y"
+//#line 236 "gramatica.y"
 {yyerror("La funcion no puede tener mas de un parametro");}
 break;
 case 91:
-//#line 209 "gramatica.y"
+//#line 237 "gramatica.y"
 {yyerror("La funcion debe tener un parametro");}
 break;
 case 92:
-//#line 210 "gramatica.y"
+//#line 238 "gramatica.y"
 {AnalizadorLexico.agregarEstructura("Se reconocio conversion");}
 break;
 case 94:
-//#line 215 "gramatica.y"
+//#line 243 "gramatica.y"
 {yyerror("La sentencia IF deben terminar con END_IF");}
 break;
 case 97:
-//#line 221 "gramatica.y"
+//#line 249 "gramatica.y"
 {yyerror("Se esperaba 'END' después del bloque BEGIN en el cuerpo FOR");}
 break;
 case 98:
-//#line 225 "gramatica.y"
+//#line 253 "gramatica.y"
 {inIF=true;}
 break;
 case 99:
-//#line 229 "gramatica.y"
+//#line 257 "gramatica.y"
 {AnalizadorLexico.agregarEstructura("Se reconocio un IF");inIF=false;}
 break;
 case 100:
-//#line 230 "gramatica.y"
+//#line 258 "gramatica.y"
 {AnalizadorLexico.agregarEstructura("Se reconocio un IF"); inIF=false;}
 break;
 case 101:
-//#line 231 "gramatica.y"
+//#line 259 "gramatica.y"
 {AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false;}
 break;
 case 102:
-//#line 232 "gramatica.y"
+//#line 260 "gramatica.y"
 {AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false;}
 break;
 case 103:
-//#line 233 "gramatica.y"
+//#line 261 "gramatica.y"
 {AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false;}
 break;
 case 104:
-//#line 234 "gramatica.y"
+//#line 262 "gramatica.y"
 {AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false;}
 break;
 case 107:
-//#line 243 "gramatica.y"
+//#line 271 "gramatica.y"
 {inIF=true;}
 break;
 case 108:
-//#line 244 "gramatica.y"
+//#line 272 "gramatica.y"
 {yyerror("Se esperaba 'END' después del bloque BEGIN en el cuerpo IF/ELSE"); inIF=true;}
 break;
 case 109:
-//#line 245 "gramatica.y"
+//#line 273 "gramatica.y"
 {yyerror("Se encontró 'END' sin un bloque BEGIN correspondiente en el cuerpo IF/ELSE");inIF=true; }
 break;
 case 110:
-//#line 246 "gramatica.y"
+//#line 274 "gramatica.y"
 {yyerror("Se esperaba BEGIN y END por sentencias multiples");}
 break;
 case 111:
-//#line 250 "gramatica.y"
+//#line 278 "gramatica.y"
 {inIF=true;}
 break;
 case 112:
-//#line 251 "gramatica.y"
+//#line 279 "gramatica.y"
 {inIF=true;}
 break;
 case 120:
-//#line 266 "gramatica.y"
+//#line 294 "gramatica.y"
 {AnalizadorLexico.agregarEstructura("Se reconocio pattern matching");}
 break;
 case 121:
-//#line 267 "gramatica.y"
+//#line 295 "gramatica.y"
 {yyerror("Falta comparador en la condicion");}
 break;
 case 125:
-//#line 278 "gramatica.y"
+//#line 306 "gramatica.y"
 {yyerror("Falta expresion en pattern matching");}
 break;
 case 126:
-//#line 282 "gramatica.y"
+//#line 310 "gramatica.y"
 {AnalizadorLexico.agregarEstructura("Se reconocio salida de mensaje por pantalla");}
 break;
 case 127:
-//#line 283 "gramatica.y"
+//#line 311 "gramatica.y"
 {AnalizadorLexico.agregarEstructura("Se reconocio salida de mensaje por pantalla");}
 break;
 case 128:
-//#line 284 "gramatica.y"
+//#line 312 "gramatica.y"
 {yyerror("Falta de parametro en funcion OUTF");}
 break;
-//#line 1059 "Parser.java"
+//#line 1118 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####
