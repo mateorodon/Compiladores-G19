@@ -41,7 +41,7 @@ sentencia_declarativa:
                                 t.getLexema().setLength(0);
                                 t.getLexema().append(var).append(":").append(ambito);
                                 t.setAmbito(ambito);
-                                t.setUso("Variable");
+                                t.setUso("variable");
                                 t.setTipo(tipoActual);
                                 TablaSimbolos.removeToken(var);
                                 TablaSimbolos.addSimbolo(t.getLexema().toString(),t);
@@ -49,14 +49,11 @@ sentencia_declarativa:
                             }
                             else {
                                 TablaSimbolos.removeToken(var);
-                                agregarErrorSemantico("Ya existe una variable '" + var +"' definida en este ambito");
-                            }
+                                variableYaDeclarada(var);
+                                }
                          }
                          varDeclaradas = new ArrayList<>();
-
-
-
-                         }
+                        }
     | declaracion_funcion {AnalizadorLexico.agregarEstructura("Se reconocio declaracion de funcion");}
     | declaracion_tipo {AnalizadorLexico.agregarEstructura("Se reconocio declaracion de tipo");}
     ;
@@ -104,18 +101,21 @@ up_down:
     ;
 
 asignacion:
-    ID ASIGNACION expresion { Token t = TablaSimbolos.getToken($1.sval + ":" + ambito);
+    ID ASIGNACION expresion { String ambitoVar = buscarAmbito(ambito,$1.sval);
+                              if (ambitoVar.equals(""))
+                                  agregarErrorSemantico("La variable " + $1.sval + " no fue declarada");
+                              else {
 
-
+                              }
+                              Token t = TablaSimbolos.getToken($1.sval + ":" + ambito);
                             }
-    }
     | ID '[' CONSTANTE ']' ASIGNACION expresion
     | ID ASIGNACION error {yyerror("Falta parte derecha de la asignacion");}
     ;
 
 tipo:
     tipo_base
-    | ID {Token t = TablaSimbolos.getToken($1.sval);
+    | ID {Token t = TablaSimbolos.getToken($1.sval + ":" + ambito);
             if (t!= null){
                 if (t.getUso() == null || !t.getUso().equals("tipo"))
                     yyerror("El identificador '" + $1.sval + "' no es un tipo definido");
@@ -138,7 +138,24 @@ list_variables:
     ;
 
 encabezado_funcion:
-    tipo FUN ID {addAmbito($3.sval); hasReturn = false;}
+    tipo FUN ID {hasReturn = false;
+                String idFuncion = $3.sval;
+                 Token t = TablaSimbolos.getToken(idFuncion);
+                 if (!TablaSimbolos.existeSimbolo(idFuncion + ":" + ambito)){
+                    t.getLexema().setLength(0);
+                    t.getLexema().append(idFuncion).append(":").append(ambito);
+                    t.setAmbito(ambito);
+                    t.setUso("funcion");
+                    t.setTipo(tipoActual);
+                    TablaSimbolos.removeToken(idFuncion);
+                    TablaSimbolos.addSimbolo(t.getLexema().toString(),t);
+                 }
+                 else {
+                    TablaSimbolos.removeToken(idFuncion);
+                    variableYaDeclarada(idFuncion);
+                 }
+                 addAmbito(idFuncion);
+                 }
     |tipo FUN {yyerror("La funcione debe tener nombre"); hasReturn = false;}
     ;
 
@@ -226,8 +243,22 @@ factor:
     ;
 
 declaracion_tipo:
-    TYPEDEF TRIPLE '<' tipo_base '>' ID {Token t = TablaSimbolos.getToken($6.sval);
-                                          t.setUso("tipo");}
+    TYPEDEF TRIPLE '<' tipo_base '>' ID {String idTipo = $6.sval;
+                                         Token t = TablaSimbolos.getToken(idTipo);
+                                         if (!TablaSimbolos.existeSimbolo(idTipo + ":" + ambito)){
+                                            t.getLexema().setLength(0);
+                                            t.getLexema().append(idTipo).append(":").append(ambito);
+                                            t.setAmbito(ambito);
+                                            t.setUso("tipo");
+                                            t.setTipo("triple");
+                                            TablaSimbolos.removeToken(idTipo);
+                                            TablaSimbolos.addSimbolo(t.getLexema().toString(),t);
+                                            }
+                                         else {
+                                            TablaSimbolos.removeToken(idTipo);
+                                            variableYaDeclarada(idTipo);
+                                         }
+                                         }
     | TYPEDEF TRIPLE '<' tipo_base '>' error {yyerror("Falta ID al final de la declaracion de tipo");}
     | TYPEDEF TRIPLE tipo_base '>' ID {yyerror("Falta diamante (<) en la declaracion de tipo");}
     | TYPEDEF TRIPLE '<' tipo_base ID {yyerror("Falta diamante (>) en la declaracion de tipo");}
@@ -329,18 +360,6 @@ static List<String> varDeclaradas = new ArrayList<>();
 static String tipoActual;
 static List<String> erroresSemanticos = new ArrayList<>();
 
-public void addAmbito(String ambitoActual){
-    ambito = ambito.concat(":" + ambitoActual);
-}
-
-public void removeAmbito(){
-        int index = ambito.lastIndexOf(':');
-
-        if (index != -1) {
-            ambito = ambito.substring(0, index);
-        }
-}
-
 public int yylex() throws IOException {
     Token t = AnalizadorLexico.obtenerToken();
     if (t!= null){
@@ -355,6 +374,46 @@ public static void yyerror(String error){
     AnalizadorLexico.agregarErrorSintactico(error);
 }
 
+public void addAmbito(String ambitoActual){
+    ambito = ambito.concat(":" + ambitoActual);
+}
+
+public void removeAmbito(){
+        int index = ambito.lastIndexOf(':');
+
+        if (index != -1) {
+            ambito = ambito.substring(0, index);
+        }
+}
+
+private void chequeoFlotantesPositivos(String lexema){
+    float valor = Float.parseFloat(lexema);
+    if  ((valor != 0f) && (valor < AccionSemantica.SINGLE_POSITIVE_MIN || valor >= Float.POSITIVE_INFINITY)) {
+        yyerror("Constante flotante fuera de rango");
+    }
+}
+
+public String buscarAmbito(String ambitoActual, String lexema) {
+    String ambito = ambitoActual;
+
+    while (!TablaSimbolos.existeSimbolo(lexema + ":" + ambito)) {
+        if (ambito.equals("main")) {
+            return "";
+        }
+        int index = ambito.lastIndexOf(':');
+        if (index == -1) {
+            return "";
+        }
+
+        ambito = ambito.substring(0, index); // Reduce el ámbito
+    }
+    
+    return ambito;
+}
+
+
+
+
 public static void agregarErrorSemantico(String error){
     erroresSemanticos.add(error + " en la linea " + AnalizadorLexico.lineaAct);
 }
@@ -364,10 +423,20 @@ public static void imprimirErroresSemanticos(){
         System.out.println(e);
 }
 
-private void chequeoFlotantesPositivos(String lexema){
-    float valor = Float.parseFloat(lexema);
-    if  ((valor != 0f) && (valor < AccionSemantica.SINGLE_POSITIVE_MIN || valor >= Float.POSITIVE_INFINITY)) {
-        yyerror("Constante flotante fuera de rango");
+private void variableYaDeclarada(String var){
+    Token t1 = TablaSimbolos.getToken(var + ":" + ambito);
+    switch (t1.getUso()) {
+        case "variable":
+            agregarErrorSemantico("Ya existe una variable con el nombre '" + var + "' definida en este ámbito");
+            break;
+        case "funcion":
+            agregarErrorSemantico("Ya existe una función con el nombre '" + var + "' definida en este ámbito");
+            break;
+        case "tipo":
+            agregarErrorSemantico("Ya existe un tipo con el nombre '" + var + "' definido en este ámbito");
+            break;
+        default:
+            break;
     }
 }
 
