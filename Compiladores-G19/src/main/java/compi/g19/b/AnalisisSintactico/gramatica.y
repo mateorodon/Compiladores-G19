@@ -105,9 +105,10 @@ asignacion:
                               if (ambitoVar.equals(""))
                                   agregarErrorSemantico("La variable " + $1.sval + " no fue declarada");
                               else {
-
+                                  Token t = TablaSimbolos.getToken($1.sval + ":" + ambitoVar);
+                                  if (!t.getUso().equals("variable"))
+                                    agregarErrorSemantico("La expresion en la parte izquierda de la asignación debe ser una variable. Se encontró un elemento no asignable (" + t.getUso() + ")" );
                               }
-                              Token t = TablaSimbolos.getToken($1.sval + ":" + ambito);
                             }
     | ID '[' CONSTANTE ']' ASIGNACION expresion
     | ID ASIGNACION error {yyerror("Falta parte derecha de la asignacion");}

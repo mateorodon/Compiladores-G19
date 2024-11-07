@@ -620,7 +620,7 @@ final static String yyrule[] = {
 "salida_mensaje : OUTF '(' ')'",
 };
 
-//#line 351 "gramatica.y"
+//#line 352 "gramatica.y"
 private static final String ENTERO = "ulongint";
 private static final String FLOTANTE = "single";
 private static final float NEGATIVE_MIN = 1.17549435e-38f;
@@ -993,19 +993,20 @@ case 38:
 //#line 104 "gramatica.y"
 { String ambitoVar = buscarAmbito(ambito,val_peek(2).sval);
                               if (ambitoVar.equals(""))
-                                  agregarErrorSemantico("La variable " + val_peek(2).sval + " no fue declarada en este ambito");
+                                  agregarErrorSemantico("La variable " + val_peek(2).sval + " no fue declarada");
                               else {
-
+                                  Token t = TablaSimbolos.getToken(val_peek(2).sval + ":" + ambitoVar);
+                                  if (!t.getUso().equals("variable"))
+                                    agregarErrorSemantico("La expresion en la parte izquierda de la asignación debe ser una variable. Se encontró un elemento no asignable (" + t.getUso() + ")" );
                               }
-                              Token t = TablaSimbolos.getToken(val_peek(2).sval + ":" + ambito);
                             }
 break;
 case 40:
-//#line 113 "gramatica.y"
+//#line 114 "gramatica.y"
 {yyerror("Falta parte derecha de la asignacion");}
 break;
 case 42:
-//#line 118 "gramatica.y"
+//#line 119 "gramatica.y"
 {Token t = TablaSimbolos.getToken(val_peek(0).sval + ":" + ambito);
             if (t!= null){
                 if (t.getUso() == null || !t.getUso().equals("tipo"))
@@ -1017,27 +1018,27 @@ case 42:
             }
 break;
 case 43:
-//#line 130 "gramatica.y"
-{tipoActual = val_peek(0).sval;}
-break;
-case 44:
 //#line 131 "gramatica.y"
 {tipoActual = val_peek(0).sval;}
 break;
+case 44:
+//#line 132 "gramatica.y"
+{tipoActual = val_peek(0).sval;}
+break;
 case 45:
-//#line 135 "gramatica.y"
+//#line 136 "gramatica.y"
 {varDeclaradas.add(val_peek(0).sval);}
 break;
 case 46:
-//#line 136 "gramatica.y"
+//#line 137 "gramatica.y"
 {yyerror("Las variables deben estar separadas por comas");}
 break;
 case 47:
-//#line 137 "gramatica.y"
+//#line 138 "gramatica.y"
 {varDeclaradas.add(val_peek(0).sval);}
 break;
 case 48:
-//#line 141 "gramatica.y"
+//#line 142 "gramatica.y"
 {hasReturn = false;
                 String idFuncion = val_peek(0).sval;
                  Token t = TablaSimbolos.getToken(idFuncion);
@@ -1058,11 +1059,11 @@ case 48:
                  }
 break;
 case 49:
-//#line 159 "gramatica.y"
+//#line 160 "gramatica.y"
 {yyerror("La funcione debe tener nombre"); hasReturn = false;}
 break;
 case 50:
-//#line 163 "gramatica.y"
+//#line 164 "gramatica.y"
 { if (!hasReturn) {
                                                             yyerror("Falta sentencia RET en la función");
                                                          }
@@ -1070,23 +1071,23 @@ case 50:
                                                          }
 break;
 case 52:
-//#line 168 "gramatica.y"
+//#line 169 "gramatica.y"
 {yyerror("La funcione no puede tener más de un parámetro");removeAmbito();}
 break;
 case 53:
-//#line 169 "gramatica.y"
+//#line 170 "gramatica.y"
 {yyerror("La función debe tener parámetro");removeAmbito();}
 break;
 case 55:
-//#line 174 "gramatica.y"
+//#line 175 "gramatica.y"
 {yyerror("El parametro debe tener su tipo");}
 break;
 case 62:
-//#line 190 "gramatica.y"
+//#line 191 "gramatica.y"
 {yyerror("El cuerpo de la funcion no puede ser vacio");}
 break;
 case 65:
-//#line 201 "gramatica.y"
+//#line 202 "gramatica.y"
 {if (ambito.length() < 5){  /*si es menor es que es main*/
                                 yyerror("No puede haber una sentencia de retorno fuera de una funcion");
                            }
@@ -1096,23 +1097,23 @@ case 65:
                            AnalizadorLexico.agregarEstructura("Se reconocio sentencia de retorno");}
 break;
 case 69:
-//#line 214 "gramatica.y"
-{yyerror("Se esperaba un termino");}
-break;
-case 70:
 //#line 215 "gramatica.y"
 {yyerror("Se esperaba un termino");}
 break;
-case 74:
-//#line 222 "gramatica.y"
-{yyerror("Se esperaba un factor");}
+case 70:
+//#line 216 "gramatica.y"
+{yyerror("Se esperaba un termino");}
 break;
-case 75:
+case 74:
 //#line 223 "gramatica.y"
 {yyerror("Se esperaba un factor");}
 break;
+case 75:
+//#line 224 "gramatica.y"
+{yyerror("Se esperaba un factor");}
+break;
 case 77:
-//#line 228 "gramatica.y"
+//#line 229 "gramatica.y"
 {Token t = TablaSimbolos.getToken(val_peek(0).sval);
                                  if (t != null && (t.getTipo().equals(FLOTANTE))) {
                                      String lexema = t.getLexema().toString();
@@ -1122,18 +1123,18 @@ case 77:
                  }
 break;
 case 78:
-//#line 235 "gramatica.y"
+//#line 236 "gramatica.y"
 {AnalizadorLexico.agregarEstructura("Se reconocio una invocacion a funcion");}
 break;
 case 81:
-//#line 238 "gramatica.y"
+//#line 239 "gramatica.y"
 {Token t = TablaSimbolos.getToken(val_peek(1).sval);
                                         if (t != null && t.getTipo().equals(ENTERO))
                                             yyerror("Las constantes de tipo ulongint no pueden ser negativas");
                     }
 break;
 case 83:
-//#line 246 "gramatica.y"
+//#line 247 "gramatica.y"
 {String idTipo = val_peek(0).sval;
                                          Token t = TablaSimbolos.getToken(idTipo);
                                          if (!TablaSimbolos.existeSimbolo(idTipo + ":" + ambito)){
@@ -1152,122 +1153,122 @@ case 83:
                                          }
 break;
 case 84:
-//#line 262 "gramatica.y"
+//#line 263 "gramatica.y"
 {yyerror("Falta ID al final de la declaracion de tipo");}
 break;
 case 85:
-//#line 263 "gramatica.y"
+//#line 264 "gramatica.y"
 {yyerror("Falta diamante (<) en la declaracion de tipo");}
 break;
 case 86:
-//#line 264 "gramatica.y"
+//#line 265 "gramatica.y"
 {yyerror("Falta diamante (>) en la declaracion de tipo");}
 break;
 case 87:
-//#line 265 "gramatica.y"
+//#line 266 "gramatica.y"
 {yyerror("Faltan diamantes (</>) en la declaracion de tipo");}
 break;
 case 88:
-//#line 266 "gramatica.y"
+//#line 267 "gramatica.y"
 {yyerror("Falta TRIPLE en la declaracion de tipo");}
 break;
 case 90:
-//#line 271 "gramatica.y"
+//#line 272 "gramatica.y"
 {yyerror("La funcion no puede tener mas de un parametro");}
 break;
 case 91:
-//#line 272 "gramatica.y"
+//#line 273 "gramatica.y"
 {yyerror("La funcion debe tener un parametro");}
 break;
 case 92:
-//#line 273 "gramatica.y"
+//#line 274 "gramatica.y"
 {AnalizadorLexico.agregarEstructura("Se reconocio conversion");}
 break;
 case 94:
-//#line 278 "gramatica.y"
+//#line 279 "gramatica.y"
 {yyerror("La sentencia IF deben terminar con END_IF");}
 break;
 case 97:
-//#line 284 "gramatica.y"
+//#line 285 "gramatica.y"
 {yyerror("Se esperaba 'END' después del bloque BEGIN en el cuerpo FOR");}
 break;
 case 98:
-//#line 288 "gramatica.y"
+//#line 289 "gramatica.y"
 {inIF=true;}
 break;
 case 99:
-//#line 292 "gramatica.y"
+//#line 293 "gramatica.y"
 {AnalizadorLexico.agregarEstructura("Se reconocio un IF");inIF=false;}
 break;
 case 100:
-//#line 293 "gramatica.y"
+//#line 294 "gramatica.y"
 {AnalizadorLexico.agregarEstructura("Se reconocio un IF"); inIF=false;}
 break;
 case 101:
-//#line 294 "gramatica.y"
-{AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false;}
-break;
-case 102:
 //#line 295 "gramatica.y"
 {AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false;}
 break;
-case 103:
+case 102:
 //#line 296 "gramatica.y"
 {AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false;}
 break;
-case 104:
+case 103:
 //#line 297 "gramatica.y"
 {AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false;}
 break;
+case 104:
+//#line 298 "gramatica.y"
+{AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false;}
+break;
 case 107:
-//#line 306 "gramatica.y"
+//#line 307 "gramatica.y"
 {inIF=true;}
 break;
 case 108:
-//#line 307 "gramatica.y"
+//#line 308 "gramatica.y"
 {yyerror("Se esperaba 'END' después del bloque BEGIN en el cuerpo IF/ELSE"); inIF=true;}
 break;
 case 109:
-//#line 308 "gramatica.y"
+//#line 309 "gramatica.y"
 {yyerror("Se encontró 'END' sin un bloque BEGIN correspondiente en el cuerpo IF/ELSE");inIF=true; }
 break;
 case 110:
-//#line 309 "gramatica.y"
+//#line 310 "gramatica.y"
 {yyerror("Se esperaba BEGIN y END por sentencias multiples");}
 break;
 case 111:
-//#line 313 "gramatica.y"
-{inIF=true;}
-break;
-case 112:
 //#line 314 "gramatica.y"
 {inIF=true;}
 break;
+case 112:
+//#line 315 "gramatica.y"
+{inIF=true;}
+break;
 case 120:
-//#line 329 "gramatica.y"
+//#line 330 "gramatica.y"
 {AnalizadorLexico.agregarEstructura("Se reconocio pattern matching");}
 break;
 case 121:
-//#line 330 "gramatica.y"
+//#line 331 "gramatica.y"
 {yyerror("Falta comparador en la condicion");}
 break;
 case 125:
-//#line 341 "gramatica.y"
+//#line 342 "gramatica.y"
 {yyerror("Falta expresion en pattern matching");}
 break;
 case 126:
-//#line 345 "gramatica.y"
-{AnalizadorLexico.agregarEstructura("Se reconocio salida de mensaje por pantalla");}
-break;
-case 127:
 //#line 346 "gramatica.y"
 {AnalizadorLexico.agregarEstructura("Se reconocio salida de mensaje por pantalla");}
 break;
-case 128:
+case 127:
 //#line 347 "gramatica.y"
+{AnalizadorLexico.agregarEstructura("Se reconocio salida de mensaje por pantalla");}
+break;
+case 128:
+//#line 348 "gramatica.y"
 {yyerror("Falta de parametro en funcion OUTF");}
 break;
-//#line 1195 "Parser.java"
+//#line 1196 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####
