@@ -21,6 +21,18 @@ public class NodoComun extends Nodo{
         izq = null;
         der = null;
     }
+
+    public NodoComun(String nombre, Nodo nodoIzq){
+        super(nombre);
+        izq = nodoIzq;
+        der = null;
+    }
+
+    public NodoComun(String nombre, Nodo nodoIzq, Nodo nodoDer){
+        super(nombre);
+        izq = nodoIzq;
+        der = nodoDer;
+    }
     @Override
     public void recorrerArbol() {
         //

@@ -62,25 +62,49 @@ sentencia_ejecutable:
     asignacion {AnalizadorLexico.agregarEstructura("Se reconocio una asignacion");}
     | invocacion_funcion {AnalizadorLexico.agregarEstructura("Se reconocio una invocacion a funcion");}
     | bloque_if
-    | salida_mensaje
+    | salida_mensaje {$$=$1;} //FALTA HACER CON EXPRESION
     | sentencia_control
     ;
 
 //tema 16
 sentencia_control:
-    FOR '(' encabezado_for ')' bloque_sentencias_ejecutables
+    FOR '(' encabezado_for ')' bloque_sentencias_ejecutables { $$ = new NodoComun("FOR",(Nodo)$3.obj,(Nodo)$5.obj);}
     |FOR '(' encabezado_for ')' error {yyerror("Falta cuerpo del FOR");}
     |FOR encabezado_for ')' bloque_sentencias_ejecutables {yyerror("Falta parentensis en el FOR");}
     |FOR '(' encabezado_for bloque_sentencias_ejecutables {yyerror("Falta parentensis en el FOR");}
     ;
 
 encabezado_for:
-    encabezado_for1
-    | encabezado_for2
+    encabezado_for1 {$$=$1;}
+    | encabezado_for2 {$$=$1;}
     ;
 
 encabezado_for1:
-    ID ASIGNACION CONSTANTE ';' condicion ';' up_down CONSTANTE {AnalizadorLexico.agregarEstructura("Se reconoció un FOR de 3");}
+    ID ASIGNACION CONSTANTE ';' condicion ';' up_down CONSTANTE {  String ambitoVar = buscarAmbito(ambito,$1.sval);
+                                                                   NodoHoja idAsignacion = new NodoHoja("error semantico");
+                                                                   if (ambitoVar.equals(""))
+                                                                       agregarErrorSemantico("La variable '" + $1.sval + "' no fue declarada");
+                                                                       idAsignacion = new NodoHoja("error semantico"); ??
+                                                                   else {
+                                                                       Token t = TablaSimbolos.getToken($1.sval + ":" + ambitoVar);
+                                                                       if (!t.getTipo().equals("ENTERO"))
+                                                                           agregarErrorSemantico("La variable de la asignacion debe ser de tipo ENTERO");
+                                                                           idAsignacion = new NodoHoja("error semantico"); ??
+                                                                       else {
+                                                                           idAsignacion = new NodoHoja($1.sval + ":" + ambitoVar);
+                                                                       }
+                                                                   }
+
+                                                                    NodoComun asignacion = new NodoComun("ASIGNACION", idAsignacion, (Nodo)$3.sval);
+                                                                    NodoComun incremento = new NodoComun("INCREMENTO", (Nodo)$7.obj, (Nodo)$8.sval);
+                                                                    NodoComun condicion = (Nodo)$5.obj;
+
+                                                                    NodoComun asgnacionIncremento = new NodoComun("ASIGNACION E INCREMENTO", asignacion, incremento);
+
+                                                                    $$.obj = new NodoComun ("ENCABEZADO FOR", asgnacionIncremento, condicion);
+
+                                                                    AnalizadorLexico.agregarEstructura("Se reconoció un FOR de 3");
+                                                                }
     | ID ASIGNACION CONSTANTE ';' condicion ';' CONSTANTE {yyerror("Falta UP/DOWN en el FOR");}
     | ID ASIGNACION CONSTANTE condicion ';' up_down CONSTANTE {yyerror("Falta ';' en el FOR");}
     | ID ASIGNACION CONSTANTE ';' condicion up_down CONSTANTE {yyerror("Falta ';' en el FOR");}
@@ -88,7 +112,34 @@ encabezado_for1:
     ;
 
 encabezado_for2:
-    ID ASIGNACION CONSTANTE ';' condicion ';' up_down CONSTANTE ';' '(' condicion ')' {AnalizadorLexico.agregarEstructura("Se reconoció un FOR con condición");}
+    ID ASIGNACION CONSTANTE ';' condicion ';' up_down CONSTANTE ';' '(' condicion ')' {String ambitoVar = buscarAmbito(ambito,$1.sval);
+                                                                                       NodoHoja idAsignacion = new NodoHoja("error semantico");
+                                                                                       if (ambitoVar.equals(""))
+                                                                                            agregarErrorSemantico("La variable '" + $1.sval + "' no fue declarada");
+                                                                                            idAsignacion = new NodoHoja("error semantico"); ??
+                                                                                       else {
+                                                                                             Token t = TablaSimbolos.getToken($1.sval + ":" + ambitoVar);
+                                                                                             if (!t.getTipo().equals("ENTERO"))
+                                                                                                    agregarErrorSemantico("La variable de la asignacion debe ser de tipo ENTERO");
+                                                                                                    idAsignacion = new NodoHoja("error semantico"); ??
+                                                                                             else {
+                                                                                                    idAsignacion = new NodoHoja($1.sval + ":" + ambitoVar);
+                                                                                             }
+                                                                                       }
+
+                                                                                       NodoComun asignacion = new NodoComun("ASIGNACION", idAsignacion, (Nodo)$3.sval);
+                                                                                       NodoComun incremento = new NodoComun("INCREMENTO", (Nodo)$7.obj, (Nodo)$8.sval);
+                                                                                       NodoComun condicion = (Nodo)$5.obj;
+                                                                                       NodoComun iteradorCondicion = (Nodo)$11.obj;
+
+                                                                                       NodoComun asgnacionIncremento = new NodoComun("ASIGNACION E INCREMENTO", asignacion, incremento);
+                                                                                       NodoComun condiciones = new NodoComun("ASIGNACION E INCREMENTO", condicion, iteradorCondicion);
+
+                                                                                       $$.obj = new NodoComun ("ENCABEZADO FOR", asgnacionIncremento, condiciones);
+
+                                                                                       AnalizadorLexico.agregarEstructura("Se reconoció un FOR con condición");
+                                                                                       }
+
     | ID ASIGNACION CONSTANTE ';' condicion ';' CONSTANTE ';' '(' condicion ')' {yyerror("Falta UP/DOWN en el FOR");}
     | ID ASIGNACION CONSTANTE condicion ';' up_down CONSTANTE ';' '(' condicion ')' {yyerror("Falta ';' en el FOR");}
     | ID ASIGNACION CONSTANTE ';' condicion up_down CONSTANTE ';' '(' condicion ')' {yyerror("Falta ';' en el FOR");}
@@ -96,18 +147,23 @@ encabezado_for2:
     ;
 
 up_down:
-    UP
-    |DOWN
+    UP {$$.obj = new NodoHoja("UP");}
+    |DOWN {$$.obj = new NodoHoja("DOWN");}
     ;
 
 asignacion:
     ID ASIGNACION expresion { String ambitoVar = buscarAmbito(ambito,$1.sval);
                               if (ambitoVar.equals(""))
-                                  agregarErrorSemantico("La variable " + $1.sval + " no fue declarada");
+                                  agregarErrorSemantico("La variable '" + $1.sval + "' no fue declarada");
                               else {
                                   Token t = TablaSimbolos.getToken($1.sval + ":" + ambitoVar);
                                   if (!t.getUso().equals("variable"))
                                     agregarErrorSemantico("La expresion en la parte izquierda de la asignación debe ser una variable. Se encontró un elemento no asignable (" + t.getUso() + ")" );
+                                    //new NodoHoja("error semantico"); ??
+                                  else {
+                                    NodoHoja id = new NodoHoja($1.sval + ":" + ambitoVar);
+
+                                  }
                               }
                             }
     | ID '[' CONSTANTE ']' ASIGNACION expresion
@@ -209,7 +265,8 @@ sentencia_return:
     ;
 
 expresion:
-    expresion '+' termino
+    expresion '+' termino {
+                            }
     | expresion '-' termino
     | termino
     | expresion '+' error {yyerror("Se esperaba un termino");}
@@ -219,20 +276,36 @@ expresion:
 termino:
     termino '*' factor
     | termino '/' factor
-    | factor
+    | factor {$$ = $1;}
     | termino '*' error {yyerror("Se esperaba un factor");}
     | termino '/' error {yyerror("Se esperaba un factor");}
     ;
 
 factor:
-    ID
+    ID {String ambitoVar = buscarAmbito(ambito,$1.sval);
+        if (ambitoVar.equals("")){
+            agregarErrorSemantico("La variable '" + $1.sval + "' no fue declarada");
+            $$ = new NodoHoja("error");
+        }
+        else {
+            Token t = TablaSimbolos.getToken($1.sval + ":" + ambitoVar);
+            if (!t.getUso().equals("variable"))
+                agregarErrorSemantico("'" + $1.sval + "' no es una variable. Es un/a " + t.getUso());
+            else {
+                $$ = new NodoHoja($1.sval + ":" + ambitoVar);
+                TablaSimbolos.removeToken($1.sval);
+            }
+        }
+        }
     | CONSTANTE {Token t = TablaSimbolos.getToken($1.sval);
-                                 if (t != null && (t.getTipo().equals(FLOTANTE))) {
-                                     String lexema = t.getLexema().toString();
-                                     chequeoFlotantesPositivos(lexema);
-
-                                 }
-                 }
+                if (t != null && (t.getTipo().equals(FLOTANTE))) {
+                    String lexema = t.getLexema().toString();
+                    chequeoFlotantesPositivos(lexema);
+                    $$ = new NodoHoja($1.sval);
+                }
+                else
+                    $$ = new NodoHoja("error");
+                }
     | invocacion_funcion {AnalizadorLexico.agregarEstructura("Se reconocio una invocacion a funcion");}
     | ID '[' CONSTANTE ']'
     | '-' ID
@@ -290,7 +363,9 @@ encabezado_if:
     ;
 
 bloque_if:
-    encabezado_if '(' condicion ')' THEN cuerpo_if_unico fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF");inIF=false;}
+    encabezado_if '(' condicion ')' THEN cuerpo_if_unico fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF");inIF=false; $$.obj = new NodoComun("CUERPO",(Nodo)$6.obj,null);
+                                                                                                                                              Nodo cuerpo = (Nodo)$$.obj;
+                                                                                                                                              $$.obj = new NodoComun("IF", (Nodo)$3.obj, cuerpo);}
     | encabezado_if '(' condicion ')' THEN cuerpo_if_bloque fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF"); inIF=false;}
     | encabezado_if '(' condicion ')' THEN cuerpo_if_unico ELSE cuerpo_if_unico fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false;}
     | encabezado_if '(' condicion ')' THEN cuerpo_if_bloque ELSE cuerpo_if_bloque fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false;}
@@ -343,7 +418,11 @@ list_expresiones:
     ;
 
 salida_mensaje:
-    OUTF '(' CADENA ')' {AnalizadorLexico.agregarEstructura("Se reconocio salida de mensaje por pantalla");}
+    OUTF '(' CADENA ')' {   $$ = new NodoComun("OUTF", new NodoHoja($3.sval));
+                            t.setUso("mensaje");
+                            t.setTipo("cadena");
+                            AnalizadorLexico.agregarEstructura("Se reconocio salida de mensaje por pantalla");}
+                        }
     | OUTF '(' expresion ')' {AnalizadorLexico.agregarEstructura("Se reconocio salida de mensaje por pantalla");}
     | OUTF '('')' {yyerror("Falta de parametro en funcion OUTF");}
     ;
@@ -394,6 +473,10 @@ private void chequeoFlotantesPositivos(String lexema){
     }
 }
 
+private boolean hayErrores(String lexema){
+    return !erroresSemanticos.isEmpty();
+}
+
 public String buscarAmbito(String ambitoActual, String lexema) {
     String ambito = ambitoActual;
 
@@ -411,9 +494,6 @@ public String buscarAmbito(String ambitoActual, String lexema) {
     
     return ambito;
 }
-
-
-
 
 public static void agregarErrorSemantico(String error){
     erroresSemanticos.add(error + " en la linea " + AnalizadorLexico.lineaAct);
