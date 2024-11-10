@@ -40,6 +40,7 @@ public class Token {
         return palabrasReservadas.get(lexema.toString().toLowerCase());
     }
 
+
     @Override
     public String toString() {
         return "Token{" +

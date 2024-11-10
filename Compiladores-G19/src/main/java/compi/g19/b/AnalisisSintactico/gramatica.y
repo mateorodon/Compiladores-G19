@@ -210,6 +210,7 @@ encabezado_funcion:
                     t.setTipo(tipoActual);
                     TablaSimbolos.removeToken(idFuncion);
                     TablaSimbolos.addSimbolo(t.getLexema().toString(),t);
+                    $$.obj = new NodoHoja($3.sval);
                  }
                  else {
                     TablaSimbolos.removeToken(idFuncion);
@@ -223,6 +224,22 @@ encabezado_funcion:
 declaracion_funcion:
     encabezado_funcion '(' parametro ')' BEGIN cuerpo_funcion { if (!hasReturn) {
                                                             yyerror("Falta sentencia RET en la función");
+                                                         }
+                                                         String parametro = $3.sval;
+                                                         Token t = TablaSimbolos.getToken(parametro);
+                                                         if (!TablaSimbolos.existeSimbolo(parametro + ":" + ambito)){
+                                                             t.getLexema().setLength(0);
+                                                             t.getLexema().append(parametro).append(":").append(ambito);
+                                                             t.setAmbito(ambito);
+                                                             t.setUso("parametro");
+                                                             t.setTipo(tipoActual);
+                                                             TablaSimbolos.removeToken(parametro);
+                                                             TablaSimbolos.addSimbolo(t.getLexema().toString(),t);
+
+                                                             //Agregar paremetro a lista de parametros, para luego chequear en la llamada a funcion si coincide con este
+
+                                                             $$.obj = new NodoHoja($3.sval);
+
                                                          }
                                                          removeAmbito();
                                                          } END
@@ -272,7 +289,7 @@ expresion:
     expresion '+' termino {
                             }
     | expresion '-' termino
-    | termino
+    | termino {$$.obj = $1;}
     | expresion '+' error {yyerror("Se esperaba un termino");}
     | expresion '-' error {yyerror("Se esperaba un termino");}
     ;
