@@ -36,6 +36,9 @@ public class Main {
             System.out.println("----------TOKENS DETECTADOS -----------");
             Parser parser = new Parser();
             parser.run();
+            System.out.println("----------ARBOL SINTACTICO -----------");
+            if (parser.getRaiz()!=null)
+                parser.getRaiz().recorrerArbol();
 
             imprimirEstructurasYErrores();
         } catch (IOException e) {

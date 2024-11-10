@@ -35,6 +35,8 @@ public class NodoComun extends Nodo{
     }
     @Override
     public void recorrerArbol() {
-        //
+        imprimirNodo();
+        if (izq != null) izq.recorrerArbol();
+        if (der != null) der.recorrerArbol();
     }
 }

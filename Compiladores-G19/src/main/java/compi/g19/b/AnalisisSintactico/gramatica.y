@@ -15,20 +15,20 @@ import compi.g19.c.GeneracionDeCodigo.*;
 
 %start programa;
 
-programa: ID BEGIN list_sentencias END {AnalizadorLexico.agregarEstructura("Se reconocio el programa");}
+programa: ID BEGIN list_sentencias END {AnalizadorLexico.agregarEstructura("Se reconocio el programa"); raiz = new NodoComun("PROGRAMA", (Nodo)$3.obj);}
     | BEGIN list_sentencias END {yyerror("El programa debe tener un nombre");}
     | ID BEGIN list_sentencias {yyerror("Falta delimitador END del programa");}
     | ID list_sentencias END {yyerror("Falta delimitador BEGIN del programa");}
     | ID list_sentencias {yyerror("Faltan los delimitadores del programa");}
     ;
 
-list_sentencias: list_sentencias sentencia
-    | sentencia
+list_sentencias: list_sentencias sentencia {$$.obj = new NodoComun("SENTENCIA", (Nodo)$1.obj, (Nodo)$2.obj);}
+    | sentencia {$$.obj=$1.obj;}
     ;
 
 sentencia:
     sentencia_declarativa ';' {$$= new NodoHoja("Sentencia Declarativa");}
-    | sentencia_ejecutable ';'
+    | sentencia_ejecutable ';' {$$.obj=$1.obj;}
     | sentencia_ejecutable {yyerror("Las sentencias deben terminar con ;");}
     | sentencia_declarativa {yyerror("Las sentencias deben terminar con ;");}
     ;
@@ -82,24 +82,26 @@ encabezado_for:
 encabezado_for1:
     ID ASIGNACION CONSTANTE ';' condicion ';' up_down CONSTANTE {  String ambitoVar = buscarAmbito(ambito,$1.sval);
                                                                    NodoHoja idAsignacion = new NodoHoja("error semantico");
-                                                                   if (ambitoVar.equals(""))
+                                                                   if (ambitoVar.equals("")) {
                                                                        agregarErrorSemantico("La variable '" + $1.sval + "' no fue declarada");
-                                                                       idAsignacion = new NodoHoja("error semantico"); ??
+                                                                       idAsignacion = new NodoHoja("error semantico"); //??
+                                                                   }
                                                                    else {
                                                                        Token t = TablaSimbolos.getToken($1.sval + ":" + ambitoVar);
-                                                                       if (!t.getTipo().equals("ENTERO"))
+                                                                       if (!t.getTipo().equals("ENTERO")) {
                                                                            agregarErrorSemantico("La variable de la asignacion debe ser de tipo ENTERO");
-                                                                           idAsignacion = new NodoHoja("error semantico"); ??
+                                                                           idAsignacion = new NodoHoja("error semantico"); //??
+                                                                       }
                                                                        else {
                                                                            idAsignacion = new NodoHoja($1.sval + ":" + ambitoVar);
                                                                        }
                                                                    }
 
-                                                                    NodoComun asignacion = new NodoComun("ASIGNACION", idAsignacion, (Nodo)$3.sval);
-                                                                    NodoComun incremento = new NodoComun("INCREMENTO", (Nodo)$7.obj, (Nodo)$8.sval);
-                                                                    NodoComun condicion = (Nodo)$5.obj;
+                                                                    Nodo asignacion = new NodoComun("ASIGNACION", idAsignacion, (Nodo)$3.obj); //Cambie sval x obj esto tiraba error el Parser
+                                                                    Nodo incremento = new NodoComun("INCREMENTO", (Nodo)$7.obj, (Nodo)$8.obj); //Idem
+                                                                    Nodo condicion = (Nodo)$5.obj;
 
-                                                                    NodoComun asgnacionIncremento = new NodoComun("ASIGNACION E INCREMENTO", asignacion, incremento);
+                                                                    Nodo asgnacionIncremento = new NodoComun("ASIGNACION E INCREMENTO", asignacion, incremento);
 
                                                                     $$.obj = new NodoComun ("ENCABEZADO FOR", asgnacionIncremento, condicion);
 
@@ -114,26 +116,28 @@ encabezado_for1:
 encabezado_for2:
     ID ASIGNACION CONSTANTE ';' condicion ';' up_down CONSTANTE ';' '(' condicion ')' {String ambitoVar = buscarAmbito(ambito,$1.sval);
                                                                                        NodoHoja idAsignacion = new NodoHoja("error semantico");
-                                                                                       if (ambitoVar.equals(""))
+                                                                                       if (ambitoVar.equals("")) {
                                                                                             agregarErrorSemantico("La variable '" + $1.sval + "' no fue declarada");
-                                                                                            idAsignacion = new NodoHoja("error semantico"); ??
+                                                                                            idAsignacion = new NodoHoja("error semantico"); //??
+                                                                                       }
                                                                                        else {
                                                                                              Token t = TablaSimbolos.getToken($1.sval + ":" + ambitoVar);
-                                                                                             if (!t.getTipo().equals("ENTERO"))
+                                                                                             if (!t.getTipo().equals("ENTERO")) {
                                                                                                     agregarErrorSemantico("La variable de la asignacion debe ser de tipo ENTERO");
-                                                                                                    idAsignacion = new NodoHoja("error semantico"); ??
+                                                                                                    idAsignacion = new NodoHoja("error semantico"); //??
+                                                                                             }
                                                                                              else {
                                                                                                     idAsignacion = new NodoHoja($1.sval + ":" + ambitoVar);
                                                                                              }
                                                                                        }
 
-                                                                                       NodoComun asignacion = new NodoComun("ASIGNACION", idAsignacion, (Nodo)$3.sval);
-                                                                                       NodoComun incremento = new NodoComun("INCREMENTO", (Nodo)$7.obj, (Nodo)$8.sval);
-                                                                                       NodoComun condicion = (Nodo)$5.obj;
-                                                                                       NodoComun iteradorCondicion = (Nodo)$11.obj;
+                                                                                       Nodo asignacion = new NodoComun("ASIGNACION", idAsignacion, (Nodo)$3.obj); //Cambie sval x obj
+                                                                                       Nodo incremento = new NodoComun("INCREMENTO", (Nodo)$7.obj, (Nodo)$8.obj); //Idem
+                                                                                       Nodo condicion = (Nodo)$5.obj;
+                                                                                       Nodo iteradorCondicion = (Nodo)$11.obj;
 
-                                                                                       NodoComun asgnacionIncremento = new NodoComun("ASIGNACION E INCREMENTO", asignacion, incremento);
-                                                                                       NodoComun condiciones = new NodoComun("ASIGNACION E INCREMENTO", condicion, iteradorCondicion);
+                                                                                       Nodo asgnacionIncremento = new NodoComun("ASIGNACION E INCREMENTO", asignacion, incremento);
+                                                                                       Nodo condiciones = new NodoComun("ASIGNACION E INCREMENTO", condicion, iteradorCondicion);
 
                                                                                        $$.obj = new NodoComun ("ENCABEZADO FOR", asgnacionIncremento, condiciones);
 
@@ -359,23 +363,38 @@ bloque_sentencias_ejecutables:
     ;
 
 encabezado_if:
-    IF {inIF=true;}
+    IF {inIF=true; $$=$1;}
     ;
 
 bloque_if:
-    encabezado_if '(' condicion ')' THEN cuerpo_if_unico fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF");inIF=false; $$.obj = new NodoComun("CUERPO",(Nodo)$6.obj,null);
+    encabezado_if '(' condicion ')' THEN cuerpo_if_unico fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF");inIF=false; $$.obj = new NodoComun("CUERPO",(Nodo)$6.obj);
                                                                                                                                               Nodo cuerpo = (Nodo)$$.obj;
                                                                                                                                               $$.obj = new NodoComun("IF", (Nodo)$3.obj, cuerpo);}
-    | encabezado_if '(' condicion ')' THEN cuerpo_if_bloque fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF"); inIF=false;}
-    | encabezado_if '(' condicion ')' THEN cuerpo_if_unico ELSE cuerpo_if_unico fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false;}
-    | encabezado_if '(' condicion ')' THEN cuerpo_if_bloque ELSE cuerpo_if_bloque fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false;}
-    | encabezado_if '(' condicion ')' THEN cuerpo_if_unico ELSE cuerpo_if_bloque fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false;}
-    | encabezado_if '(' condicion ')' THEN cuerpo_if_bloque ELSE cuerpo_if_unico fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false;}
+    | encabezado_if '(' condicion ')' THEN cuerpo_if_bloque fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF"); inIF=false; $$.obj = new NodoComun("CUERPO", (Nodo)$6.obj);
+                                                                                                                                          Nodo cuerpo = (Nodo)$$.obj;
+                                                                                                                                          $$.obj = new NodoComun("IF", (Nodo)$3.obj, cuerpo);}
+
+
+    | encabezado_if '(' condicion ')' THEN cuerpo_if_unico ELSE cuerpo_if_unico fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false; $$.obj = new NodoComun("CUERPO", (Nodo)$6.obj, (Nodo)$8.obj);
+                                                                                                                                                                          Nodo cuerpo = (Nodo)$$.obj;
+                                                                                                                                                                          $$.obj = new NodoComun("IF", (Nodo)$3.obj,(Nodo)$6.obj);}
+
+    | encabezado_if '(' condicion ')' THEN cuerpo_if_bloque ELSE cuerpo_if_bloque fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false; $$.obj = new NodoComun("CUERPO", (Nodo)$6.obj, (Nodo)$8.obj);
+                                                                                                                                                                            Nodo cuerpo = (Nodo)$$.obj;
+                                                                                                                                                                            $$.obj = new NodoComun("IF", (Nodo)$3.obj,(Nodo)$6.obj);}
+
+    | encabezado_if '(' condicion ')' THEN cuerpo_if_unico ELSE cuerpo_if_bloque fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false; $$.obj = new NodoComun("CUERPO", (Nodo)$6.obj, (Nodo)$8.obj);
+                                                                                                                                                                  Nodo cuerpo = (Nodo)$$.obj;
+                                                                                                                                                                  $$.obj = new NodoComun("IF", (Nodo)$3.obj,(Nodo)$6.obj);}
+
+    | encabezado_if '(' condicion ')' THEN cuerpo_if_bloque ELSE cuerpo_if_unico fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false; $$.obj = new NodoComun("CUERPO", (Nodo)$6.obj, (Nodo)$8.obj);
+                                                                                                                                                                   Nodo cuerpo = (Nodo)$$.obj;
+                                                                                                                                                                   $$.obj = new NodoComun("IF", (Nodo)$3.obj,(Nodo)$6.obj); }
     ;
 
 cuerpo_if_unico:
-    sentencia_ejecutable ';'
-    | sentencia_return ';'
+    sentencia_ejecutable ';' {$$ = $1;}
+    | sentencia_return ';' {$$ = $1;}
     ;
 
 cuerpo_if_bloque:
@@ -387,7 +406,7 @@ cuerpo_if_bloque:
 
 list_sentencias_ejecutables:
     list_sentencias_ejecutables sentencia_ejecutable ';' {inIF=true;}
-    | sentencia_ejecutable ';'{inIF=true;}
+    | sentencia_ejecutable ';' {inIF=true;}
     ;
 
 
@@ -419,9 +438,10 @@ list_expresiones:
 
 salida_mensaje:
     OUTF '(' CADENA ')' {   $$ = new NodoComun("OUTF", new NodoHoja($3.sval));
+                            Token t = TablaSimbolos.getToken($3.sval); //Obtenemos el token, faltaba esto
                             t.setUso("mensaje");
                             t.setTipo("cadena");
-                            AnalizadorLexico.agregarEstructura("Se reconocio salida de mensaje por pantalla");}
+                            AnalizadorLexico.agregarEstructura("Se reconocio salida de mensaje por pantalla");
                         }
     | OUTF '(' expresion ')' {AnalizadorLexico.agregarEstructura("Se reconocio salida de mensaje por pantalla");}
     | OUTF '('')' {yyerror("Falta de parametro en funcion OUTF");}
@@ -433,6 +453,7 @@ private static final String FLOTANTE = "single";
 private static final float NEGATIVE_MIN = 1.17549435e-38f;
 private static final float NEGATIVE_MAX = 3.40282347e+38f;
 
+static NodoComun raiz;
 static String ambito = "main";
 static boolean inIF = false;
 static boolean hasReturn = false;
@@ -521,3 +542,6 @@ private void variableYaDeclarada(String var){
     }
 }
 
+public NodoComun getRaiz(){
+    return this.raiz;
+}

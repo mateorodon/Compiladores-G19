@@ -13,6 +13,6 @@ public class NodoHoja extends Nodo {
 
     @Override
     public void recorrerArbol() {
-        //
+        imprimirNodo();
     }
 }
