@@ -262,16 +262,16 @@ list_parametro:
     ;
 
 cuerpo_funcion:
-    list_sentencias_funcion sentencia_return ';'
-    | list_sentencias_funcion
-    | sentencia_return ';'
+    list_sentencias_funcion sentencia_return ';' {$$ = new NodoComun("SENTENCIA", (Nodo) $1.obj, (Nodo) $2.obj);}
+    | list_sentencias_funcion {$$=$1;}
+    | sentencia_return ';' {$$=$1;}
     |  {yyerror("El cuerpo de la funcion no puede ser vacio");}
     ;
 
 
 list_sentencias_funcion:
-    list_sentencias_funcion sentencia
-    | sentencia
+    list_sentencias_funcion sentencia {$$ = new NodoComun("SENTENCIA", (Nodo) $1.obj, (Nodo) $2.obj);}
+    | sentencia {$$=$1;}
     ;
 
 
@@ -281,7 +281,9 @@ sentencia_return:
                            }
                            if (!inIF){
                                 hasReturn = true;
+                                $$ = new NodoComun("RETURN", (Nodo)$3.obj);
                            }
+                           //$$ = new NodoComun("RETURN", (Nodo)$3.obj);   DONDE VA?
                            AnalizadorLexico.agregarEstructura("Se reconocio sentencia de retorno");}
     ;
 
@@ -374,8 +376,8 @@ fin_if:
     ;
 
 bloque_sentencias_ejecutables:
-    sentencia_ejecutable ';'
-    | BEGIN list_sentencias_ejecutables END
+    sentencia_ejecutable ';' {$$=$1}
+    | BEGIN list_sentencias_ejecutables END {$$=$2;}
     | BEGIN error {yyerror("Se esperaba 'END' después del bloque BEGIN en el cuerpo FOR");}
     ;
 
@@ -415,41 +417,44 @@ cuerpo_if_unico:
     ;
 
 cuerpo_if_bloque:
-    BEGIN list_sentencias_ejecutables END {inIF=true;}
-    | BEGIN error {yyerror("Se esperaba 'END' después del bloque BEGIN en el cuerpo IF/ELSE"); inIF=true;}
-    | list_sentencias_ejecutables END  {yyerror("Se encontró 'END' sin un bloque BEGIN correspondiente en el cuerpo IF/ELSE");inIF=true; }
+    BEGIN list_sentencias_ejecutables END {$$ = $2;}
+    | BEGIN error {yyerror("Se esperaba 'END' después del bloque BEGIN en el cuerpo IF/ELSE");}
+    | list_sentencias_ejecutables END  {yyerror("Se encontró 'END' sin un bloque BEGIN correspondiente en el cuerpo IF/ELSE");}
     | error {yyerror("Se esperaba BEGIN y END por sentencias multiples");}
     ;
 
 list_sentencias_ejecutables:
-    list_sentencias_ejecutables sentencia_ejecutable ';' {inIF=true;}
-    | sentencia_ejecutable ';' {inIF=true;}
+    list_sentencias_ejecutables sentencia_ejecutable ';' {$$ = new NodoComun("SENTENCIA", (Nodo) $1.obj, (Nodo) $2.obj);}
+    | sentencia_ejecutable ';' {$$ = $1;}
     ;
 
 
 comparacion:
-    MAYORIGUAL
-    | MENORIGUAL
-    | DISTINTO
-    | '='
-    | '>'
-    | '<'
+    MAYORIGUAL {$$ = new NodoHoja($1.sval);}
+    | MENORIGUAL {$$ = new NodoHoja($1.sval);}
+    | DISTINTO {$$ = new NodoHoja($1.sval);}
+    | '=' {$$ = new NodoHoja($1.sval);}
+    | '>' {$$ = new NodoHoja($1.sval);}
+    | '<' {$$ = new NodoHoja($1.sval);}
     ;
 
 condicion:
-    expresion comparacion expresion
-    | '(' bloque_list_expresiones ')' comparacion '(' bloque_list_expresiones ')' {AnalizadorLexico.agregarEstructura("Se reconocio pattern matching");}
+    expresion comparacion expresion {$$ = new NodoComun((Nodo)$2.obj, (Nodo)$1.obj, (Nodo)$3.obj);}
+    | '(' bloque_list_expresiones ')' comparacion '(' bloque_list_expresiones ')' { $$ = new NodoComun((Nodo)$4.obj, (Nodo)$2.obj, (Nodo)$4.obj);
+                                                                                    AnalizadorLexico.agregarEstructura("Se reconocio pattern matching");
+                                                                                  }
+
     | error {yyerror("Falta comparador en la condicion");}
     ;
 
 //tema 19
 bloque_list_expresiones:
-    list_expresiones ',' expresion
+    list_expresiones ',' expresion {$$ = new NodoComun("SENTENCIA", (Nodo) $1.obj, (Nodo) $3.obj);}
     ;
 
 list_expresiones:
-    list_expresiones ',' expresion
-    | expresion
+    list_expresiones ',' expresion  {$$ = new NodoComun("SENTENCIA", (Nodo) $1.obj, (Nodo) $3.obj);}
+    | expresion {$$=$1;}
     | error {yyerror("Falta expresion en pattern matching");}
     ;
 
