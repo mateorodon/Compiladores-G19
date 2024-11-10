@@ -1,6 +1,4 @@
 prog
 begin
-    SINGLE FUN F3 (ULONGINT z)
-    BEGIN
-    END
-end        
+    SINGLE y;
+end     

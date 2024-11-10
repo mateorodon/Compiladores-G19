@@ -38,7 +38,7 @@ public class Main {
             parser.run();
             System.out.println("----------ARBOL SINTACTICO -----------");
             if (parser.getRaiz()!=null)
-                parser.getRaiz().recorrerArbol();
+                parser.getRaiz().recorrerArbol(0);
 
             imprimirEstructurasYErrores();
         } catch (IOException e) {

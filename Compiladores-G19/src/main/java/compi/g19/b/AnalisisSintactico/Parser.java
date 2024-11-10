@@ -901,7 +901,7 @@ case 7:
 break;
 case 8:
 //#line 30 "gramatica.y"
-{yyval= new NodoHoja("Sentencia Declarativa");}
+{yyval.obj = new NodoHoja("Sentencia Declarativa");}
 break;
 case 9:
 //#line 31 "gramatica.y"

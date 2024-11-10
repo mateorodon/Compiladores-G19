@@ -9,7 +9,6 @@ public abstract class Nodo extends ParserVal {
 
     protected String nombre;
     protected Token token;
-    protected Integer nivel = 0;
 
     public Nodo(String nombre){
         this.nombre = nombre;
@@ -21,11 +20,14 @@ public abstract class Nodo extends ParserVal {
         this.token = t;
     }
 
-    public abstract void recorrerArbol();
+    public abstract void recorrerArbol(int nivel);
 
-    protected void imprimirNodo() {
-        // Imprime el nodo con la cantidad de espacios en función de su nivel
-        System.out.println("    ".repeat(nivel) + nombre);
+
+    protected void imprimirNodo(String nombre, int nivel) {
+        for (int i = 0; i < nivel; i++) {
+            System.out.print("    ");
+        }
+        System.out.println(nombre);
     }
 
 }

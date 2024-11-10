@@ -33,10 +33,15 @@ public class NodoComun extends Nodo{
         izq = nodoIzq;
         der = nodoDer;
     }
+
     @Override
-    public void recorrerArbol() {
-        imprimirNodo();
-        if (izq != null) izq.recorrerArbol();
-        if (der != null) der.recorrerArbol();
+    public void recorrerArbol(int nivel) {
+        imprimirNodo(nombre, nivel);
+        if (izq != null) {
+            izq.recorrerArbol(nivel + 1);
+        }
+        if (der != null) {
+            der.recorrerArbol(nivel + 1);
+        }
     }
 }

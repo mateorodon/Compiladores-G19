@@ -12,7 +12,7 @@ public class NodoHoja extends Nodo {
     }
 
     @Override
-    public void recorrerArbol() {
-        imprimirNodo();
+    public void recorrerArbol(int nivel) {
+        imprimirNodo(nombre, nivel);
     }
 }
