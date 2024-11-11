@@ -1,42 +1,195 @@
-#ifndef lint
-static char yysccsid[] = "@(#)yaccpar	1.8 (Berkeley) 01/20/90";
-#endif
-#define YYBYACC 1
-#line 2 "gramatica.y"
-package compi.g19.b.AnalisisSintactico;
+//### This file created by BYACC 1.8(/Java extension  1.15)
+//### Java capabilities added 7 Jan 97, Bob Jamison
+//### Updated : 27 Nov 97  -- Bob Jamison, Joe Nieten
+//###           01 Jan 98  -- Bob Jamison -- fixed generic semantic constructor
+//###           01 Jun 99  -- Bob Jamison -- added Runnable support
+//###           06 Aug 00  -- Bob Jamison -- made state variables class-global
+//###           03 Jan 01  -- Bob Jamison -- improved flags, tracing
+//###           16 May 01  -- Bob Jamison -- added custom stack sizing
+//###           04 Mar 02  -- Yuval Oren  -- improved java performance, added options
+//###           14 Mar 02  -- Tomas Hurka -- -d support, static initializer workaround
+//### Please send bug reports to tom@hukatronic.cz
+//### static char yysccsid[] = "@(#)yaccpar	1.8 (Berkeley) 01/20/90";
+
+
+
+
+
+
+//#line 2 "gramatica.y"
+package compi.g19.AnalisisSintactico;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-import compi.g19.a.AnalisisLexico.*;
-import compi.g19.c.GeneracionDeCodigo.*;
-#line 14 "y.tab.c"
-#define ID 257
-#define ASIGNACION 258
-#define MAYORIGUAL 259
-#define MENORIGUAL 260
-#define DISTINTO 261
-#define CONSTANTE 262
-#define CADENA 263
-#define IF 264
-#define THEN 265
-#define ELSE 266
-#define BEGIN 267
-#define END 268
-#define END_IF 269
-#define OUTF 270
-#define TYPEDEF 271
-#define FUN 272
-#define RET 273
-#define ULONGINT 274
-#define SINGLE 275
-#define FOR 276
-#define OR 277
-#define UP 278
-#define DOWN 279
-#define TRIPLE 280
-#define YYERRCODE 256
-short yylhs[] = {                                        -1,
+import compi.g19.AnalisisLexico.*;
+import compi.g19.GeneracionDeCodigo.*;
+//#line 27 "Parser.java"
+
+
+
+
+public class Parser
+{
+
+boolean yydebug;        //do I want debug output?
+int yynerrs;            //number of errors so far
+int yyerrflag;          //was there an error?
+int yychar;             //the current working character
+
+//########## MESSAGES ##########
+//###############################################################
+// method: debug
+//###############################################################
+void debug(String msg)
+{
+  if (yydebug)
+    System.out.println(msg);
+}
+
+//########## STATE STACK ##########
+final static int YYSTACKSIZE = 500;  //maximum stack size
+int statestk[] = new int[YYSTACKSIZE]; //state stack
+int stateptr;
+int stateptrmax;                     //highest index of stackptr
+int statemax;                        //state when highest index reached
+//###############################################################
+// methods: state stack push,pop,drop,peek
+//###############################################################
+final void state_push(int state)
+{
+  try {
+		stateptr++;
+		statestk[stateptr]=state;
+	 }
+	 catch (ArrayIndexOutOfBoundsException e) {
+     int oldsize = statestk.length;
+     int newsize = oldsize * 2;
+     int[] newstack = new int[newsize];
+     System.arraycopy(statestk,0,newstack,0,oldsize);
+     statestk = newstack;
+     statestk[stateptr]=state;
+  }
+}
+final int state_pop()
+{
+  return statestk[stateptr--];
+}
+final void state_drop(int cnt)
+{
+  stateptr -= cnt; 
+}
+final int state_peek(int relative)
+{
+  return statestk[stateptr-relative];
+}
+//###############################################################
+// method: init_stacks : allocate and prepare stacks
+//###############################################################
+final boolean init_stacks()
+{
+  stateptr = -1;
+  val_init();
+  return true;
+}
+//###############################################################
+// method: dump_stacks : show n levels of the stacks
+//###############################################################
+void dump_stacks(int count)
+{
+int i;
+  System.out.println("=index==state====value=     s:"+stateptr+"  v:"+valptr);
+  for (i=0;i<count;i++)
+    System.out.println(" "+i+"    "+statestk[i]+"      "+valstk[i]);
+  System.out.println("======================");
+}
+
+
+//########## SEMANTIC VALUES ##########
+//public class ParserVal is defined in ParserVal.java
+
+
+String   yytext;//user variable to return contextual strings
+ParserVal yyval; //used to return semantic vals from action routines
+ParserVal yylval;//the 'lval' (result) I got from yylex()
+ParserVal valstk[];
+int valptr;
+//###############################################################
+// methods: value stack push,pop,drop,peek.
+//###############################################################
+void val_init()
+{
+  valstk=new ParserVal[YYSTACKSIZE];
+  yyval=new ParserVal();
+  yylval=new ParserVal();
+  valptr=-1;
+}
+void val_push(ParserVal val)
+{
+  if (valptr>=YYSTACKSIZE)
+    return;
+  valstk[++valptr]=val;
+}
+ParserVal val_pop()
+{
+  if (valptr<0)
+    return new ParserVal();
+  return valstk[valptr--];
+}
+void val_drop(int cnt)
+{
+int ptr;
+  ptr=valptr-cnt;
+  if (ptr<0)
+    return;
+  valptr = ptr;
+}
+ParserVal val_peek(int relative)
+{
+int ptr;
+  ptr=valptr-relative;
+  if (ptr<0)
+    return new ParserVal();
+  return valstk[ptr];
+}
+final ParserVal dup_yyval(ParserVal val)
+{
+  ParserVal dup = new ParserVal();
+  dup.ival = val.ival;
+  dup.dval = val.dval;
+  dup.sval = val.sval;
+  dup.obj = val.obj;
+  return dup;
+}
+//#### end semantic value section ####
+public final static short ID=257;
+public final static short ASIGNACION=258;
+public final static short MAYORIGUAL=259;
+public final static short MENORIGUAL=260;
+public final static short DISTINTO=261;
+public final static short CONSTANTE=262;
+public final static short CADENA=263;
+public final static short IF=264;
+public final static short THEN=265;
+public final static short ELSE=266;
+public final static short BEGIN=267;
+public final static short END=268;
+public final static short END_IF=269;
+public final static short OUTF=270;
+public final static short TYPEDEF=271;
+public final static short FUN=272;
+public final static short RET=273;
+public final static short ULONGINT=274;
+public final static short SINGLE=275;
+public final static short FOR=276;
+public final static short OR=277;
+public final static short UP=278;
+public final static short DOWN=279;
+public final static short TRIPLE=280;
+public final static short YYERRCODE=256;
+final static short yylhs[] = {                           -1,
     0,    0,    0,    0,    0,    1,    1,    2,    2,    2,
     2,    3,    3,    3,    4,    4,    4,    4,    4,   13,
    13,   13,   13,   14,   14,   16,   16,   16,   16,   16,
@@ -51,7 +204,7 @@ short yylhs[] = {                                        -1,
    34,   34,   38,   38,   38,   38,   38,   38,   18,   18,
    18,   32,   39,   39,   39,   12,   12,   12,
 };
-short yylen[] = {                                         2,
+final static short yylen[] = {                            2,
     4,    3,    3,    3,    2,    2,    1,    2,    2,    1,
     1,    2,    1,    1,    1,    1,    1,    1,    1,    5,
     5,    4,    4,    1,    1,    8,    7,    7,    7,    7,
@@ -66,7 +219,7 @@ short yylen[] = {                                         2,
     3,    2,    1,    1,    1,    1,    1,    1,    3,    7,
     1,    3,    3,    1,    1,    4,    4,    3,
 };
-short yydefred[] = {                                      0,
+final static short yydefred[] = {                         0,
     0,    0,    0,    0,   98,    0,    0,    0,   43,   44,
     0,    0,    7,    0,    0,    0,   13,   14,   15,   16,
    17,   18,   19,   41,    0,    0,    0,    0,    0,    0,
@@ -94,13 +247,13 @@ short yydefred[] = {                                      0,
     0,    0,    0,   35,    0,    0,   32,    0,   34,   33,
    31,
 };
-short yydgoto[] = {                                       3,
+final static short yydgoto[] = {                          3,
    12,   13,   14,   15,   16,   46,   17,   18,   19,   54,
    21,   22,   23,   37,  111,   38,   39,   86,  196,   87,
    24,   25,   81,  156,  201,   82,   83,  157,  158,   56,
    57,   62,  212,  188,   26,  189,  190,  128,   63,
 };
-short yysindex[] = {                                   -117,
+final static short yysindex[] = {                      -117,
   287,  319,    0,  -32,    0,  319,  -21,  -57,    0,    0,
    -5,  303,    0,   -3,    5, -154,    0,    0,    0,    0,
     0,    0,    0,    0,   37,   61,  328,  103,   -7, -229,
@@ -128,7 +281,7 @@ short yysindex[] = {                                   -117,
    57,  455,   57,    0,  456,  457,    0,  458,    0,    0,
     0,
 };
-short yyrindex[] = {                                      0,
+final static short yyrindex[] = {                         0,
     0,    0,    0, -153,    0,    0,    0,    0,    0,    0,
     0,  488,    0,  159,  174,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
@@ -156,14 +309,17 @@ short yyrindex[] = {                                      0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,
 };
-short yygindex[] = {                                      0,
+final static short yygindex[] = {                         0,
    34,   10,    0,  403,  -31,    0,    0,    0,    0,  473,
     0,    0,    0,  481,  -54,    0,    0,  -48, -145,  424,
    20,    0,  414,  173,    0,    0,    0,    0, -132,  264,
   343,  -70,  -80,  -91,    0,  -90,  -45,  369,    0,
 };
-#define YYTABLESIZE 686
-short yytable[] = {                                     119,
+final static int YYTABLESIZE=686;
+static short yytable[];
+static { yytable();}
+static void yytable(){
+yytable = new short[]{                        119,
    76,   85,   34,  109,   27,   30,   53,   29,  104,  143,
   125,  127,  126,  229,  120,   80,  150,  119,   32,  112,
   146,   41,   29,   80,  179,   67,  197,   29,   55,   53,
@@ -234,7 +390,11 @@ short yytable[] = {                                     119,
     0,    0,    0,    0,    0,    0,    0,   20,    0,    0,
     0,    0,   20,    0,    0,   20,
 };
-short yycheck[] = {                                      41,
+}
+static short yycheck[];
+static { yycheck(); }
+static void yycheck() {
+yycheck = new short[] {                         41,
     0,   40,   60,   41,   41,   41,   45,   40,   62,   62,
    60,   61,   62,   40,   85,   47,  108,   59,   40,   74,
    59,   12,   40,    0,  157,   41,  172,   41,   41,   45,
@@ -305,25 +465,32 @@ short yycheck[] = {                                      41,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,  205,   -1,   -1,
    -1,   -1,  210,   -1,   -1,  213,
 };
-#define YYFINAL 3
-#ifndef YYDEBUG
-#define YYDEBUG 0
-#endif
-#define YYMAXTOKEN 280
-#if YYDEBUG
-char *yyname[] = {
-"end-of-file",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,"'('","')'","'*'","'+'","','","'-'",0,"'/'",0,0,0,0,0,0,0,0,0,0,0,
-"';'","'<'","'='","'>'",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-"'['",0,"']'",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,"ID","ASIGNACION","MAYORIGUAL","MENORIGUAL","DISTINTO",
-"CONSTANTE","CADENA","IF","THEN","ELSE","BEGIN","END","END_IF","OUTF","TYPEDEF",
-"FUN","RET","ULONGINT","SINGLE","FOR","OR","UP","DOWN","TRIPLE",
+}
+final static short YYFINAL=3;
+final static short YYMAXTOKEN=280;
+final static String yyname[] = {
+"end-of-file",null,null,null,null,null,null,null,null,null,null,null,null,null,
+null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
+null,null,null,null,null,null,null,null,null,null,"'('","')'","'*'","'+'","','",
+"'-'",null,"'/'",null,null,null,null,null,null,null,null,null,null,null,"';'",
+"'<'","'='","'>'",null,null,null,null,null,null,null,null,null,null,null,null,
+null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
+"'['",null,"']'",null,null,null,null,null,null,null,null,null,null,null,null,
+null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
+null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
+null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
+null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
+null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
+null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
+null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
+null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
+null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
+null,null,null,null,null,null,null,"ID","ASIGNACION","MAYORIGUAL","MENORIGUAL",
+"DISTINTO","CONSTANTE","CADENA","IF","THEN","ELSE","BEGIN","END","END_IF",
+"OUTF","TYPEDEF","FUN","RET","ULONGINT","SINGLE","FOR","OR","UP","DOWN",
+"TRIPLE",
 };
-char *yyrule[] = {
+final static String yyrule[] = {
 "$accept : programa",
 "programa : ID BEGIN list_sentencias END",
 "programa : BEGIN list_sentencias END",
@@ -454,36 +621,8 @@ char *yyrule[] = {
 "salida_mensaje : OUTF '(' expresion ')'",
 "salida_mensaje : OUTF '(' ')'",
 };
-#endif
-#ifndef YYSTYPE
-typedef int YYSTYPE;
-#endif
-#define yyclearin (yychar=(-1))
-#define yyerrok (yyerrflag=0)
-#ifdef YYSTACKSIZE
-#ifndef YYMAXDEPTH
-#define YYMAXDEPTH YYSTACKSIZE
-#endif
-#else
-#ifdef YYMAXDEPTH
-#define YYSTACKSIZE YYMAXDEPTH
-#else
-#define YYSTACKSIZE 500
-#define YYMAXDEPTH 500
-#endif
-#endif
-int yydebug;
-int yynerrs;
-int yyerrflag;
-int yychar;
-short *yyssp;
-YYSTYPE *yyvsp;
-YYSTYPE yyval;
-YYSTYPE yylval;
-short yyss[YYSTACKSIZE];
-YYSTYPE yyvs[YYSTACKSIZE];
-#define yystacksize YYSTACKSIZE
-#line 446 "gramatica.y"
+
+//#line 479 "gramatica.y"
 private static final String ENTERO = "ulongint";
 private static final String FLOTANTE = "single";
 private static final float NEGATIVE_MIN = 1.17549435e-38f;
@@ -496,6 +635,7 @@ static boolean hasReturn = false;
 static List<String> varDeclaradas = new ArrayList<>();
 static String tipoActual;
 static List<String> erroresSemanticos = new ArrayList<>();
+static Map<String,String> tiposDeclarados = new HashMap<>(); //clave: lexema del tipo ; valor: tipo del tipo
 
 public int yylex() throws IOException {
     Token t = AnalizadorLexico.obtenerToken();
@@ -581,192 +721,205 @@ private void variableYaDeclarada(String var){
 public NodoComun getRaiz(){
     return this.raiz;
 }
-#line 585 "y.tab.c"
-#define YYABORT goto yyabort
-#define YYACCEPT goto yyaccept
-#define YYERROR goto yyerrlab
-int
-yyparse()
+//#line 653 "Parser.java"
+//###############################################################
+// method: yylexdebug : check lexer state
+//###############################################################
+void yylexdebug(int state,int ch)
 {
-    register int yym, yyn, yystate;
-#if YYDEBUG
-    register char *yys;
-    extern char *getenv();
+String s=null;
+  if (ch < 0) ch=0;
+  if (ch <= YYMAXTOKEN) //check index bounds
+     s = yyname[ch];    //now get it
+  if (s==null)
+    s = "illegal-symbol";
+  debug("state "+state+", reading "+ch+" ("+s+")");
+}
 
-    if (yys = getenv("YYDEBUG"))
+
+
+
+
+//The following are now global, to aid in error reporting
+int yyn;       //next next thing to do
+int yym;       //
+int yystate;   //current parsing state from state table
+String yys;    //current token string
+
+
+//###############################################################
+// method: yyparse : parse input and execute indicated items
+//###############################################################
+int yyparse() throws IOException {
+boolean doaction;
+  init_stacks();
+  yynerrs = 0;
+  yyerrflag = 0;
+  yychar = -1;          //impossible char forces a read
+  yystate=0;            //initial state
+  state_push(yystate);  //save it
+  val_push(yylval);     //save empty value
+  while (true) //until parsing is done, either correctly, or w/error
     {
-        yyn = *yys;
-        if (yyn >= '0' && yyn <= '9')
-            yydebug = yyn - '0';
-    }
-#endif
-
-    yynerrs = 0;
-    yyerrflag = 0;
-    yychar = (-1);
-
-    yyssp = yyss;
-    yyvsp = yyvs;
-    *yyssp = yystate = 0;
-
-yyloop:
-    if (yyn = yydefred[yystate]) goto yyreduce;
-    if (yychar < 0)
-    {
-        if ((yychar = yylex()) < 0) yychar = 0;
-#if YYDEBUG
-        if (yydebug)
+    doaction=true;
+    if (yydebug) debug("loop"); 
+    //#### NEXT ACTION (from reduction table)
+    for (yyn=yydefred[yystate];yyn==0;yyn=yydefred[yystate])
+      {
+      if (yydebug) debug("yyn:"+yyn+"  state:"+yystate+"  yychar:"+yychar);
+      if (yychar < 0)      //we want a char?
         {
-            yys = 0;
-            if (yychar <= YYMAXTOKEN) yys = yyname[yychar];
-            if (!yys) yys = "illegal-symbol";
-            printf("yydebug: state %d, reading %d (%s)\n", yystate,
-                    yychar, yys);
-        }
-#endif
-    }
-    if ((yyn = yysindex[yystate]) && (yyn += yychar) >= 0 &&
-            yyn <= YYTABLESIZE && yycheck[yyn] == yychar)
-    {
-#if YYDEBUG
-        if (yydebug)
-            printf("yydebug: state %d, shifting to state %d (%s)\n",
-                    yystate, yytable[yyn],yyrule[yyn]);
-#endif
-        if (yyssp >= yyss + yystacksize - 1)
+        yychar = yylex();  //get next token
+        if (yydebug) debug(" next yychar:"+yychar);
+        //#### ERROR CHECK ####
+        if (yychar < 0)    //it it didn't work/error
+          {
+          yychar = 0;      //change it to default string (no -1!)
+          if (yydebug)
+            yylexdebug(yystate,yychar);
+          }
+        }//yychar<0
+      yyn = yysindex[yystate];  //get amount to shift by (shift index)
+      if ((yyn != 0) && (yyn += yychar) >= 0 &&
+          yyn <= YYTABLESIZE && yycheck[yyn] == yychar)
         {
-            goto yyoverflow;
+        if (yydebug)
+          debug("state "+yystate+", shifting to state "+yytable[yyn]);
+        //#### NEXT STATE ####
+        yystate = yytable[yyn];//we are in a new state
+        state_push(yystate);   //save it
+        val_push(yylval);      //push our lval as the input for next rule
+        yychar = -1;           //since we have 'eaten' a token, say we need another
+        if (yyerrflag > 0)     //have we recovered an error?
+           --yyerrflag;        //give ourselves credit
+        doaction=false;        //but don't process yet
+        break;   //quit the yyn=0 loop
         }
-        *++yyssp = yystate = yytable[yyn];
-        *++yyvsp = yylval;
-        yychar = (-1);
-        if (yyerrflag > 0)  --yyerrflag;
-        goto yyloop;
-    }
-    if ((yyn = yyrindex[yystate]) && (yyn += yychar) >= 0 &&
+
+    yyn = yyrindex[yystate];  //reduce
+    if ((yyn !=0 ) && (yyn += yychar) >= 0 &&
             yyn <= YYTABLESIZE && yycheck[yyn] == yychar)
-    {
-        yyn = yytable[yyn];
-        goto yyreduce;
-    }
-    if (yyerrflag) goto yyinrecovery;
-#ifdef lint
-    goto yynewerror;
-#endif
-yynewerror:
-    yyerror("syntax error");
-#ifdef lint
-    goto yyerrlab;
-#endif
-yyerrlab:
-    ++yynerrs;
-yyinrecovery:
-    if (yyerrflag < 3)
-    {
+      {   //we reduced!
+      if (yydebug) debug("reduce");
+      yyn = yytable[yyn];
+      doaction=true; //get ready to execute
+      break;         //drop down to actions
+      }
+    else //ERROR RECOVERY
+      {
+      if (yyerrflag==0)
+        {
+        yyerror("syntax error");
+        yynerrs++;
+        }
+      if (yyerrflag < 3) //low error count?
+        {
         yyerrflag = 3;
-        for (;;)
-        {
-            if ((yyn = yysindex[*yyssp]) && (yyn += YYERRCODE) >= 0 &&
+        while (true)   //do until break
+          {
+          if (stateptr<0)   //check for under & overflow here
+            {
+            yyerror("stack underflow. aborting...");  //note lower case 's'
+            return 1;
+            }
+          yyn = yysindex[state_peek(0)];
+          if ((yyn != 0) && (yyn += YYERRCODE) >= 0 &&
                     yyn <= YYTABLESIZE && yycheck[yyn] == YYERRCODE)
             {
-#if YYDEBUG
-                if (yydebug)
-                    printf("yydebug: state %d, error recovery shifting\
- to state %d\n", *yyssp, yytable[yyn]);
-#endif
-                if (yyssp >= yyss + yystacksize - 1)
-                {
-                    goto yyoverflow;
-                }
-                *++yyssp = yystate = yytable[yyn];
-                *++yyvsp = yylval;
-                goto yyloop;
+            if (yydebug)
+              debug("state "+state_peek(0)+", error recovery shifting to state "+yytable[yyn]+" ");
+            yystate = yytable[yyn];
+            state_push(yystate);
+            val_push(yylval);
+            doaction=false;
+            break;
             }
-            else
+          else
             {
-#if YYDEBUG
-                if (yydebug)
-                    printf("yydebug: error recovery discarding state %d\n",
-                            *yyssp);
-#endif
-                if (yyssp <= yyss) goto yyabort;
-                --yyssp;
-                --yyvsp;
+            if (yydebug)
+              debug("error recovery discarding state "+state_peek(0)+" ");
+            if (stateptr<0)   //check for under & overflow here
+              {
+              yyerror("Stack underflow. aborting...");  //capital 'S'
+              return 1;
+              }
+            state_pop();
+            val_pop();
             }
+          }
         }
-    }
-    else
-    {
-        if (yychar == 0) goto yyabort;
-#if YYDEBUG
-        if (yydebug)
+      else            //discard this token
         {
-            yys = 0;
-            if (yychar <= YYMAXTOKEN) yys = yyname[yychar];
-            if (!yys) yys = "illegal-symbol";
-            printf("yydebug: state %d, error recovery discards token %d (%s)\n",
-                    yystate, yychar, yys);
+        if (yychar == 0)
+          return 1; //yyabort
+        if (yydebug)
+          {
+          yys = null;
+          if (yychar <= YYMAXTOKEN) yys = yyname[yychar];
+          if (yys == null) yys = "illegal-symbol";
+          debug("state "+yystate+", error recovery discards token "+yychar+" ("+yys+")");
+          }
+        yychar = -1;  //read another
         }
-#endif
-        yychar = (-1);
-        goto yyloop;
-    }
-yyreduce:
-#if YYDEBUG
+      }//end error recovery
+    }//yyn=0 loop
+    if (!doaction)   //any reason not to proceed?
+      continue;      //skip action
+    yym = yylen[yyn];          //get count of terminals on rhs
     if (yydebug)
-        printf("yydebug: state %d, reducing by rule %d (%s)\n",
-                yystate, yyn, yyrule[yyn]);
-#endif
-    yym = yylen[yyn];
-    yyval = yyvsp[1-yym];
-    switch (yyn)
-    {
+      debug("state "+yystate+", reducing "+yym+" by rule "+yyn+" ("+yyrule[yyn]+")");
+    if (yym>0)                 //if count of rhs not 'nil'
+      yyval = val_peek(yym-1); //get current semantic value
+    yyval = dup_yyval(yyval); //duplicate yyval if ParserVal is used as semantic value
+    switch(yyn)
+      {
+//########## USER-SUPPLIED ACTIONS ##########
 case 1:
-#line 18 "gramatica.y"
-{AnalizadorLexico.agregarEstructura("Se reconocio el programa"); raiz = new NodoComun("PROGRAMA", (Nodo)yyvsp[-1].obj);}
+//#line 20 "gramatica.y"
+{AnalizadorLexico.agregarEstructura("Se reconocio el programa"); raiz = new NodoComun("PROGRAMA", (Nodo)val_peek(1).obj);}
 break;
 case 2:
-#line 19 "gramatica.y"
+//#line 21 "gramatica.y"
 {yyerror("El programa debe tener un nombre");}
 break;
 case 3:
-#line 20 "gramatica.y"
+//#line 22 "gramatica.y"
 {yyerror("Falta delimitador END del programa");}
 break;
 case 4:
-#line 21 "gramatica.y"
+//#line 23 "gramatica.y"
 {yyerror("Falta delimitador BEGIN del programa");}
 break;
 case 5:
-#line 22 "gramatica.y"
+//#line 24 "gramatica.y"
 {yyerror("Faltan los delimitadores del programa");}
 break;
 case 6:
-#line 25 "gramatica.y"
-{yyval.obj = new NodoComun("SENTENCIA", (Nodo)yyvsp[-1].obj, (Nodo)yyvsp[0].obj);}
+//#line 27 "gramatica.y"
+{yyval.obj = new NodoComun("SENTENCIA", (Nodo)val_peek(1).obj, (Nodo)val_peek(0).obj);}
 break;
 case 7:
-#line 26 "gramatica.y"
-{yyval.obj=yyvsp[0].obj;}
+//#line 28 "gramatica.y"
+{yyval.obj=val_peek(0).obj;}
 break;
 case 8:
-#line 30 "gramatica.y"
-{yyval= new NodoHoja("Sentencia Declarativa");}
+//#line 32 "gramatica.y"
+{yyval.obj = new NodoHoja("Sentencia Declarativa");}
 break;
 case 9:
-#line 31 "gramatica.y"
-{yyval.obj=yyvsp[-1].obj;}
+//#line 33 "gramatica.y"
+{yyval.obj=val_peek(1).obj;}
 break;
 case 10:
-#line 32 "gramatica.y"
+//#line 34 "gramatica.y"
 {yyerror("Las sentencias deben terminar con ;");}
 break;
 case 11:
-#line 33 "gramatica.y"
+//#line 35 "gramatica.y"
 {yyerror("Las sentencias deben terminar con ;");}
 break;
 case 12:
-#line 37 "gramatica.y"
+//#line 39 "gramatica.y"
 {AnalizadorLexico.agregarEstructura("Se reconocio declaracion de variable/s");
                          for (String var: varDeclaradas){
                             Token t = TablaSimbolos.getToken(var);
@@ -789,71 +942,73 @@ case 12:
                         }
 break;
 case 13:
-#line 57 "gramatica.y"
+//#line 59 "gramatica.y"
 {AnalizadorLexico.agregarEstructura("Se reconocio declaracion de funcion");}
 break;
 case 14:
-#line 58 "gramatica.y"
+//#line 60 "gramatica.y"
 {AnalizadorLexico.agregarEstructura("Se reconocio declaracion de tipo");}
 break;
 case 15:
-#line 62 "gramatica.y"
+//#line 64 "gramatica.y"
 {AnalizadorLexico.agregarEstructura("Se reconocio una asignacion");}
 break;
 case 16:
-#line 63 "gramatica.y"
+//#line 65 "gramatica.y"
 {AnalizadorLexico.agregarEstructura("Se reconocio una invocacion a funcion");}
 break;
 case 18:
-#line 65 "gramatica.y"
-{yyval=yyvsp[0];}
+//#line 67 "gramatica.y"
+{yyval=val_peek(0);}
 break;
 case 20:
-#line 71 "gramatica.y"
-{ yyval = new NodoComun("FOR",(Nodo)yyvsp[-2].obj,(Nodo)yyvsp[0].obj);}
+//#line 73 "gramatica.y"
+{ yyval = new NodoComun("FOR",(Nodo)val_peek(2).obj,(Nodo)val_peek(0).obj);}
 break;
 case 21:
-#line 72 "gramatica.y"
+//#line 74 "gramatica.y"
 {yyerror("Falta cuerpo del FOR");}
 break;
 case 22:
-#line 73 "gramatica.y"
+//#line 75 "gramatica.y"
 {yyerror("Falta parentensis en el FOR");}
 break;
 case 23:
-#line 74 "gramatica.y"
+//#line 76 "gramatica.y"
 {yyerror("Falta parentensis en el FOR");}
 break;
 case 24:
-#line 78 "gramatica.y"
-{yyval=yyvsp[0];}
+//#line 80 "gramatica.y"
+{yyval=val_peek(0);}
 break;
 case 25:
-#line 79 "gramatica.y"
-{yyval=yyvsp[0];}
+//#line 81 "gramatica.y"
+{yyval=val_peek(0);}
 break;
 case 26:
-#line 83 "gramatica.y"
-{  String ambitoVar = buscarAmbito(ambito,yyvsp[-7].sval);
+//#line 85 "gramatica.y"
+{  String ambitoVar = buscarAmbito(ambito,val_peek(7).sval);
                                                                    NodoHoja idAsignacion = new NodoHoja("error semantico");
-                                                                   if (ambitoVar.equals(""))
-                                                                       agregarErrorSemantico("La variable '" + yyvsp[-7].sval + "' no fue declarada");
-                                                                       idAsignacion = new NodoHoja("error semantico"); ??
+                                                                   if (ambitoVar.equals("")) {
+                                                                       agregarErrorSemantico("La variable '" + val_peek(7).sval + "' no fue declarada");
+                                                                       idAsignacion = new NodoHoja("error semantico"); /*??*/
+                                                                   }
                                                                    else {
-                                                                       Token t = TablaSimbolos.getToken(yyvsp[-7].sval + ":" + ambitoVar);
-                                                                       if (!t.getTipo().equals("ENTERO"))
+                                                                       Token t = TablaSimbolos.getToken(val_peek(7).sval + ":" + ambitoVar);
+                                                                       if (!t.getTipo().equals("ENTERO")) {
                                                                            agregarErrorSemantico("La variable de la asignacion debe ser de tipo ENTERO");
-                                                                           idAsignacion = new NodoHoja("error semantico"); ??
+                                                                           idAsignacion = new NodoHoja("error semantico"); /*??*/
+                                                                       }
                                                                        else {
-                                                                           idAsignacion = new NodoHoja(yyvsp[-7].sval + ":" + ambitoVar);
+                                                                           idAsignacion = new NodoHoja(val_peek(7).sval + ":" + ambitoVar);
                                                                        }
                                                                    }
 
-                                                                    NodoComun asignacion = new NodoComun("ASIGNACION", idAsignacion, (Nodo)yyvsp[-5].sval);
-                                                                    NodoComun incremento = new NodoComun("INCREMENTO", (Nodo)yyvsp[-1].obj, (Nodo)yyvsp[0].sval);
-                                                                    NodoComun condicion = (Nodo)yyvsp[-3].obj;
+                                                                    Nodo asignacion = new NodoComun("ASIGNACION", idAsignacion, (Nodo)val_peek(5).obj); /*Cambie sval x obj esto tiraba error el Parser*/
+                                                                    Nodo incremento = new NodoComun("INCREMENTO", (Nodo)val_peek(1).obj, (Nodo)val_peek(0).obj); /*Idem*/
+                                                                    Nodo condicion = (Nodo)val_peek(3).obj;
 
-                                                                    NodoComun asgnacionIncremento = new NodoComun("ASIGNACION E INCREMENTO", asignacion, incremento);
+                                                                    Nodo asgnacionIncremento = new NodoComun("ASIGNACION E INCREMENTO", asignacion, incremento);
 
                                                                     yyval.obj = new NodoComun ("ENCABEZADO FOR", asgnacionIncremento, condicion);
 
@@ -861,45 +1016,47 @@ case 26:
                                                                 }
 break;
 case 27:
-#line 108 "gramatica.y"
+//#line 112 "gramatica.y"
 {yyerror("Falta UP/DOWN en el FOR");}
 break;
 case 28:
-#line 109 "gramatica.y"
+//#line 113 "gramatica.y"
 {yyerror("Falta ';' en el FOR");}
 break;
 case 29:
-#line 110 "gramatica.y"
+//#line 114 "gramatica.y"
 {yyerror("Falta ';' en el FOR");}
 break;
 case 30:
-#line 111 "gramatica.y"
+//#line 115 "gramatica.y"
 {yyerror("Falta constante después de UP/DOWN en el FOR");}
 break;
 case 31:
-#line 115 "gramatica.y"
-{String ambitoVar = buscarAmbito(ambito,yyvsp[-11].sval);
+//#line 119 "gramatica.y"
+{String ambitoVar = buscarAmbito(ambito,val_peek(11).sval);
                                                                                        NodoHoja idAsignacion = new NodoHoja("error semantico");
-                                                                                       if (ambitoVar.equals(""))
-                                                                                            agregarErrorSemantico("La variable '" + yyvsp[-11].sval + "' no fue declarada");
-                                                                                            idAsignacion = new NodoHoja("error semantico"); ??
+                                                                                       if (ambitoVar.equals("")) {
+                                                                                            agregarErrorSemantico("La variable '" + val_peek(11).sval + "' no fue declarada");
+                                                                                            idAsignacion = new NodoHoja("error semantico"); /*??*/
+                                                                                       }
                                                                                        else {
-                                                                                             Token t = TablaSimbolos.getToken(yyvsp[-11].sval + ":" + ambitoVar);
-                                                                                             if (!t.getTipo().equals("ENTERO"))
+                                                                                             Token t = TablaSimbolos.getToken(val_peek(11).sval + ":" + ambitoVar);
+                                                                                             if (!t.getTipo().equals("ENTERO")) {
                                                                                                     agregarErrorSemantico("La variable de la asignacion debe ser de tipo ENTERO");
-                                                                                                    idAsignacion = new NodoHoja("error semantico"); ??
+                                                                                                    idAsignacion = new NodoHoja("error semantico"); /*??*/
+                                                                                             }
                                                                                              else {
-                                                                                                    idAsignacion = new NodoHoja(yyvsp[-11].sval + ":" + ambitoVar);
+                                                                                                    idAsignacion = new NodoHoja(val_peek(11).sval + ":" + ambitoVar);
                                                                                              }
                                                                                        }
 
-                                                                                       NodoComun asignacion = new NodoComun("ASIGNACION", idAsignacion, (Nodo)yyvsp[-9].sval);
-                                                                                       NodoComun incremento = new NodoComun("INCREMENTO", (Nodo)yyvsp[-5].obj, (Nodo)yyvsp[-4].sval);
-                                                                                       NodoComun condicion = (Nodo)yyvsp[-7].obj;
-                                                                                       NodoComun iteradorCondicion = (Nodo)yyvsp[-1].obj;
+                                                                                       Nodo asignacion = new NodoComun("ASIGNACION", idAsignacion, (Nodo)val_peek(9).obj); /*Cambie sval x obj*/
+                                                                                       Nodo incremento = new NodoComun("INCREMENTO", (Nodo)val_peek(5).obj, (Nodo)val_peek(4).obj); /*Idem*/
+                                                                                       Nodo condicion = (Nodo)val_peek(7).obj;
+                                                                                       Nodo iteradorCondicion = (Nodo)val_peek(1).obj;
 
-                                                                                       NodoComun asgnacionIncremento = new NodoComun("ASIGNACION E INCREMENTO", asignacion, incremento);
-                                                                                       NodoComun condiciones = new NodoComun("ASIGNACION E INCREMENTO", condicion, iteradorCondicion);
+                                                                                       Nodo asgnacionIncremento = new NodoComun("ASIGNACION E INCREMENTO", asignacion, incremento);
+                                                                                       Nodo condiciones = new NodoComun("ASIGNACION E INCREMENTO", condicion, iteradorCondicion);
 
                                                                                        yyval.obj = new NodoComun ("ENCABEZADO FOR", asgnacionIncremento, condiciones);
 
@@ -907,86 +1064,89 @@ case 31:
                                                                                        }
 break;
 case 32:
-#line 143 "gramatica.y"
+//#line 149 "gramatica.y"
 {yyerror("Falta UP/DOWN en el FOR");}
 break;
 case 33:
-#line 144 "gramatica.y"
+//#line 150 "gramatica.y"
 {yyerror("Falta ';' en el FOR");}
 break;
 case 34:
-#line 145 "gramatica.y"
+//#line 151 "gramatica.y"
 {yyerror("Falta ';' en el FOR");}
 break;
 case 35:
-#line 146 "gramatica.y"
+//#line 152 "gramatica.y"
 {yyerror("Falta constante después de UP/DOWN en el FOR");}
 break;
 case 36:
-#line 150 "gramatica.y"
+//#line 156 "gramatica.y"
 {yyval.obj = new NodoHoja("UP");}
 break;
 case 37:
-#line 151 "gramatica.y"
+//#line 157 "gramatica.y"
 {yyval.obj = new NodoHoja("DOWN");}
 break;
 case 38:
-#line 155 "gramatica.y"
-{ String ambitoVar = buscarAmbito(ambito,yyvsp[-2].sval);
+//#line 161 "gramatica.y"
+{ String ambitoVar = buscarAmbito(ambito,val_peek(2).sval);
                               if (ambitoVar.equals(""))
-                                  agregarErrorSemantico("La variable '" + yyvsp[-2].sval + "' no fue declarada");
+                                  agregarErrorSemantico("La variable '" + val_peek(2).sval + "' no fue declarada");
                               else {
-                                  Token t = TablaSimbolos.getToken(yyvsp[-2].sval + ":" + ambitoVar);
+                                  Token t = TablaSimbolos.getToken(val_peek(2).sval + ":" + ambitoVar);
                                   if (!t.getUso().equals("variable"))
                                     agregarErrorSemantico("La expresion en la parte izquierda de la asignación debe ser una variable. Se encontró un elemento no asignable (" + t.getUso() + ")" );
                                     /*new NodoHoja("error semantico"); ??*/
                                   else {
-                                    NodoHoja id = new NodoHoja(yyvsp[-2].sval + ":" + ambitoVar);
+                                    NodoHoja id = new NodoHoja(val_peek(2).sval + ":" + ambitoVar);
 
                                   }
                               }
                             }
 break;
 case 40:
-#line 170 "gramatica.y"
+//#line 176 "gramatica.y"
 {yyerror("Falta parte derecha de la asignacion");}
 break;
 case 42:
-#line 175 "gramatica.y"
-{Token t = TablaSimbolos.getToken(yyvsp[0].sval + ":" + ambito);
-            if (t!= null){
-                if (t.getUso() == null || !t.getUso().equals("tipo"))
-                    yyerror("El identificador '" + yyvsp[0].sval + "' no es un tipo definido");
-            }
+//#line 181 "gramatica.y"
+{ String ambitoVar = buscarAmbito(ambito,val_peek(0).sval);
+           if (ambitoVar.equals(""))
+                agregarErrorSemantico("El tipo '" + val_peek(0).sval + "' no fue declarado");
+           else {
+            Token t = TablaSimbolos.getToken(val_peek(0).sval + ":" + ambitoVar);
+            if (t.getUso() == null || !t.getUso().equals("tipo"))
+                yyerror("El identificador '" + val_peek(0).sval + "' no es un tipo definido");
             else {
-                yyerror("El identificador '" + yyvsp[0].sval + "' no es un tipo definido");}
-            tipoActual = yyvsp[0].sval;
+                tipoActual = val_peek(0).sval;
             }
+            }
+         }
 break;
 case 43:
-#line 187 "gramatica.y"
-{tipoActual = yyvsp[0].sval;}
+//#line 196 "gramatica.y"
+{tipoActual = val_peek(0).sval;}
 break;
 case 44:
-#line 188 "gramatica.y"
-{tipoActual = yyvsp[0].sval;}
+//#line 197 "gramatica.y"
+{tipoActual = val_peek(0).sval;}
 break;
 case 45:
-#line 192 "gramatica.y"
-{varDeclaradas.add(yyvsp[0].sval);}
+//#line 201 "gramatica.y"
+{varDeclaradas.add(val_peek(0).sval);}
 break;
 case 46:
-#line 193 "gramatica.y"
+//#line 202 "gramatica.y"
 {yyerror("Las variables deben estar separadas por comas");}
 break;
 case 47:
-#line 194 "gramatica.y"
-{varDeclaradas.add(yyvsp[0].sval);}
+//#line 203 "gramatica.y"
+{varDeclaradas.add(val_peek(0).sval);}
 break;
 case 48:
-#line 198 "gramatica.y"
+//#line 207 "gramatica.y"
 {hasReturn = false;
-                String idFuncion = yyvsp[0].sval;
+                String idFuncion = val_peek(0).sval;
                  Token t = TablaSimbolos.getToken(idFuncion);
                  if (!TablaSimbolos.existeSimbolo(idFuncion + ":" + ambito)){
                     t.getLexema().setLength(0);
@@ -996,6 +1156,7 @@ case 48:
                     t.setTipo(tipoActual);
                     TablaSimbolos.removeToken(idFuncion);
                     TablaSimbolos.addSimbolo(t.getLexema().toString(),t);
+                    yyval.obj = new NodoHoja(val_peek(0).sval);
                  }
                  else {
                     TablaSimbolos.removeToken(idFuncion);
@@ -1005,121 +1166,164 @@ case 48:
                  }
 break;
 case 49:
-#line 216 "gramatica.y"
+//#line 226 "gramatica.y"
 {yyerror("La funcione debe tener nombre"); hasReturn = false;}
 break;
 case 50:
-#line 220 "gramatica.y"
+//#line 230 "gramatica.y"
 { if (!hasReturn) {
                                                             yyerror("Falta sentencia RET en la función");
+                                                         }
+                                                         String parametro = val_peek(3).sval;
+                                                         Token t = TablaSimbolos.getToken(parametro);
+                                                         if (!TablaSimbolos.existeSimbolo(parametro + ":" + ambito)){
+                                                             t.getLexema().setLength(0);
+                                                             t.getLexema().append(parametro).append(":").append(ambito);
+                                                             t.setAmbito(ambito);
+                                                             t.setUso("parametro");
+                                                             t.setTipo(tipoActual);
+                                                             TablaSimbolos.removeToken(parametro);
+                                                             TablaSimbolos.addSimbolo(t.getLexema().toString(),t);
+
+                                                             /*Agregar paremetro a lista de parametros, para luego chequear en la llamada a funcion si coincide con este*/
+
+                                                             yyval.obj = new NodoHoja(val_peek(3).sval);
+
                                                          }
                                                          removeAmbito();
                                                          }
 break;
 case 52:
-#line 225 "gramatica.y"
+//#line 251 "gramatica.y"
 {yyerror("La funcione no puede tener más de un parámetro");removeAmbito();}
 break;
 case 53:
-#line 226 "gramatica.y"
+//#line 252 "gramatica.y"
 {yyerror("La función debe tener parámetro");removeAmbito();}
 break;
 case 55:
-#line 231 "gramatica.y"
+//#line 257 "gramatica.y"
 {yyerror("El parametro debe tener su tipo");}
 break;
+case 59:
+//#line 270 "gramatica.y"
+{yyval = new NodoComun("SENTENCIA", (Nodo) val_peek(2).obj, (Nodo) val_peek(1).obj);}
+break;
+case 60:
+//#line 271 "gramatica.y"
+{yyval=val_peek(0);}
+break;
+case 61:
+//#line 272 "gramatica.y"
+{yyval=val_peek(1);}
+break;
 case 62:
-#line 247 "gramatica.y"
+//#line 273 "gramatica.y"
 {yyerror("El cuerpo de la funcion no puede ser vacio");}
 break;
+case 63:
+//#line 278 "gramatica.y"
+{yyval = new NodoComun("SENTENCIA", (Nodo) val_peek(1).obj, (Nodo) val_peek(0).obj);}
+break;
+case 64:
+//#line 279 "gramatica.y"
+{yyval=val_peek(0);}
+break;
 case 65:
-#line 258 "gramatica.y"
+//#line 284 "gramatica.y"
 {if (ambito.length() < 5){  /*si es menor es que es main*/
                                 yyerror("No puede haber una sentencia de retorno fuera de una funcion");
                            }
                            if (!inIF){
                                 hasReturn = true;
+                                yyval = new NodoComun("RETURN", (Nodo)val_peek(1).obj);
                            }
+                           /*$$ = new NodoComun("RETURN", (Nodo)$3.obj);   DONDE VA?*/
                            AnalizadorLexico.agregarEstructura("Se reconocio sentencia de retorno");}
 break;
 case 66:
-#line 268 "gramatica.y"
+//#line 296 "gramatica.y"
 {
                             }
 break;
+case 68:
+//#line 299 "gramatica.y"
+{yyval.obj = val_peek(0);}
+break;
 case 69:
-#line 272 "gramatica.y"
+//#line 300 "gramatica.y"
 {yyerror("Se esperaba un termino");}
 break;
 case 70:
-#line 273 "gramatica.y"
+//#line 301 "gramatica.y"
 {yyerror("Se esperaba un termino");}
 break;
 case 73:
-#line 279 "gramatica.y"
-{yyval = yyvsp[0];}
+//#line 307 "gramatica.y"
+{yyval = val_peek(0);}
 break;
 case 74:
-#line 280 "gramatica.y"
+//#line 308 "gramatica.y"
 {yyerror("Se esperaba un factor");}
 break;
 case 75:
-#line 281 "gramatica.y"
+//#line 309 "gramatica.y"
 {yyerror("Se esperaba un factor");}
 break;
 case 76:
-#line 285 "gramatica.y"
-{String ambitoVar = buscarAmbito(ambito,yyvsp[0].sval);
+//#line 313 "gramatica.y"
+{String ambitoVar = buscarAmbito(ambito,val_peek(0).sval);
         if (ambitoVar.equals("")){
-            agregarErrorSemantico("La variable '" + yyvsp[0].sval + "' no fue declarada");
+            agregarErrorSemantico("La variable '" + val_peek(0).sval + "' no fue declarada");
             yyval = new NodoHoja("error");
         }
         else {
-            Token t = TablaSimbolos.getToken(yyvsp[0].sval + ":" + ambitoVar);
+            Token t = TablaSimbolos.getToken(val_peek(0).sval + ":" + ambitoVar);
             if (!t.getUso().equals("variable"))
-                agregarErrorSemantico("'" + yyvsp[0].sval + "' no es una variable. Es un/a " + t.getUso());
+                agregarErrorSemantico("'" + val_peek(0).sval + "' no es una variable. Es un/a " + t.getUso());
             else {
-                yyval = new NodoHoja(yyvsp[0].sval + ":" + ambitoVar);
-                TablaSimbolos.removeToken(yyvsp[0].sval);
+                yyval = new NodoHoja(val_peek(0).sval + ":" + ambitoVar);
+                TablaSimbolos.removeToken(val_peek(0).sval);
             }
         }
         }
 break;
 case 77:
-#line 300 "gramatica.y"
-{Token t = TablaSimbolos.getToken(yyvsp[0].sval);
+//#line 328 "gramatica.y"
+{Token t = TablaSimbolos.getToken(val_peek(0).sval);
                 if (t != null && (t.getTipo().equals(FLOTANTE))) {
                     String lexema = t.getLexema().toString();
                     chequeoFlotantesPositivos(lexema);
-                    yyval = new NodoHoja(yyvsp[0].sval);
+                    yyval = new NodoHoja(val_peek(0).sval);
                 }
                 else
                     yyval = new NodoHoja("error");
                 }
 break;
 case 78:
-#line 309 "gramatica.y"
+//#line 337 "gramatica.y"
 {AnalizadorLexico.agregarEstructura("Se reconocio una invocacion a funcion");}
 break;
 case 81:
-#line 312 "gramatica.y"
-{Token t = TablaSimbolos.getToken(yyvsp[-1].sval);
+//#line 340 "gramatica.y"
+{Token t = TablaSimbolos.getToken(val_peek(1).sval);
                                         if (t != null && t.getTipo().equals(ENTERO))
                                             yyerror("Las constantes de tipo ulongint no pueden ser negativas");
                     }
 break;
 case 83:
-#line 320 "gramatica.y"
-{String idTipo = yyvsp[0].sval;
+//#line 348 "gramatica.y"
+{String idTipo = val_peek(0).sval;
                                          Token t = TablaSimbolos.getToken(idTipo);
                                          if (!TablaSimbolos.existeSimbolo(idTipo + ":" + ambito)){
                                             t.getLexema().setLength(0);
                                             t.getLexema().append(idTipo).append(":").append(ambito);
                                             t.setAmbito(ambito);
                                             t.setUso("tipo");
-                                            t.setTipo("triple");
+                                            t.setTipo(val_peek(2).sval);
                                             TablaSimbolos.removeToken(idTipo);
                                             TablaSimbolos.addSimbolo(t.getLexema().toString(),t);
+                                            tiposDeclarados.put(val_peek(0).sval, val_peek(2).sval);
                                             }
                                          else {
                                             TablaSimbolos.removeToken(idTipo);
@@ -1128,199 +1332,275 @@ case 83:
                                          }
 break;
 case 84:
-#line 336 "gramatica.y"
+//#line 365 "gramatica.y"
 {yyerror("Falta ID al final de la declaracion de tipo");}
 break;
 case 85:
-#line 337 "gramatica.y"
+//#line 366 "gramatica.y"
 {yyerror("Falta diamante (<) en la declaracion de tipo");}
 break;
 case 86:
-#line 338 "gramatica.y"
+//#line 367 "gramatica.y"
 {yyerror("Falta diamante (>) en la declaracion de tipo");}
 break;
 case 87:
-#line 339 "gramatica.y"
+//#line 368 "gramatica.y"
 {yyerror("Faltan diamantes (</>) en la declaracion de tipo");}
 break;
 case 88:
-#line 340 "gramatica.y"
+//#line 369 "gramatica.y"
 {yyerror("Falta TRIPLE en la declaracion de tipo");}
 break;
 case 90:
-#line 345 "gramatica.y"
+//#line 374 "gramatica.y"
 {yyerror("La funcion no puede tener mas de un parametro");}
 break;
 case 91:
-#line 346 "gramatica.y"
+//#line 375 "gramatica.y"
 {yyerror("La funcion debe tener un parametro");}
 break;
 case 92:
-#line 347 "gramatica.y"
+//#line 376 "gramatica.y"
 {AnalizadorLexico.agregarEstructura("Se reconocio conversion");}
 break;
 case 94:
-#line 352 "gramatica.y"
+//#line 381 "gramatica.y"
 {yyerror("La sentencia IF deben terminar con END_IF");}
 break;
+case 95:
+//#line 385 "gramatica.y"
+{yyval=val_peek(1);}
+break;
+case 96:
+//#line 386 "gramatica.y"
+{yyval=val_peek(1);}
+break;
 case 97:
-#line 358 "gramatica.y"
+//#line 387 "gramatica.y"
 {yyerror("Se esperaba 'END' después del bloque BEGIN en el cuerpo FOR");}
 break;
 case 98:
-#line 362 "gramatica.y"
-{inIF=true; yyval=yyvsp[0];}
+//#line 391 "gramatica.y"
+{inIF=true; yyval=val_peek(0);}
 break;
 case 99:
-#line 366 "gramatica.y"
-{AnalizadorLexico.agregarEstructura("Se reconocio un IF");inIF=false; yyval.obj = new NodoComun("CUERPO",(Nodo)yyvsp[-1].obj);
+//#line 395 "gramatica.y"
+{AnalizadorLexico.agregarEstructura("Se reconocio un IF");inIF=false; yyval.obj = new NodoComun("CUERPO",(Nodo)val_peek(1).obj);
                                                                                                                                               Nodo cuerpo = (Nodo)yyval.obj;
-                                                                                                                                              yyval.obj = new NodoComun("IF", (Nodo)yyvsp[-4].obj, cuerpo);}
+                                                                                                                                              yyval.obj = new NodoComun("IF", (Nodo)val_peek(4).obj, cuerpo);}
 break;
 case 100:
-#line 369 "gramatica.y"
-{AnalizadorLexico.agregarEstructura("Se reconocio un IF"); inIF=false; yyval.obj = new NodoComun("CUERPO", (Nodo)yyvsp[-1].obj);
+//#line 398 "gramatica.y"
+{AnalizadorLexico.agregarEstructura("Se reconocio un IF"); inIF=false; yyval.obj = new NodoComun("CUERPO", (Nodo)val_peek(1).obj);
                                                                                                                                           Nodo cuerpo = (Nodo)yyval.obj;
-                                                                                                                                          yyval.obj = new NodoComun("IF", (Nodo)yyvsp[-4].obj, cuerpo);}
+                                                                                                                                          yyval.obj = new NodoComun("IF", (Nodo)val_peek(4).obj, cuerpo);}
 break;
 case 101:
-#line 374 "gramatica.y"
-{AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false; yyval.obj = new NodoComun("CUERPO", (Nodo)yyvsp[-3].obj, (Nodo)yyvsp[-1].obj));
+//#line 403 "gramatica.y"
+{AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false; yyval.obj = new NodoComun("CUERPO", (Nodo)val_peek(3).obj, (Nodo)val_peek(1).obj);
                                                                                                                                                                           Nodo cuerpo = (Nodo)yyval.obj;
-                                                                                                                                                                          yyval.obj = new NodoComun("IF", (Nodo)yyvsp[-6].obj,(Nodo)yyvsp[-3].obj);}
+                                                                                                                                                                          yyval.obj = new NodoComun("IF", (Nodo)val_peek(6).obj,(Nodo)val_peek(3).obj);}
 break;
 case 102:
-#line 378 "gramatica.y"
-{AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false; yyval.obj = new NodoComun("CUERPO", (Nodo)yyvsp[-3].obj, (Nodo)yyvsp[-1].obj));
+//#line 407 "gramatica.y"
+{AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false; yyval.obj = new NodoComun("CUERPO", (Nodo)val_peek(3).obj, (Nodo)val_peek(1).obj);
                                                                                                                                                                             Nodo cuerpo = (Nodo)yyval.obj;
-                                                                                                                                                                            yyval.obj = new NodoComun("IF", (Nodo)yyvsp[-6].obj,(Nodo)yyvsp[-3].obj);}
+                                                                                                                                                                            yyval.obj = new NodoComun("IF", (Nodo)val_peek(6).obj,(Nodo)val_peek(3).obj);}
 break;
 case 103:
-#line 382 "gramatica.y"
-{AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false; yyval.obj = new NodoComun("CUERPO", (Nodo)yyvsp[-3].obj, (Nodo)yyvsp[-1].obj));
+//#line 411 "gramatica.y"
+{AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false; yyval.obj = new NodoComun("CUERPO", (Nodo)val_peek(3).obj, (Nodo)val_peek(1).obj);
                                                                                                                                                                   Nodo cuerpo = (Nodo)yyval.obj;
-                                                                                                                                                                  yyval.obj = new NodoComun("IF", (Nodo)yyvsp[-6].obj,(Nodo)yyvsp[-3].obj);}
+                                                                                                                                                                  yyval.obj = new NodoComun("IF", (Nodo)val_peek(6).obj,(Nodo)val_peek(3).obj);}
 break;
 case 104:
-#line 386 "gramatica.y"
-{AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false; yyval.obj = new NodoComun("CUERPO", (Nodo)yyvsp[-3].obj, (Nodo)yyvsp[-1].obj));
+//#line 415 "gramatica.y"
+{AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false; yyval.obj = new NodoComun("CUERPO", (Nodo)val_peek(3).obj, (Nodo)val_peek(1).obj);
                                                                                                                                                                    Nodo cuerpo = (Nodo)yyval.obj;
-                                                                                                                                                                   yyval.obj = new NodoComun("IF", (Nodo)yyvsp[-6].obj,(Nodo)yyvsp[-3].obj); }
+                                                                                                                                                                   yyval.obj = new NodoComun("IF", (Nodo)val_peek(6).obj,(Nodo)val_peek(3).obj); }
 break;
 case 105:
-#line 392 "gramatica.y"
-{yyval = yyvsp[-1];}
+//#line 421 "gramatica.y"
+{yyval = val_peek(1);}
 break;
 case 106:
-#line 393 "gramatica.y"
-{yyval = yyvsp[-1];}
+//#line 422 "gramatica.y"
+{yyval = val_peek(1);}
 break;
 case 107:
-#line 397 "gramatica.y"
-{inIF=true;}
+//#line 426 "gramatica.y"
+{yyval = val_peek(1);}
 break;
 case 108:
-#line 398 "gramatica.y"
-{yyerror("Se esperaba 'END' después del bloque BEGIN en el cuerpo IF/ELSE"); inIF=true;}
+//#line 427 "gramatica.y"
+{yyerror("Se esperaba 'END' después del bloque BEGIN en el cuerpo IF/ELSE");}
 break;
 case 109:
-#line 399 "gramatica.y"
-{yyerror("Se encontró 'END' sin un bloque BEGIN correspondiente en el cuerpo IF/ELSE");inIF=true; }
+//#line 428 "gramatica.y"
+{yyerror("Se encontró 'END' sin un bloque BEGIN correspondiente en el cuerpo IF/ELSE");}
 break;
 case 110:
-#line 400 "gramatica.y"
+//#line 429 "gramatica.y"
 {yyerror("Se esperaba BEGIN y END por sentencias multiples");}
 break;
 case 111:
-#line 404 "gramatica.y"
-{inIF=true;}
+//#line 433 "gramatica.y"
+{yyval = new NodoComun("SENTENCIA", (Nodo) val_peek(2).obj, (Nodo) val_peek(1).obj);}
 break;
 case 112:
-#line 405 "gramatica.y"
-{inIF=true;}
+//#line 434 "gramatica.y"
+{yyval = val_peek(1);}
+break;
+case 113:
+//#line 439 "gramatica.y"
+{yyval = new NodoHoja(val_peek(0).sval);}
+break;
+case 114:
+//#line 440 "gramatica.y"
+{yyval = new NodoHoja(val_peek(0).sval);}
+break;
+case 115:
+//#line 441 "gramatica.y"
+{yyval = new NodoHoja(val_peek(0).sval);}
+break;
+case 116:
+//#line 442 "gramatica.y"
+{yyval = new NodoHoja(val_peek(0).sval);}
+break;
+case 117:
+//#line 443 "gramatica.y"
+{yyval = new NodoHoja(val_peek(0).sval);}
+break;
+case 118:
+//#line 444 "gramatica.y"
+{yyval = new NodoHoja(val_peek(0).sval);}
+break;
+case 119:
+//#line 448 "gramatica.y"
+{yyval = new NodoComun(val_peek(1).sval, (Nodo)val_peek(2).obj, (Nodo)val_peek(0).obj);}
 break;
 case 120:
-#line 420 "gramatica.y"
-{AnalizadorLexico.agregarEstructura("Se reconocio pattern matching");}
+//#line 449 "gramatica.y"
+{ yyval = new NodoComun(val_peek(3).sval, (Nodo)val_peek(5).obj, (Nodo)val_peek(3).obj);
+                                                                                    AnalizadorLexico.agregarEstructura("Se reconocio pattern matching");
+                                                                                  }
 break;
 case 121:
-#line 421 "gramatica.y"
+//#line 453 "gramatica.y"
 {yyerror("Falta comparador en la condicion");}
 break;
+case 122:
+//#line 458 "gramatica.y"
+{yyval = new NodoComun("SENTENCIA", (Nodo) val_peek(2).obj, (Nodo) val_peek(0).obj);}
+break;
+case 123:
+//#line 462 "gramatica.y"
+{yyval = new NodoComun("SENTENCIA", (Nodo) val_peek(2).obj, (Nodo) val_peek(0).obj);}
+break;
+case 124:
+//#line 463 "gramatica.y"
+{yyval=val_peek(0);}
+break;
 case 125:
-#line 432 "gramatica.y"
+//#line 464 "gramatica.y"
 {yyerror("Falta expresion en pattern matching");}
 break;
 case 126:
-#line 436 "gramatica.y"
-{   yyval = new NodoComun("OUTF", new NodoHoja(yyvsp[-1].sval));
+//#line 468 "gramatica.y"
+{   yyval = new NodoComun("OUTF", new NodoHoja(val_peek(1).sval));
+                            Token t = TablaSimbolos.getToken(val_peek(1).sval); /*Obtenemos el token, faltaba esto*/
                             t.setUso("mensaje");
                             t.setTipo("cadena");
                             AnalizadorLexico.agregarEstructura("Se reconocio salida de mensaje por pantalla");
                         }
 break;
 case 127:
-#line 441 "gramatica.y"
+//#line 474 "gramatica.y"
 {AnalizadorLexico.agregarEstructura("Se reconocio salida de mensaje por pantalla");}
 break;
 case 128:
-#line 442 "gramatica.y"
+//#line 475 "gramatica.y"
 {yyerror("Falta de parametro en funcion OUTF");}
 break;
-#line 1271 "y.tab.c"
-    }
-    yyssp -= yym;
-    yystate = *yyssp;
-    yyvsp -= yym;
-    yym = yylhs[yyn];
-    if (yystate == 0 && yym == 0)
-    {
-#if YYDEBUG
-        if (yydebug)
-            printf("yydebug: after reduction, shifting from state 0 to\
- state %d\n", YYFINAL);
-#endif
-        yystate = YYFINAL;
-        *++yyssp = YYFINAL;
-        *++yyvsp = yyval;
-        if (yychar < 0)
+//#line 1450 "Parser.java"
+//########## END OF USER-SUPPLIED ACTIONS ##########
+    }//switch
+    //#### Now let's reduce... ####
+    if (yydebug) debug("reduce");
+    state_drop(yym);             //we just reduced yylen states
+    yystate = state_peek(0);     //get new state
+    val_drop(yym);               //corresponding value drop
+    yym = yylhs[yyn];            //select next TERMINAL(on lhs)
+    if (yystate == 0 && yym == 0)//done? 'rest' state and at first TERMINAL
+      {
+      if (yydebug) debug("After reduction, shifting from state 0 to state "+YYFINAL+"");
+      yystate = YYFINAL;         //explicitly say we're done
+      state_push(YYFINAL);       //and save it
+      val_push(yyval);           //also save the semantic value of parsing
+      if (yychar < 0)            //we want another character?
         {
-            if ((yychar = yylex()) < 0) yychar = 0;
-#if YYDEBUG
-            if (yydebug)
-            {
-                yys = 0;
-                if (yychar <= YYMAXTOKEN) yys = yyname[yychar];
-                if (!yys) yys = "illegal-symbol";
-                printf("yydebug: state %d, reading %d (%s)\n",
-                        YYFINAL, yychar, yys);
-            }
-#endif
+        yychar = yylex();        //get next character
+        if (yychar<0) yychar=0;  //clean, if necessary
+        if (yydebug)
+          yylexdebug(yystate,yychar);
         }
-        if (yychar == 0) goto yyaccept;
-        goto yyloop;
-    }
-    if ((yyn = yygindex[yym]) && (yyn += yystate) >= 0 &&
+      if (yychar == 0)          //Good exit (if lex returns 0 ;-)
+         break;                 //quit the loop--all DONE
+      }//if yystate
+    else                        //else not done yet
+      {                         //get next state and push, for next yydefred[]
+      yyn = yygindex[yym];      //find out where to go
+      if ((yyn != 0) && (yyn += yystate) >= 0 &&
             yyn <= YYTABLESIZE && yycheck[yyn] == yystate)
-        yystate = yytable[yyn];
-    else
-        yystate = yydgoto[yym];
-#if YYDEBUG
-    if (yydebug)
-        printf("yydebug: after reduction, shifting from state %d \
-to state %d\n", *yyssp, yystate);
-#endif
-    if (yyssp >= yyss + yystacksize - 1)
-    {
-        goto yyoverflow;
-    }
-    *++yyssp = yystate;
-    *++yyvsp = yyval;
-    goto yyloop;
-yyoverflow:
-    yyerror("yacc stack overflow");
-yyabort:
-    return (1);
-yyaccept:
-    return (0);
+        yystate = yytable[yyn]; //get new state
+      else
+        yystate = yydgoto[yym]; //else go to new defred
+      if (yydebug) debug("after reduction, shifting from state "+state_peek(0)+" to state "+yystate+"");
+      state_push(yystate);     //going again, so push state & val...
+      val_push(yyval);         //for next action
+      }
+    }//main loop
+  return 0;//yyaccept!!
 }
+//## end of method parse() ######################################
+
+
+
+//## run() --- for Thread #######################################
+/**
+ * A default run method, used for operating this parser
+ * object in the background.  It is intended for extending Thread
+ * or implementing Runnable.  Turn off with -Jnorun .
+ */
+public void run() throws IOException {
+  yyparse();
+}
+//## end of method run() ########################################
+
+
+
+//## Constructors ###############################################
+/**
+ * Default constructor.  Turn off with -Jnoconstruct .
+
+ */
+public Parser()
+{
+  //nothing to do
+}
+
+
+/**
+ * Create a parser, setting the debug to true or false.
+ * @param debugMe true for debugging, false for no debug.
+ */
+public Parser(boolean debugMe)
+{
+  yydebug=debugMe;
+}
+//###############################################################
+
+
+
+}
+//################### END OF CLASS ##############################

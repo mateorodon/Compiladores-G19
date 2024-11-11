@@ -1,4 +1,4 @@
-package compi.g19.c.GeneracionDeCodigo;
+package compi.g19.GeneracionDeCodigo;
 
 public class NodoHoja extends Nodo {
 

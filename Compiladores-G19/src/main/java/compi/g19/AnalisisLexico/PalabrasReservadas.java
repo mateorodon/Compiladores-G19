@@ -1,4 +1,4 @@
-package compi.g19.a.AnalisisLexico;
+package compi.g19.AnalisisLexico;
 
 import java.util.HashMap;
 

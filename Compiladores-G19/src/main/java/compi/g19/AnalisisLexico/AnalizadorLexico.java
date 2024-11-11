@@ -1,4 +1,4 @@
-package compi.g19.a.AnalisisLexico;
+package compi.g19.AnalisisLexico;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,8 +7,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import static compi.g19.a.AnalisisLexico.AccionSemantica.token;
 
 
 @Getter
@@ -99,7 +97,7 @@ public class AnalizadorLexico {
             }
         }
 
-        Token returnToken = new Token(token);
+        Token returnToken = new Token(AccionSemantica.token);
 
         lexemaBuilder.setLength(0);
 

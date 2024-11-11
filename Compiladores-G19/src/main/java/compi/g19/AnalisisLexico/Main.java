@@ -1,6 +1,6 @@
-package compi.g19.a.AnalisisLexico;
+package compi.g19.AnalisisLexico;
 
-import compi.g19.b.AnalisisSintactico.*;
+import compi.g19.AnalisisSintactico.*;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -10,7 +10,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
-
 public class Main {
     public static void main(String[] args) {
         try{

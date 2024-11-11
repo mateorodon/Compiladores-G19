@@ -37,7 +37,7 @@
                         <configuration>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>compi.g19.a.AnalisisLexico.Main</mainClass>
+                                    <mainClass>compi.g19.AnalisisLexico.Main</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>

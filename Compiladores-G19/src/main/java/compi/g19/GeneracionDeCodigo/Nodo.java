@@ -1,8 +1,7 @@
-package compi.g19.c.GeneracionDeCodigo;
+package compi.g19.GeneracionDeCodigo;
 
-import compi.g19.a.AnalisisLexico.Token;
-import compi.g19.b.AnalisisSintactico.ParserVal;
-import lombok.Data;
+import compi.g19.AnalisisLexico.Token;
+import compi.g19.AnalisisSintactico.ParserVal;
 
 
 public abstract class Nodo extends ParserVal {

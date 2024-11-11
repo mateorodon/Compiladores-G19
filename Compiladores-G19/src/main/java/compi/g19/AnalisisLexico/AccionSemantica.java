@@ -1,11 +1,11 @@
-package compi.g19.a.AnalisisLexico;
+package compi.g19.AnalisisLexico;
 
 import lombok.AllArgsConstructor;
 
 import java.io.IOException;
 import java.io.Reader;
 
-import static compi.g19.a.AnalisisLexico.AnalizadorLexico.lineaAct;
+import static compi.g19.AnalisisLexico.AnalizadorLexico.lineaAct;
 
 public abstract class AccionSemantica {
 

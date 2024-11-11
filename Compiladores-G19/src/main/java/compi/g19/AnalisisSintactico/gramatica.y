@@ -1,11 +1,13 @@
 %{
-package compi.g19.b.AnalisisSintactico;
+package compi.g19.AnalisisSintactico;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-import compi.g19.a.AnalisisLexico.*;
-import compi.g19.c.GeneracionDeCodigo.*;
+import compi.g19.AnalisisLexico.*;
+import compi.g19.GeneracionDeCodigo.*;
 %}
 %token ID ASIGNACION MAYORIGUAL MENORIGUAL DISTINTO CONSTANTE CADENA IF THEN ELSE BEGIN END END_IF OUTF TYPEDEF FUN RET ULONGINT SINGLE FOR OR UP DOWN TRIPLE
 
@@ -176,15 +178,18 @@ asignacion:
 
 tipo:
     tipo_base
-    | ID {Token t = TablaSimbolos.getToken($1.sval + ":" + ambito);
-            if (t!= null){
-                if (t.getUso() == null || !t.getUso().equals("tipo"))
-                    yyerror("El identificador '" + $1.sval + "' no es un tipo definido");
-            }
+    | ID { String ambitoVar = buscarAmbito(ambito,$1.sval);
+           if (ambitoVar.equals(""))
+                agregarErrorSemantico("El tipo '" + $1.sval + "' no fue declarado");
+           else {
+            Token t = TablaSimbolos.getToken($1.sval + ":" + ambitoVar);
+            if (t.getUso() == null || !t.getUso().equals("tipo"))
+                yyerror("El identificador '" + $1.sval + "' no es un tipo definido");
             else {
-                yyerror("El identificador '" + $1.sval + "' no es un tipo definido");}
-            tipoActual = $1.sval;
+                tipoActual = $1.sval;
             }
+            }
+         }
     ;
 
 tipo_base:
@@ -347,9 +352,10 @@ declaracion_tipo:
                                             t.getLexema().append(idTipo).append(":").append(ambito);
                                             t.setAmbito(ambito);
                                             t.setUso("tipo");
-                                            t.setTipo("triple");
+                                            t.setTipo($4.sval);
                                             TablaSimbolos.removeToken(idTipo);
                                             TablaSimbolos.addSimbolo(t.getLexema().toString(),t);
+                                            tiposDeclarados.put($6.sval, $4.sval);
                                             }
                                          else {
                                             TablaSimbolos.removeToken(idTipo);
@@ -376,7 +382,7 @@ fin_if:
     ;
 
 bloque_sentencias_ejecutables:
-    sentencia_ejecutable ';' {$$=$1}
+    sentencia_ejecutable ';' {$$=$1;}
     | BEGIN list_sentencias_ejecutables END {$$=$2;}
     | BEGIN error {yyerror("Se esperaba 'END' después del bloque BEGIN en el cuerpo FOR");}
     ;
@@ -439,8 +445,8 @@ comparacion:
     ;
 
 condicion:
-    expresion comparacion expresion {$$ = new NodoComun((Nodo)$2.obj, (Nodo)$1.obj, (Nodo)$3.obj);}
-    | '(' bloque_list_expresiones ')' comparacion '(' bloque_list_expresiones ')' { $$ = new NodoComun((Nodo)$4.obj, (Nodo)$2.obj, (Nodo)$4.obj);
+    expresion comparacion expresion {$$ = new NodoComun($2.sval, (Nodo)$1.obj, (Nodo)$3.obj);}
+    | '(' bloque_list_expresiones ')' comparacion '(' bloque_list_expresiones ')' { $$ = new NodoComun($4.sval, (Nodo)$2.obj, (Nodo)$4.obj);
                                                                                     AnalizadorLexico.agregarEstructura("Se reconocio pattern matching");
                                                                                   }
 
@@ -482,6 +488,7 @@ static boolean hasReturn = false;
 static List<String> varDeclaradas = new ArrayList<>();
 static String tipoActual;
 static List<String> erroresSemanticos = new ArrayList<>();
+static Map<String,String> tiposDeclarados = new HashMap<>(); //clave: lexema del tipo ; valor: tipo del tipo
 
 public int yylex() throws IOException {
     Token t = AnalizadorLexico.obtenerToken();
