@@ -215,7 +215,8 @@ encabezado_funcion:
                     t.setTipo(tipoActual);
                     TablaSimbolos.removeToken(idFuncion);
                     TablaSimbolos.addSimbolo(t.getLexema().toString(),t);
-                    $$.obj = new NodoHoja($3.sval);
+                    String funcion = $1.sval + $2.sval + $3.sval;
+                    $$ = funcion;
                  }
                  else {
                     TablaSimbolos.removeToken(idFuncion);
@@ -243,8 +244,9 @@ declaracion_funcion:
 
                                                              //Agregar paremetro a lista de parametros, para luego chequear en la llamada a funcion si coincide con este
 
-                                                             $$.obj = new NodoHoja($3.sval);
-
+                                                             Nodo funcion = new NodoComun("FUNCION", (Nodo)$1.obj, (Nodo)$6.obj);
+                                                             funciones_declaradas.add(funcion);
+                                                             $$.obj = funcion;
                                                          }
                                                          removeAmbito();
                                                          } END
@@ -530,6 +532,7 @@ static List<String> varDeclaradas = new ArrayList<>();
 static String tipoActual;
 static List<String> erroresSemanticos = new ArrayList<>();
 static Map<String,String> tiposDeclarados = new HashMap<>(); //clave: lexema del tipo ; valor: tipo del tipo
+static List<NodoComun> funcionesDeclaradas = new ArrayList<>();
 
 public int yylex() throws IOException {
     Token t = AnalizadorLexico.obtenerToken();
