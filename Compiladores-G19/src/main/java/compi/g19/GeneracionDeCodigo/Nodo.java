@@ -2,6 +2,8 @@ package compi.g19.GeneracionDeCodigo;
 
 import compi.g19.AnalisisLexico.Token;
 import compi.g19.AnalisisSintactico.ParserVal;
+import lombok.Getter;
+
 
 
 public abstract class Nodo extends ParserVal {
@@ -14,9 +16,44 @@ public abstract class Nodo extends ParserVal {
         this.token = null;
     }
 
-    public Nodo(String nombre, Token t){
+    public Nodo(String nombre, Token token){
         this.nombre = nombre;
-        this.token = t;
+        this.token = token;
+    }
+
+    public Token getToken(){return this.token;}
+    public void setToken(Token token){this.token = token;}
+
+    public String getTipo(){
+        return token.getTipo();
+    }
+
+    public void setTipo(String tipo){
+        token.setTipo(tipo);
+    }
+
+    public void setAmbito(String amb){
+        token.setAmbito(amb);
+    }
+
+    public String getAmbito(){
+        return token.getAmbito();
+    }
+
+    public void setLexema(String lex){
+        token.setTipo(lex);
+    }
+
+    public String getLexema(){
+        return token.getLexema().toString();
+    }
+
+    public String getUso(){
+        return token.getUso();
+    }
+
+    public void setUso(String uso){
+        token.setUso(uso);
     }
 
     public abstract void recorrerArbol(int nivel);

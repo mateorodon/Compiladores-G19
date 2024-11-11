@@ -1,5 +1,7 @@
 package compi.g19.GeneracionDeCodigo;
 
+import compi.g19.AnalisisLexico.Token;
+
 public class NodoHoja extends Nodo {
 
     /*
@@ -9,6 +11,10 @@ public class NodoHoja extends Nodo {
 
     public NodoHoja(String nombre){
         super(nombre);
+    }
+
+    public NodoHoja(String nombre, Token t){
+        super(nombre,t);
     }
 
     @Override

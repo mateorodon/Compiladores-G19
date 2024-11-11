@@ -293,20 +293,47 @@ sentencia_return:
     ;
 
 expresion:
-    expresion '+' termino {
+    expresion '+' termino { $$ = new NodoComun($2.sval, (Nodo)$1, (Nodo)$3);
+                            if (!(((Nodo)$1).getLexema().contains("error") || ((Nodo)$1).getLexema().contains("error"))) {
+                                if (!(((Nodo)$1).getTipo().equals(((Nodo)$3).getTipo())))
+                                    agregarErrorSemantico("Incompatibilidad de tipos en la suma.");
+                                else
+                                    ((Nodo)$$).setTipo(((Nodo)$1).getTipo());
                             }
-    | expresion '-' termino
+                            }
+    | expresion '-' termino { $$ = new NodoComun($2.sval, (Nodo)$1, (Nodo)$3);
+                              if (!(((Nodo)$1).getLexema().contains("error") || ((Nodo)$1).getLexema().contains("error"))) {
+                                if (!(((Nodo)$1).getTipo().equals(((Nodo)$3).getTipo())))
+                                    agregarErrorSemantico("Incompatibilidad de tipos en la resta.");
+                                else
+                                    ((Nodo)$$).setTipo(((Nodo)$1).getTipo());
+                              }
+                              }
     | termino {$$.obj = $1;}
     | expresion '+' error {yyerror("Se esperaba un termino");}
     | expresion '-' error {yyerror("Se esperaba un termino");}
     ;
 
 termino:
-    termino '*' factor
-    | termino '/' factor
+    termino '*' factor { $$ = new NodoComun($2.sval, (Nodo)$1, (Nodo)$3);
+                         if (!(((Nodo)$1).getLexema().contains("error") || ((Nodo)$1).getLexema().contains("error"))) {
+                            if (!(((Nodo)$1).getTipo().equals(((Nodo)$3).getTipo())))
+                                agregarErrorSemantico("Incompatibilidad de tipos en la multiplicacion.");
+                            else
+                                ((Nodo)$$).setTipo(((Nodo)$1).getTipo());
+                         }
+                         }
+    | termino '/' factor { $$ = new NodoComun($2.sval, (Nodo)$1, (Nodo)$3);
+                            if (!(((Nodo)$1).getLexema().contains("error") || ((Nodo)$1).getLexema().contains("error"))) {
+                                if (!(((Nodo)$1).getTipo().equals(((Nodo)$3).getTipo())))
+                                    agregarErrorSemantico("Incompatibilidad de tipos en la division.");
+                                else
+                                    ((Nodo)$$).setTipo(((Nodo)$1).getTipo());
+                            }
+                            }
     | factor {$$ = $1;}
-    | termino '*' error {yyerror("Se esperaba un factor");}
-    | termino '/' error {yyerror("Se esperaba un factor");}
+    | termino '*' error {$$ = new NodoHoja("error sintactico"); yyerror("Se esperaba un factor");}
+    | termino '/' error {$$ = new NodoHoja("error sintactico"); yyerror("Se esperaba un factor");}
     ;
 
 factor:
@@ -320,7 +347,7 @@ factor:
             if (!t.getUso().equals("variable"))
                 agregarErrorSemantico("'" + $1.sval + "' no es una variable. Es un/a " + t.getUso());
             else {
-                $$ = new NodoHoja($1.sval + ":" + ambitoVar);
+                $$ = new NodoHoja($1.sval + ":" + ambitoVar,t);
                 TablaSimbolos.removeToken($1.sval);
             }
         }
@@ -329,15 +356,29 @@ factor:
                 if (t != null && (t.getTipo().equals(FLOTANTE))) {
                     String lexema = t.getLexema().toString();
                     chequeoFlotantesPositivos(lexema);
-                    $$ = new NodoHoja($1.sval);
+                    $$ = new NodoHoja($1.sval,t);
                 }
                 else
                     $$ = new NodoHoja("error");
                 }
     | invocacion_funcion {AnalizadorLexico.agregarEstructura("Se reconocio una invocacion a funcion");}
     | ID '[' CONSTANTE ']'
-    | '-' ID
-    | '-' CONSTANTE {Token t = TablaSimbolos.getToken($1.sval);
+    | '-' ID {String ambitoVar = buscarAmbito(ambito,$2.sval);
+                     if (ambitoVar.equals("")){
+                         agregarErrorSemantico("La variable '" + $2.sval + "' no fue declarada");
+                         $$ = new NodoHoja("error");
+                     }
+                     else {
+                         Token t = TablaSimbolos.getToken($2.sval + ":" + ambitoVar);
+                         if (!t.getUso().equals("variable"))
+                             agregarErrorSemantico("'" + $2.sval + "' no es una variable. Es un/a " + t.getUso());
+                         else {
+                             $$ = new NodoHoja($2.sval + ":" + ambitoVar,t);
+                             TablaSimbolos.removeToken($2.sval);
+                         }
+                     }
+                     }
+    | '-' CONSTANTE {Token t = TablaSimbolos.getToken($2.sval);
                                         if (t != null && t.getTipo().equals(ENTERO))
                                             yyerror("Las constantes de tipo ulongint no pueden ser negativas");
                     }
