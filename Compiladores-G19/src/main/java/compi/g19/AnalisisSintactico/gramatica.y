@@ -223,6 +223,7 @@ encabezado_funcion:
                     variableYaDeclarada(idFuncion);
                  }
                  addAmbito(idFuncion);
+                 $$ = $1.sval + $2.sval + $3.sval;
                  }
     |tipo FUN {yyerror("La funcione debe tener nombre"); hasReturn = false;}
     ;
@@ -242,9 +243,8 @@ declaracion_funcion:
                                                              TablaSimbolos.removeToken(parametro);
                                                              TablaSimbolos.addSimbolo(t.getLexema().toString(),t);
 
-                                                             //Agregar paremetro a lista de parametros, para luego chequear en la llamada a funcion si coincide con este
-
-                                                             Nodo funcion = new NodoComun("FUNCION", (Nodo)$1.obj, (Nodo)$6.obj);
+                                                             Nodo datosFuncion = new NodoHoja($1.sval + $3.sval);
+                                                             Nodo funcion = new NodoComun("FUNCION", datosFuncion, (Nodo)$6.obj);
                                                              funcionesDeclaradas.add(funcion);
                                                              $$.obj = funcion;
                                                          }
@@ -255,7 +255,7 @@ declaracion_funcion:
     ;
 
 parametro:
-    tipo ID
+    tipo ID {$$ = $1;}
     | ID {yyerror("El parametro debe tener su tipo");}
     ;
 
