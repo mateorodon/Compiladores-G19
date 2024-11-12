@@ -216,7 +216,7 @@ encabezado_funcion:
                     TablaSimbolos.removeToken(idFuncion);
                     TablaSimbolos.addSimbolo(t.getLexema().toString(),t);
                     String funcion = $1.sval + $2.sval + $3.sval;
-                    $$ = funcion;
+                    $$.obj = funcion;
                  }
                  else {
                     TablaSimbolos.removeToken(idFuncion);
@@ -245,7 +245,7 @@ declaracion_funcion:
                                                              //Agregar paremetro a lista de parametros, para luego chequear en la llamada a funcion si coincide con este
 
                                                              Nodo funcion = new NodoComun("FUNCION", (Nodo)$1.obj, (Nodo)$6.obj);
-                                                             funciones_declaradas.add(funcion);
+                                                             funcionesDeclaradas.add(funcion);
                                                              $$.obj = funcion;
                                                          }
                                                          removeAmbito();
@@ -458,6 +458,10 @@ bloque_if:
     | encabezado_if '(' condicion ')' THEN cuerpo_if_bloque ELSE cuerpo_if_unico fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false; $$.obj = new NodoComun("CUERPO", (Nodo)$6.obj, (Nodo)$8.obj);
                                                                                                                                                                    Nodo cuerpo = (Nodo)$$.obj;
                                                                                                                                                                    $$.obj = new NodoComun("IF", (Nodo)$3.obj,(Nodo)$6.obj); }
+    | encabezado_if '(' condicion ')' cuerpo_if_bloque ELSE cuerpo_if_unico fin_if {yyerror("Falta THEN en IF");}
+    | encabezado_if '(' condicion ')' THEN cuerpo_if_bloque cuerpo_if_unico fin_if {yyerror("Falta ELSE en IF");}
+    | encabezado_if '(' condicion ')' cuerpo_if_bloque ELSE cuerpo_if_unico {yyerror("Falta END_IF en IF");}
+
     ;
 
 cuerpo_if_unico:
@@ -532,7 +536,7 @@ static List<String> varDeclaradas = new ArrayList<>();
 static String tipoActual;
 static List<String> erroresSemanticos = new ArrayList<>();
 static Map<String,String> tiposDeclarados = new HashMap<>(); //clave: lexema del tipo ; valor: tipo del tipo
-static List<NodoComun> funcionesDeclaradas = new ArrayList<>();
+static List<Nodo> funcionesDeclaradas = new ArrayList<>();
 
 public int yylex() throws IOException {
     Token t = AnalizadorLexico.obtenerToken();
