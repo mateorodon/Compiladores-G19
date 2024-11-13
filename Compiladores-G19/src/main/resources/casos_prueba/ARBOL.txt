@@ -17,4 +17,4 @@ begin
     BEGIN
         x := 2;
     END;
-end                                  
+end

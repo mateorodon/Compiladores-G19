@@ -1,5 +1,6 @@
 package compi.g19.GeneracionDeCodigo;
 
+import compi.g19.AnalisisLexico.Token;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,19 +23,19 @@ public class NodoComun extends Nodo{
     private Nodo der; //Si tiene un solo hijo, der es null
 
     public NodoComun(String nombre){
-        super(nombre);
+        super(nombre, new Token());
         izq = null;
         der = null;
     }
 
     public NodoComun(String nombre, Nodo nodoIzq){
-        super(nombre);
+        super(nombre, new Token());
         izq = nodoIzq;
         der = null;
     }
 
     public NodoComun(String nombre, Nodo nodoIzq, Nodo nodoDer){
-        super(nombre);
+        super(nombre, new Token());
         izq = nodoIzq;
         der = nodoDer;
     }

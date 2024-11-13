@@ -10,12 +10,14 @@ public class NodoHoja extends Nodo {
     */
 
     public NodoHoja(String nombre){
-        super(nombre);
+        super(nombre, new Token());
     }
 
     public NodoHoja(String nombre, Token t){
         super(nombre,t);
     }
+
+
 
     @Override
     public void recorrerArbol(int nivel) {

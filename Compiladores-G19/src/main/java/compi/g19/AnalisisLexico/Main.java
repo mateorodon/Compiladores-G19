@@ -1,6 +1,7 @@
 package compi.g19.AnalisisLexico;
 
 import compi.g19.AnalisisSintactico.*;
+import compi.g19.GeneracionDeCodigo.Nodo;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -38,7 +39,13 @@ public class Main {
             System.out.println("----------ARBOL SINTACTICO -----------");
             if (parser.getRaiz()!=null)
                 parser.getRaiz().recorrerArbol(0);
-
+            System.out.println("----------ARBOL SINTACTICO FUNCIONES -----------");
+            if (parser.getFuncionesDeclaradas() != null) {
+                for (Nodo funcion : parser.getFuncionesDeclaradas()) {
+                    if (funcion != null)
+                        funcion.recorrerArbol(0);
+                }
+            }
             imprimirEstructurasYErrores();
         } catch (IOException e) {
             e.printStackTrace();

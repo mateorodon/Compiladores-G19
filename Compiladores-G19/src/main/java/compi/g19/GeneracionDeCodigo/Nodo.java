@@ -3,11 +3,12 @@ package compi.g19.GeneracionDeCodigo;
 import compi.g19.AnalisisLexico.Token;
 import compi.g19.AnalisisSintactico.ParserVal;
 import lombok.Getter;
-
+import lombok.Setter;
 
 
 public abstract class Nodo extends ParserVal {
 
+    @Getter @Setter
     protected String nombre;
     protected Token token;
 
