@@ -1,20 +1,9 @@
 ----------TOKENS DETECTADOS -----------
 Token{id=257, lexema=prog, linea=1, tipo=null}
 Token{id=267, lexema=begin, linea=2, tipo=null}
-Token{id=275, lexema=SINGLE, linea=3, tipo=null}
-Token{id=257, lexema=y, linea=3, tipo=ulongint}
+Token{id=257, lexema=x, linea=3, tipo=ulongint}
+Token{id=258, lexema=:=, linea=3, tipo=ulongint}
+Token{id=262, lexema=2, linea=3, tipo=ulongint}
+Token{id=43, lexema=+, linea=3, tipo=null}
+Token{id=262, lexema=1, linea=3, tipo=ulongint}
 Token{id=59, lexema=;, linea=3, tipo=null}
-Token{id=268, lexema=end, linea=4, tipo=null}
-----------ARBOL SINTACTICO -----------
-PROGRAMA
-    Sentencia Declarativa
-----------ESTRUCTURAS RECONOCIDAS-----------
-Se reconocio declaracion de variable/s en la línea 3
-Se reconocio el programa en la línea 4
-----------TABLA DE SIMBOLOS-----------
-Token{id=257, lexema=y:main, linea=3, tipo=SINGLE}
-Token{id=257, lexema=prog, linea=1, tipo=null}
------------ERRORES LEXICOS----------
------------ERRORES SINTACTICOS----------
------------ERRORES SEMANTICOS----------
-----------WARNINGS-----------

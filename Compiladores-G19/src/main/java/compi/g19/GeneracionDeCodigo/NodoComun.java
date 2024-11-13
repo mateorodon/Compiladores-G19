@@ -1,5 +1,10 @@
 package compi.g19.GeneracionDeCodigo;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class NodoComun extends Nodo{
 
     /*

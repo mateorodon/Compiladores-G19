@@ -1,4 +1,4 @@
 prog
 begin
-    x = 1 + 1;
-end     
+    x := 2 + 1;
+end                       
