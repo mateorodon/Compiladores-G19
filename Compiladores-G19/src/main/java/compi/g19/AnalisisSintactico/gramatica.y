@@ -341,7 +341,30 @@ factor:
                     $$.obj = new NodoHoja("error");
                 }
     | invocacion_funcion {AnalizadorLexico.agregarEstructura("Se reconocio una invocacion a funcion");}
-    | ID '[' CONSTANTE ']' {$$.obj = new  NodoHoja("hola");}
+    | ID '[' CONSTANTE ']' {    String ambitoVar = buscarAmbito(ambito,$1.sval);
+                                if (ambitoVar.equals("")){
+                                    agregarErrorSemantico("La variable '" + $1.sval + "' no fue declarada");
+                                    $$.obj = new NodoHoja("error");
+                                }
+                                else {
+                                    Token t = TablaSimbolos.getToken($1.sval + ":" + ambitoVar);
+                                    String tipo = t.getTipo();
+                                    if (tiposDeclarados.containsKey(tipo)){
+                                        String tipoTriple = tiposDeclarados.get(tipo);
+                                        NodoHoja nodo = new NodoHoja($1.sval + $2.sval + $3.sval + $4.sval);
+                                        nodo.setTipo(tipoTriple);
+                                        $$.obj = nodo;
+                                    }
+                                    else {
+                                        agregarErrorSemantico("La variable '" + $1.sval + "' no es de un tipo TRIPLE definido");
+                                        $$.obj = new NodoHoja("error");
+                                    }
+                                }
+                             String index = TablaSimbolos.getToken($3.sval).getLexema().toString();
+                             if (!(index != null && (index.equals("1") || index.equals("2") || index.equals("3"))))
+                                 agregarErrorSemantico("El indice esta fuera de rango. Debe estar entre 1 y 3");
+                                 $$.obj = new NodoHoja("error");
+                            }
     | '-' ID {String ambitoVar = buscarAmbito(ambito,$2.sval);
                      if (ambitoVar.equals("")){
                          agregarErrorSemantico("La variable '" + $2.sval + "' no fue declarada");
