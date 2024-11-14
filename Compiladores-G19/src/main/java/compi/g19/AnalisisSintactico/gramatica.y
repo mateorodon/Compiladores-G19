@@ -514,17 +514,20 @@ bloque_if:
                                                                                                                                                                           Nodo cuerpo  = new NodoComun("CUERPO", nThen, nElse);
                                                                                                                                                                           $$.obj = new NodoComun("IF", (Nodo)$3.obj,cuerpo);}
 
-    | encabezado_if '(' condicion ')' THEN cuerpo_if_bloque ELSE cuerpo_if_bloque fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false; $$.obj = new NodoComun("CUERPO", (Nodo)$6.obj, (Nodo)$8.obj);
-                                                                                                                                                                            Nodo cuerpo = (Nodo)$$.obj;
-                                                                                                                                                                            $$.obj = new NodoComun("IF", (Nodo)$3.obj,(Nodo)$6.obj);}
+    | encabezado_if '(' condicion ')' THEN cuerpo_if_bloque ELSE cuerpo_if_bloque fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false; $$.obj = NodoComun nThen = new NodoComun("THEN", (Nodo)$6.obj);
+                                                                                                                                                                    NodoComun nElse = new NodoComun("ELSE", (Nodo)$8.obj);
+                                                                                                                                                                    Nodo cuerpo  = new NodoComun("CUERPO", nThen, nElse);
+                                                                                                                                                                    $$.obj = new NodoComun("IF", (Nodo)$3.obj,cuerpo);}
 
-    | encabezado_if '(' condicion ')' THEN cuerpo_if_unico ELSE cuerpo_if_bloque fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false; $$.obj = new NodoComun("CUERPO", (Nodo)$6.obj, (Nodo)$8.obj);
-                                                                                                                                                                  Nodo cuerpo = (Nodo)$$.obj;
-                                                                                                                                                                  $$.obj = new NodoComun("IF", (Nodo)$3.obj,(Nodo)$6.obj);}
+    | encabezado_if '(' condicion ')' THEN cuerpo_if_unico ELSE cuerpo_if_bloque fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false; NodoComun nThen = new NodoComun("THEN", (Nodo)$6.obj);
+                                                                                                                                                                   NodoComun nElse = new NodoComun("ELSE", (Nodo)$8.obj);
+                                                                                                                                                                   Nodo cuerpo  = new NodoComun("CUERPO", nThen, nElse);
+                                                                                                                                                                   $$.obj = new NodoComun("IF", (Nodo)$3.obj,cuerpo);}
 
-    | encabezado_if '(' condicion ')' THEN cuerpo_if_bloque ELSE cuerpo_if_unico fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false; $$.obj = new NodoComun("CUERPO", (Nodo)$6.obj, (Nodo)$8.obj);
-                                                                                                                                                                   Nodo cuerpo = (Nodo)$$.obj;
-                                                                                                                                                                   $$.obj = new NodoComun("IF", (Nodo)$3.obj,(Nodo)$6.obj); }
+    | encabezado_if '(' condicion ')' THEN cuerpo_if_bloque ELSE cuerpo_if_unico fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false; NodoComun nThen = new NodoComun("THEN", (Nodo)$6.obj);
+                                                                                                                                                                   NodoComun nElse = new NodoComun("ELSE", (Nodo)$8.obj);
+                                                                                                                                                                   Nodo cuerpo  = new NodoComun("CUERPO", nThen, nElse);
+                                                                                                                                                                   $$.obj = new NodoComun("IF", (Nodo)$3.obj,cuerpo);}
     | encabezado_if '(' condicion ')' cuerpo_if_bloque ELSE cuerpo_if_unico fin_if {yyerror("Falta THEN en IF");}
     | encabezado_if '(' condicion ')' THEN cuerpo_if_bloque cuerpo_if_unico fin_if {yyerror("Falta ELSE en IF");}
     | encabezado_if '(' condicion ')' cuerpo_if_bloque ELSE cuerpo_if_unico {yyerror("Falta END_IF en IF");}
