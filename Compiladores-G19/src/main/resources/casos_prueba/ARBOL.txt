@@ -4,7 +4,6 @@ begin
     x := 2 + 1;
     single FUN rr(ulongint m)
     begin
-        m := 2;
         IF (m < 3) THEN
             x := 8 + m;
         ELSE
@@ -12,9 +11,11 @@ begin
         END_IF;
         ret(m);
     end;
+    rr(j);
+
 
     FOR (x := 6 ; x<5 ; UP 1)
     BEGIN
         x := 2;
     END;
-end
+end         

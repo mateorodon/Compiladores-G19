@@ -33,7 +33,6 @@ public class Main {
             AnalizadorLexico.setEntrada(reader);
 
             armarArchivoSalida(args[0]);
-            System.out.println("----------TOKENS DETECTADOS -----------");
             Parser parser = new Parser();
             parser.run();
             System.out.println("----------ARBOL SINTACTICO -----------");

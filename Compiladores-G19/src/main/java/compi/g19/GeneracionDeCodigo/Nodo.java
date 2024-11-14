@@ -57,6 +57,10 @@ public abstract class Nodo extends ParserVal {
         token.setUso(uso);
     }
 
+    public void setValor(String valor){
+        token.setValor(valor);
+    }
+
     public abstract void recorrerArbol(int nivel);
 
 

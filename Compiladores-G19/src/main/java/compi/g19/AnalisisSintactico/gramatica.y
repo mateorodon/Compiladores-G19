@@ -62,7 +62,7 @@ sentencia_declarativa:
 
 sentencia_ejecutable:
     asignacion {AnalizadorLexico.agregarEstructura("Se reconocio una asignacion"); $$=$1;}
-    | invocacion_funcion {AnalizadorLexico.agregarEstructura("Se reconocio una invocacion a funcion");}
+    | invocacion_funcion {$$ = $1; AnalizadorLexico.agregarEstructura("Se reconocio una invocacion a funcion");}
     | bloque_if {$$=$1;}
     | salida_mensaje {$$=$1;} //FALTA HACER CON EXPRESION
     | sentencia_control {$$=$1;}
@@ -251,12 +251,12 @@ declaracion_funcion:
                                                          NodoComun funcion = (NodoComun)$1.obj; //Encabezado con nombre funcion, este tiene el tipo
 
                                                          funcion.setIzq(parametro); //Parametro
-                                                         funcion.setDer((Nodo)$6.obj); //Cuerpo funcionn
+                                                         funcion.setDer((Nodo)$6.obj); //Cuerpo funcion
 
-                                                         funcionesDeclaradas.add(funcion);
+                                                         funcionesDeclaradas.put(funcion.getNombre(),funcion);
                                                          removeAmbito();
                                                          } END
-    | encabezado_funcion '(' bloque_list_parametro ')' BEGIN cuerpo_funcion END {yyerror("La funcione no puede tener más de un parámetro");removeAmbito();}
+    | encabezado_funcion '(' bloque_list_parametro ')' BEGIN cuerpo_funcion END {yyerror("La funciones no puede tener más de un parámetro");removeAmbito();}
     | encabezado_funcion '(' ')' BEGIN cuerpo_funcion END {yyerror("La función debe tener parámetro");removeAmbito();}
     ;
 
@@ -377,7 +377,8 @@ factor:
         }
         }
     | CONSTANTE {Token t = TablaSimbolos.getToken($1.sval);
-
+                t.setValor($1.sval);
+                t.setUso("constante");
                 $$.obj = new NodoHoja($1.sval,t);
                 }
     | invocacion_funcion {AnalizadorLexico.agregarEstructura("Se reconocio una invocacion a funcion");}
@@ -428,7 +429,9 @@ factor:
                                         else if (t != null && (t.getTipo().equals(FLOTANTE))) {
                                             String lexema = t.getLexema().toString();
                                             chequeoFlotantesPositivos(lexema);
-                                            $$.obj = new NodoHoja($1.sval + $2.sval);
+                                            t.setUso("constante");
+                                            t.setValor($1.sval + $2.sval);
+                                            $$.obj = new NodoHoja($1.sval + $2.sval,t);
                                         }
 
                     }
@@ -461,7 +464,22 @@ declaracion_tipo:
     ;
 
 invocacion_funcion:
-    ID '(' expresion ')'
+    ID '(' expresion ')' {
+                            String ambitoVar = buscarAmbito(ambito,$1.sval);
+                             if (ambitoVar.equals(""))
+        agregarErrorSemantico("La funcion '" + $1.sval + "' no fue declarada");
+        else {
+        if (funcionesDeclaradas.containsKey($1.sval + ":" + ambitoVar)){
+            Nodo exp = (Nodo)$3.obj;
+            Token copiaValor = new Token(exp.getToken());
+            NodoComun funcion = funcionesDeclaradas.get($1.sval + ":" + ambitoVar);
+            $$.obj = generarLlamadoFuncion(funcion,copiaValor);
+        }
+        else {
+            agregarErrorSemantico("La funcion '" + $1.sval + "' no fue declarada");
+        }
+     }
+        }
     | ID '(' bloque_list_expresiones ')' {yyerror("La funcion no puede tener mas de un parametro");}
     | ID '(' ')' {yyerror("La funcion debe tener un parametro");}
     | ID '(' tipo_base '(' expresion ')' ')' {AnalizadorLexico.agregarEstructura("Se reconocio conversion");}
@@ -590,12 +608,11 @@ static List<String> varDeclaradas = new ArrayList<>();
 static String tipoActual;
 static List<String> erroresSemanticos = new ArrayList<>();
 static Map<String,String> tiposDeclarados = new HashMap<>(); //clave: lexema del tipo ; valor: tipo del tipo
-public static List<Nodo> funcionesDeclaradas = new ArrayList<>();
+public static Map<String,NodoComun> funcionesDeclaradas = new HashMap<>();
 
 public int yylex() throws IOException {
     Token t = AnalizadorLexico.obtenerToken();
     if (t!= null){
-      System.out.println(t);
       this.yylval = new ParserVal(t.getLexema().toString());
       return (int) t.getId();
     }
@@ -685,6 +702,19 @@ private NodoComun controlarTipos(Nodo nodo1, String op, Nodo nodo3){
     return ret;
 }
 
+private Nodo generarLlamadoFuncion(NodoComun funcion, Token copia){
+    if (funcion != null){
+        Nodo param = funcion.getIzq();
+        if (param.getTipo().equals(copia.getTipo())){
+            param.setValor(copia.getValor());
+        }
+        else {
+            agregarErrorSemantico("El tipo del parametro real no coincide con el del parametro formal");
+        }
+    }
+    return funcion;
+}
+
 public NodoComun getRaiz(){
     return this.raiz;
 }
@@ -694,5 +724,5 @@ private boolean idCompatible(String id){
 }
 
 public static List<Nodo> getFuncionesDeclaradas(){
-    return new ArrayList<>(funcionesDeclaradas);
+    return new ArrayList<>(funcionesDeclaradas.values());
 }
