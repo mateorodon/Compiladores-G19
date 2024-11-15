@@ -1,6 +1,7 @@
 package compi.g19.AnalisisLexico;
 
 import compi.g19.AnalisisSintactico.*;
+import compi.g19.GeneracionAssembler.GeneradorAssembler;
 import compi.g19.GeneracionDeCodigo.Nodo;
 
 import java.io.BufferedReader;
@@ -49,6 +50,21 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        /*
+        GeneradorAssembler generador = new GeneradorAssembler(parser);
+        File f = new File(archivo.substring(0,archivo.length()-4)+".asm");
+        f.createNewFile();
+        PrintWriter pw;
+        try {
+            pw = new PrintWriter(archivo.substring(0,archivo.length()-4)+".asm");
+            pw.print(generador.getAssembler());
+            pw.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+         */
+
     }
 
     public static void armarArchivoSalida(String archivo_entrada) throws FileNotFoundException {

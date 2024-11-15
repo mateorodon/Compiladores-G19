@@ -63,6 +63,8 @@ public abstract class Nodo extends ParserVal {
 
     public abstract void recorrerArbol(int nivel);
 
+    public abstract String getAssembler();
+
 
     protected void imprimirNodo(String nombre, int nivel) {
         for (int i = 0; i < nivel; i++) {

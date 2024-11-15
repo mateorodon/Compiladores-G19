@@ -50,4 +50,58 @@ public class NodoComun extends Nodo{
             der.recorrerArbol(nivel + 1);
         }
     }
+
+    /*
+    CASOS A TRATAR EN ASSEMBLER:
+    Sentencia
+    For
+    Encabezado For
+    := (Asignacion)
+    Incremento
+    Asignacion e Incremento ?? no lo se
+    Condicion
+    Condiciones  ?? no lo se
+    Funcion (viene dado por el nopmbre mas ambito de la funcion)
+    Return
+    +
+    -
+    *
+    /
+    >=
+    <=
+    !=
+    =
+    >
+    <
+    If
+    Then
+    Else
+    Cuerpo
+    Outf
+     */
+
+    @Override
+    public String getAssembler() {
+        String salida = "";
+        switch(super.getLexema()) {
+
+            case "Sentencia":
+                if (getIzq() != null)
+                    salida += getIzq().getAssembler();
+                if (getDer() != null)
+                    salida += getDer().getAssembler();
+                break;
+            case ":=":
+                salida += getDer().getAssembler() + getIzq().getAssembler();
+                if(getIzq().getTipo().equals("ULONGINT")){
+                    salida+= "MOV EAX , " + getDer().getLexema() + "\n";
+                    salida+= "MOV " + getIzq().getLexema() + ", " + "EAX" + "\n";
+                }else { //flotante ?
+                    salida += "FLD " + getDer().getLexema() + "\n";
+                    salida += "FST " + getIzq().getLexema() + "\n";
+                }
+                break;
+        }
+        return salida;
+    }
 }

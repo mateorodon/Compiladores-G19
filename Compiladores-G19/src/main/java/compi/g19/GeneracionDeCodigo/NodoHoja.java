@@ -17,10 +17,11 @@ public class NodoHoja extends Nodo {
         super(nombre,t);
     }
 
-
-
     @Override
     public void recorrerArbol(int nivel) {
         imprimirNodo(nombre, nivel);
     }
+
+    @Override
+    public String getAssembler() {return this.getNombre();}
 }

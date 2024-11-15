@@ -24,7 +24,7 @@ programa: ID BEGIN list_sentencias END {AnalizadorLexico.agregarEstructura("Se r
     | ID list_sentencias {yyerror("Faltan los delimitadores del programa");}
     ;
 
-list_sentencias: list_sentencias sentencia {$$.obj = new NodoComun("SENTENCIA", (Nodo)$1.obj, (Nodo)$2.obj);}
+list_sentencias: list_sentencias sentencia {$$.obj = new NodoComun("Sentencia", (Nodo)$1.obj, (Nodo)$2.obj);}
     | sentencia {$$.obj=$1.obj;}
     ;
 
@@ -64,13 +64,13 @@ sentencia_ejecutable:
     asignacion {AnalizadorLexico.agregarEstructura("Se reconocio una asignacion"); $$=$1;}
     | invocacion_funcion {$$ = $1; AnalizadorLexico.agregarEstructura("Se reconocio una invocacion a funcion");}
     | bloque_if {$$=$1;}
-    | salida_mensaje {$$=$1;} //FALTA HACER CON EXPRESION
+    | salida_mensaje {$$=$1;}
     | sentencia_control {$$=$1;}
     ;
 
 //tema 16
 sentencia_control:
-    FOR '(' encabezado_for ')' bloque_sentencias_ejecutables { $$.obj = new NodoComun("FOR",(Nodo)$3.obj,(Nodo)$5.obj);}
+    FOR '(' encabezado_for ')' bloque_sentencias_ejecutables { $$.obj = new NodoComun("For",(Nodo)$3.obj,(Nodo)$5.obj);}
     |FOR '(' encabezado_for ')' error {yyerror("Falta cuerpo del FOR");}
     |FOR encabezado_for ')' bloque_sentencias_ejecutables {yyerror("Falta parentensis en el FOR");}
     |FOR '(' encabezado_for bloque_sentencias_ejecutables {yyerror("Falta parentensis en el FOR");}
@@ -103,12 +103,12 @@ encabezado_for1:
                                                                     Nodo asignacion = new NodoComun($2.sval, idAsignacion, constante); //Cambie sval x obj esto tiraba error el Parser
 
                                                                     NodoHoja constanteUpDown = new NodoHoja($8.sval);
-                                                                    Nodo incremento = new NodoComun("INCREMENTO", (Nodo)$7.obj, constanteUpDown); //Idem
+                                                                    Nodo incremento = new NodoComun("Incremento", (Nodo)$7.obj, constanteUpDown); //Idem
                                                                     Nodo condicion = (Nodo)$5.obj;
 
-                                                                    Nodo asgnacionIncremento = new NodoComun("ASIGNACION E INCREMENTO", asignacion, incremento);
+                                                                    Nodo asgnacionIncremento = new NodoComun("Asignacion e Incremento", asignacion, incremento);
 
-                                                                    $$.obj = new NodoComun ("ENCABEZADO FOR", asgnacionIncremento, condicion);
+                                                                    $$.obj = new NodoComun ("Encabezado For", asgnacionIncremento, condicion);
 
                                                                     AnalizadorLexico.agregarEstructura("Se reconoció un FOR de 3");
                                                                 }
@@ -136,15 +136,15 @@ encabezado_for2:
                                                                                              }
                                                                                        }
 
-                                                                                       Nodo asignacion = new NodoComun("ASIGNACION", idAsignacion, (Nodo)$3.obj); //Cambie sval x obj
-                                                                                       Nodo incremento = new NodoComun("INCREMENTO", (Nodo)$7.obj, (Nodo)$8.obj); //Idem
+                                                                                       Nodo asignacion = new NodoComun("Asignacion", idAsignacion, (Nodo)$3.obj); //Cambie sval x obj
+                                                                                       Nodo incremento = new NodoComun("Incremento", (Nodo)$7.obj, (Nodo)$8.obj); //Idem
                                                                                        Nodo condicion = (Nodo)$5.obj;
                                                                                        Nodo iteradorCondicion = (Nodo)$11.obj;
 
-                                                                                       Nodo asgnacionIncremento = new NodoComun("ASIGNACION E INCREMENTO", asignacion, incremento);
-                                                                                       Nodo condiciones = new NodoComun("ASIGNACION E INCREMENTO", condicion, iteradorCondicion);
+                                                                                       Nodo asgnacionIncremento = new NodoComun("Asignacion e Incremento", asignacion, incremento);
+                                                                                       Nodo condiciones = new NodoComun("Condiciones", condicion, iteradorCondicion);
 
-                                                                                       $$.obj = new NodoComun ("ENCABEZADO FOR", asgnacionIncremento, condiciones);
+                                                                                       $$.obj = new NodoComun ("Encabezado For", asgnacionIncremento, condiciones);
 
                                                                                        AnalizadorLexico.agregarEstructura("Se reconoció un FOR con condición");
                                                                                        }
@@ -156,8 +156,8 @@ encabezado_for2:
     ;
 
 up_down:
-    UP {$$.obj = new NodoHoja("UP");}
-    |DOWN {$$.obj = new NodoHoja("DOWN");}
+    UP {$$.obj = new NodoHoja("Up");}
+    |DOWN {$$.obj = new NodoHoja("Down");}
     ;
 
 asignacion:
@@ -289,7 +289,7 @@ list_parametro:
     ;
 
 cuerpo_funcion:
-    list_sentencias_funcion sentencia_return ';' {$$.obj = new NodoComun("SENTENCIA", (Nodo) $1.obj, (Nodo) $2.obj);}
+    list_sentencias_funcion sentencia_return ';' {$$.obj = new NodoComun("Sentencia", (Nodo) $1.obj, (Nodo) $2.obj);}
     | list_sentencias_funcion {$$=$1;}
     | sentencia_return ';' {$$=$1;}
     |  {yyerror("El cuerpo de la funcion no puede ser vacio");}
@@ -297,7 +297,7 @@ cuerpo_funcion:
 
 
 list_sentencias_funcion:
-    list_sentencias_funcion sentencia {$$.obj = new NodoComun("SENTENCIA", (Nodo) $1.obj, (Nodo) $2.obj);}
+    list_sentencias_funcion sentencia {$$.obj = new NodoComun("Sentencia", (Nodo) $1.obj, (Nodo) $2.obj);}
     | sentencia {$$=$1;}
     ;
 
@@ -309,7 +309,7 @@ sentencia_return:
                            if (!inIF){
                                 hasReturn = true;
                            }
-                           $$.obj = new NodoComun("RETURN", (Nodo)$3.obj);
+                           $$.obj = new NodoComun("Return", (Nodo)$3.obj);
                            AnalizadorLexico.agregarEstructura("Se reconocio sentencia de retorno");}
     ;
 
@@ -501,33 +501,33 @@ encabezado_if:
     ;
 
 bloque_if:
-    encabezado_if '(' condicion ')' THEN cuerpo_if_unico fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF");inIF=false; $$.obj = new NodoComun("CUERPO",(Nodo)$6.obj);
+    encabezado_if '(' condicion ')' THEN cuerpo_if_unico fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF");inIF=false; $$.obj = new NodoComun("Cuerpo",(Nodo)$6.obj);
                                                                                                                                               Nodo cuerpo = (Nodo)$$.obj;
-                                                                                                                                              $$.obj = new NodoComun("IF", (Nodo)$3.obj, cuerpo);}
-    | encabezado_if '(' condicion ')' THEN cuerpo_if_bloque fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF"); inIF=false; $$.obj = new NodoComun("CUERPO", (Nodo)$6.obj);
+                                                                                                                                              $$.obj = new NodoComun("If", (Nodo)$3.obj, cuerpo);}
+    | encabezado_if '(' condicion ')' THEN cuerpo_if_bloque fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF"); inIF=false; $$.obj = new NodoComun("Cuerpo", (Nodo)$6.obj);
                                                                                                                                           Nodo cuerpo = (Nodo)$$.obj;
-                                                                                                                                          $$.obj = new NodoComun("IF", (Nodo)$3.obj, cuerpo);}
+                                                                                                                                          $$.obj = new NodoComun("If", (Nodo)$3.obj, cuerpo);}
 
 
-    | encabezado_if '(' condicion ')' THEN cuerpo_if_unico ELSE cuerpo_if_unico fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false;  NodoComun nThen = new NodoComun("THEN", (Nodo)$6.obj);
-                                                                                                                                                                          NodoComun nElse = new NodoComun("ELSE", (Nodo)$8.obj);
-                                                                                                                                                                          Nodo cuerpo  = new NodoComun("CUERPO", nThen, nElse);
-                                                                                                                                                                          $$.obj = new NodoComun("IF", (Nodo)$3.obj,cuerpo);}
+    | encabezado_if '(' condicion ')' THEN cuerpo_if_unico ELSE cuerpo_if_unico fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false;  NodoComun nThen = new NodoComun("Then", (Nodo)$6.obj);
+                                                                                                                                                                          NodoComun nElse = new NodoComun("Else", (Nodo)$8.obj);
+                                                                                                                                                                          Nodo cuerpo  = new NodoComun("Cuerpo", nThen, nElse);
+                                                                                                                                                                          $$.obj = new NodoComun("If", (Nodo)$3.obj,cuerpo);}
 
-    | encabezado_if '(' condicion ')' THEN cuerpo_if_bloque ELSE cuerpo_if_bloque fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false; $$.obj = NodoComun nThen = new NodoComun("THEN", (Nodo)$6.obj);
-                                                                                                                                                                    NodoComun nElse = new NodoComun("ELSE", (Nodo)$8.obj);
-                                                                                                                                                                    Nodo cuerpo  = new NodoComun("CUERPO", nThen, nElse);
-                                                                                                                                                                    $$.obj = new NodoComun("IF", (Nodo)$3.obj,cuerpo);}
+    | encabezado_if '(' condicion ')' THEN cuerpo_if_bloque ELSE cuerpo_if_bloque fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false; $$.obj = NodoComun nThen = new NodoComun("Then", (Nodo)$6.obj);
+                                                                                                                                                                    NodoComun nElse = new NodoComun("Else", (Nodo)$8.obj);
+                                                                                                                                                                    Nodo cuerpo  = new NodoComun("Cuerpo", nThen, nElse);
+                                                                                                                                                                    $$.obj = new NodoComun("If", (Nodo)$3.obj,cuerpo);}
 
-    | encabezado_if '(' condicion ')' THEN cuerpo_if_unico ELSE cuerpo_if_bloque fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false; NodoComun nThen = new NodoComun("THEN", (Nodo)$6.obj);
-                                                                                                                                                                   NodoComun nElse = new NodoComun("ELSE", (Nodo)$8.obj);
-                                                                                                                                                                   Nodo cuerpo  = new NodoComun("CUERPO", nThen, nElse);
-                                                                                                                                                                   $$.obj = new NodoComun("IF", (Nodo)$3.obj,cuerpo);}
+    | encabezado_if '(' condicion ')' THEN cuerpo_if_unico ELSE cuerpo_if_bloque fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false; NodoComun nThen = new NodoComun("Then", (Nodo)$6.obj);
+                                                                                                                                                                   NodoComun nElse = new NodoComun("Else", (Nodo)$8.obj);
+                                                                                                                                                                   Nodo cuerpo  = new NodoComun("Cuerpo", nThen, nElse);
+                                                                                                                                                                   $$.obj = new NodoComun("If", (Nodo)$3.obj,cuerpo);}
 
-    | encabezado_if '(' condicion ')' THEN cuerpo_if_bloque ELSE cuerpo_if_unico fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false; NodoComun nThen = new NodoComun("THEN", (Nodo)$6.obj);
-                                                                                                                                                                   NodoComun nElse = new NodoComun("ELSE", (Nodo)$8.obj);
-                                                                                                                                                                   Nodo cuerpo  = new NodoComun("CUERPO", nThen, nElse);
-                                                                                                                                                                   $$.obj = new NodoComun("IF", (Nodo)$3.obj,cuerpo);}
+    | encabezado_if '(' condicion ')' THEN cuerpo_if_bloque ELSE cuerpo_if_unico fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false; NodoComun nThen = new NodoComun("Then", (Nodo)$6.obj);
+                                                                                                                                                                   NodoComun nElse = new NodoComun("Else", (Nodo)$8.obj);
+                                                                                                                                                                   Nodo cuerpo  = new NodoComun("Cuerpo", nThen, nElse);
+                                                                                                                                                                   $$.obj = new NodoComun("If", (Nodo)$3.obj,cuerpo);}
     | encabezado_if '(' condicion ')' cuerpo_if_bloque ELSE cuerpo_if_unico fin_if {yyerror("Falta THEN en IF");}
     | encabezado_if '(' condicion ')' THEN cuerpo_if_bloque cuerpo_if_unico fin_if {yyerror("Falta ELSE en IF");}
     | encabezado_if '(' condicion ')' cuerpo_if_bloque ELSE cuerpo_if_unico {yyerror("Falta END_IF en IF");}
@@ -547,7 +547,7 @@ cuerpo_if_bloque:
     ;
 
 list_sentencias_ejecutables:
-    list_sentencias_ejecutables sentencia_ejecutable ';' {$$ = new NodoComun("SENTENCIA", (Nodo) $1.obj, (Nodo) $2.obj);}
+    list_sentencias_ejecutables sentencia_ejecutable ';' {$$ = new NodoComun("Sentencia", (Nodo) $1.obj, (Nodo) $2.obj);}
     | sentencia_ejecutable ';' {$$ = $1;}
     ;
 
@@ -572,23 +572,23 @@ condicion:
 
 //tema 19
 bloque_list_expresiones:
-    list_expresiones ',' expresion {$$ = new NodoComun("SENTENCIA", (Nodo) $1.obj, (Nodo) $3.obj);}
+    list_expresiones ',' expresion {$$ = new NodoComun("Sentencia", (Nodo) $1.obj, (Nodo) $3.obj);}
     ;
 
 list_expresiones:
-    list_expresiones ',' expresion  {$$ = new NodoComun("SENTENCIA", (Nodo) $1.obj, (Nodo) $3.obj);}
+    list_expresiones ',' expresion  {$$ = new NodoComun("Sentencia", (Nodo) $1.obj, (Nodo) $3.obj);}
     | expresion {$$=$1;}
     | error {yyerror("Falta expresion en pattern matching");}
     ;
 
 salida_mensaje:
-    OUTF '(' CADENA ')' {   $$.obj = new NodoComun("OUTF", new NodoHoja($3.sval));
+    OUTF '(' CADENA ')' {   $$.obj = new NodoComun("Outf", new NodoHoja($3.sval));
                             Token t = TablaSimbolos.getToken($3.sval); //Obtenemos el token, faltaba esto
                             t.setUso("mensaje");
                             t.setTipo("cadena");
                             AnalizadorLexico.agregarEstructura("Se reconocio salida de mensaje por pantalla");
                         }
-    | OUTF '(' expresion ')' {   $$.obj = new NodoComun("OUTF", new NodoHoja($3.sval));
+    | OUTF '(' expresion ')' {   $$.obj = new NodoComun("Outf", new NodoHoja($3.sval));
                                  Token t = TablaSimbolos.getToken($3.sval); //Obtenemos el token, faltaba esto
                                  t.setUso("mensaje");
                                  t.setTipo("cadena");
