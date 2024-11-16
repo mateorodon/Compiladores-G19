@@ -118,6 +118,7 @@ encabezado_for1:
                                                                     $$.obj = new NodoComun ("Encabezado For", asgnacionIncremento, condicion);
 
                                                                     AnalizadorLexico.agregarEstructura("Se reconoció un FOR de 3");
+                                                                    TablaSimbolos.removeToken($1.sval);
                                                                 }
     | ID ASIGNACION CONSTANTE ';' condicion ';' CONSTANTE {yyerror("Falta UP/DOWN en el FOR");}
     | ID ASIGNACION CONSTANTE condicion ';' up_down CONSTANTE {yyerror("Falta ';' en el FOR");}
@@ -154,6 +155,7 @@ encabezado_for2:
                                                                                        $$.obj = new NodoComun ("Encabezado For", asgnacionIncremento, condiciones);
 
                                                                                        AnalizadorLexico.agregarEstructura("Se reconoció un FOR con condición");
+                                                                                       TablaSimbolos.removeToken($1.sval);
                                                                                        }
 
     | ID ASIGNACION CONSTANTE ';' condicion ';' CONSTANTE ';' '(' condicion ')' {yyerror("Falta UP/DOWN en el FOR");}
@@ -200,6 +202,7 @@ asignacion:
                                   }
                               }
                               $$.obj = asignacion;
+                              TablaSimbolos.removeToken($1.sval);
                             }
     | ID '[' CONSTANTE ']' ASIGNACION expresion
     | ID ASIGNACION error {yyerror("Falta parte derecha de la asignacion");}
@@ -218,6 +221,7 @@ tipo:
                 tipoActual = $1.sval;
             }
             }
+            TablaSimbolos.removeToken($1.sval);
          }
     ;
 
@@ -341,45 +345,99 @@ sentencia_return:
     ;
 
 expresion:
-    expresion '+' termino { Token tIzq = TablaSimbolos.getToken($1.sval);
-                            Nodo nIzq = new NodoHoja($1.sval, tIzq);
+    expresion '+' termino { String expresion = ((Nodo)$1.obj).getNombre();
+                            String termino = ((Nodo)$3.obj).getNombre();
+                            if (!(expresion.contains("error") || termino.contains("error"))) {
+                                Nodo nIzq;
+                                Nodo nDer;
 
-                            Token tDer = TablaSimbolos.getToken($3.sval);
-                            Nodo nDer = new NodoHoja($3.sval, tIzq);
+                                if (esOperacion(expresion)) {
+                                    nIzq = (Nodo)$1.obj;
+                                } else {
+                                    Token tIzq = TablaSimbolos.getToken(expresion);
+                                    nIzq = new NodoHoja(tIzq.getLexema().toString(), tIzq);
+                                }
+                                if (esOperacion(termino)) {
+                                    nDer = (Nodo)$3.obj;
+                                } else {
+                                    Token tDer = TablaSimbolos.getToken(termino);
+                                    nDer = new NodoHoja(tDer.getLexema().toString(), tDer);
+                                }
+                                $$.obj = controlarTipos(nIzq, $2.sval, nDer);
+                            } else {
+                                $$.obj = new NodoHoja("error");
+                            }
+                            }
+    | expresion '-' termino {String expresion = ((Nodo)$1.obj).getNombre();
+                            String termino = ((Nodo)$3.obj).getNombre();
+                            if (!(expresion.contains("error") || termino.contains("error"))) {
+                                Nodo nIzq;
+                                Nodo nDer;
 
-                            $$.obj = controlarTipos(nIzq,$2.sval,nDer);
-                          }
-
-    | expresion '-' termino { Token tIzq = TablaSimbolos.getToken($1.sval);
-                              Nodo nIzq = new NodoHoja($1.sval, tIzq);
-
-                              Token tDer = TablaSimbolos.getToken($3.sval);
-                              Nodo nDer = new NodoHoja($3.sval, tIzq);
-
-                              $$.obj = controlarTipos(nIzq,$2.sval,nDer);
-                             }
+                                if (esOperacion(expresion)) {
+                                    nIzq = (Nodo)$1.obj;
+                                } else {
+                                    Token tIzq = TablaSimbolos.getToken(expresion);
+                                    nIzq = new NodoHoja(tIzq.getLexema().toString(), tIzq);
+                                }
+                                if (esOperacion(termino)) {
+                                    nDer = (Nodo)$3.obj;
+                                } else {
+                                    Token tDer = TablaSimbolos.getToken(termino);
+                                    nDer = new NodoHoja(tDer.getLexema().toString(), tDer);
+                                }
+                                $$.obj = controlarTipos(nIzq, $2.sval, nDer);
+                            } else {
+                                $$.obj = new NodoHoja("error");
+                            }
+                            }
     | termino {$$ = $1;}
     | expresion '+' error {yyerror("Se esperaba un termino");}
     | expresion '-' error {yyerror("Se esperaba un termino");}
     ;
 
 termino:
-    termino '*' factor { Token tIzq = TablaSimbolos.getToken($1.sval);
-                         Nodo nIzq = new NodoHoja($1.sval, tIzq);
-
-                         Token tDer = TablaSimbolos.getToken($3.sval);
-                         Nodo nDer = new NodoHoja($3.sval, tIzq);
-
-                         $$.obj = controlarTipos(nIzq,$2.sval,nDer);
+    termino '*' factor { String termino = ((Nodo)$1.obj).getNombre();
+                         String factor = ((Nodo)$3.obj).getNombre();
+                         if (!(termino.contains("error") || factor.contains("error"))){
+                             Nodo nIzq;
+                             Nodo nDer;
+                             if (esOperacion(termino)){
+                                nIzq = (Nodo)$1.obj;
+                             }
+                             else {
+                                 Token tIzq = TablaSimbolos.getToken(termino);
+                                 nIzq = new NodoHoja(tIzq.getLexema().toString(), tIzq);
+                             }
+                             Token tDer = TablaSimbolos.getToken(factor);
+                             nDer = new NodoHoja(tDer.getLexema().toString(), tDer);
+                             $$.obj = controlarTipos(nIzq,$2.sval,nDer);
+                         }
+                         else {
+                            $$.obj = new NodoHoja("error");
+                         }
                         }
-    | termino '/' factor { Token tIzq = TablaSimbolos.getToken($1.sval);
-                           Nodo nIzq = new NodoHoja($1.sval, tIzq);
-
-                           Token tDer = TablaSimbolos.getToken($3.sval);
-                           Nodo nDer = new NodoHoja($3.sval, tIzq);
-
-                           $$.obj = controlarTipos(nIzq,$2.sval,nDer);
-                          }
+    | termino '/' factor {
+                         String termino = ((Nodo)$1.obj).getNombre();
+                         String factor = ((Nodo)$3.obj).getNombre();
+                         if (!(termino.contains("error") || factor.contains("error"))){
+                             Nodo nIzq;
+                             Nodo nDer;
+                             if (esOperacion(termino)){
+                                nIzq = (Nodo)$1.obj;
+                             }
+                             else {
+                                 Token tIzq = TablaSimbolos.getToken(termino);
+                                 nIzq = new NodoHoja(tIzq.getLexema().toString(), tIzq);
+                             }
+                             Token tDer = TablaSimbolos.getToken(factor);
+                             nDer = new NodoHoja(tDer.getLexema().toString(), tDer);
+                             $$.obj = controlarTipos(nIzq,$2.sval,nDer);
+                         }
+                         else {
+                            $$.obj = new NodoHoja("error");
+                         }
+                        }
     | factor {$$ = $1;}
     | termino '*' error {$$.obj = new NodoHoja("error sintactico"); yyerror("Se esperaba un factor");}
     | termino '/' error {$$.obj = new NodoHoja("error sintactico"); yyerror("Se esperaba un factor");}
@@ -389,7 +447,7 @@ factor:
     ID {String ambitoVar = buscarAmbito(ambito,$1.sval);
         if (ambitoVar.equals("")){
             agregarErrorSemantico("La variable '" + $1.sval + "' no fue declarada");
-            Nodo aux = new NodoHoja($1.sval);
+            Nodo aux = new NodoHoja("error");
             $$.obj = aux;
         }
         else {
@@ -399,9 +457,9 @@ factor:
             else {
                 Nodo aux = new NodoHoja($1.sval+":"+ambitoVar, t);
                 $$.obj = aux;
-                TablaSimbolos.removeToken($1.sval);
             }
         }
+        TablaSimbolos.removeToken($1.sval);
         }
     | CONSTANTE {Token t = TablaSimbolos.getToken($1.sval);
                 t.setValor($1.sval);
@@ -432,6 +490,7 @@ factor:
                              if (!(index != null && (index.equals("1") || index.equals("2") || index.equals("3"))))
                                  agregarErrorSemantico("El indice esta fuera de rango. Debe estar entre 1 y 3");
                                  $$.obj = new NodoHoja("error");
+                            TablaSimbolos.removeToken($1.sval);
                             }
     | '-' ID {String ambitoVar = buscarAmbito(ambito,$2.sval);
                      if (ambitoVar.equals("")){
@@ -444,9 +503,9 @@ factor:
                              agregarErrorSemantico("'" + $2.sval + "' no es una variable. Es un/a " + t.getUso());
                          else {
                              $$.obj = new NodoHoja($2.sval + ":" + ambitoVar,t);
-                             TablaSimbolos.removeToken($2.sval);
                          }
                      }
+                     TablaSimbolos.removeToken($2.sval);
                      }
     | '-' CONSTANTE {Token t = TablaSimbolos.getToken($2.sval);
                                         if (t != null && t.getTipo().equals(ENTERO)) {
@@ -505,8 +564,9 @@ invocacion_funcion:
         else {
             agregarErrorSemantico("La funcion '" + $1.sval + "' no fue declarada");
         }
-     }
         }
+        TablaSimbolos.removeToken($1.sval);
+    }
     | ID '(' bloque_list_expresiones ')' {yyerror("La funcion no puede tener mas de un parametro");}
     | ID '(' ')' {yyerror("La funcion debe tener un parametro");}
     | ID '(' tipo_base '(' expresion ')' ')' {AnalizadorLexico.agregarEstructura("Se reconocio conversion");}
@@ -781,9 +841,11 @@ private void variableYaDeclarada(String var){
 
 private NodoComun controlarTipos(Nodo nodo1, String op, Nodo nodo3){
     NodoComun ret = new NodoComun(op, nodo1, nodo3);
-    if (!(nodo1.getLexema().contains("error") || nodo1.getLexema().contains("error"))) {
-    if (!(nodo1.getTipo().equals(nodo3.getTipo())))
-        agregarErrorSemantico("Incompatibilidad de tipos en la "+op);
+    if (!(nodo1.getNombre().contains("error") || nodo3.getNombre().contains("error"))) {
+    if (!(nodo1.getTipo().equals(nodo3.getTipo()))){
+        agregarErrorSemantico("Incompatibilidad de tipos en la " + op);
+        ret = new NodoComun("error");
+    }
     else
         ret.setTipo(nodo1.getTipo());
     }
@@ -810,4 +872,8 @@ public NodoComun getRaiz(){
 
 public static List<Nodo> getFuncionesDeclaradas(){
     return new ArrayList<>(funcionesDeclaradas.values());
+}
+
+public static boolean esOperacion(String nombre){
+    return nombre.equals("*") || nombre.equals("/") || nombre.equals("+") || nombre.equals("-");
 }
