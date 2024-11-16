@@ -234,6 +234,7 @@ list_variables:
 
 encabezado_funcion:
     tipo FUN ID {hasReturn = false;
+                enFuncion = true;
                 String idFuncion = $3.sval;
                  Token t = TablaSimbolos.getToken(idFuncion);
                  if (!TablaSimbolos.existeSimbolo(idFuncion + ":" + ambito)){
@@ -282,6 +283,7 @@ declaracion_funcion:
 
                                                          funcionesDeclaradas.put(funcion.getNombre(),funcion);
                                                          removeAmbito();
+                                                         enFuncion = false;
                                                          } END
     | encabezado_funcion '(' bloque_list_parametro ')' BEGIN cuerpo_funcion END {yyerror("La funciones no puede tener más de un parámetro");removeAmbito();}
     | encabezado_funcion '(' ')' BEGIN cuerpo_funcion END {yyerror("La función debe tener parámetro");removeAmbito();}
@@ -316,9 +318,10 @@ list_parametro:
     ;
 
 cuerpo_funcion:
-    list_sentencias_funcion sentencia_return ';' {$$.obj = new NodoComun("Sentencia", (Nodo) $1.obj, (Nodo) $2.obj);}
+    list_sentencias_funcion sentencia_return ';' {  $$.obj = new NodoComun("Sentencia", (Nodo) $1.obj, (Nodo) $2.obj);
+                                                    hasReturn = true;}
     | list_sentencias_funcion {$$=$1;}
-    | sentencia_return ';' {$$=$1;}
+    | sentencia_return ';' {$$=$1; hasReturn = true;}
     |  {yyerror("El cuerpo de la funcion no puede ser vacio");}
     ;
 
@@ -332,9 +335,6 @@ list_sentencias_funcion:
 sentencia_return:
     RET '(' expresion ')' {if (ambito.length() < 5){  //si es menor es que es main
                                 yyerror("No puede haber una sentencia de retorno fuera de una funcion");
-                           }
-                           if (!inIF){
-                                hasReturn = true;
                            }
                            $$.obj = new NodoComun("Return", (Nodo)$3.obj);
                            AnalizadorLexico.agregarEstructura("Se reconocio sentencia de retorno");}
@@ -537,22 +537,44 @@ bloque_if:
     | encabezado_if '(' condicion ')' THEN cuerpo_if_unico ELSE cuerpo_if_unico fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false;  NodoComun nThen = new NodoComun("Then", (Nodo)$6.obj);
                                                                                                                                                                           NodoComun nElse = new NodoComun("Else", (Nodo)$8.obj);
                                                                                                                                                                           Nodo cuerpo  = new NodoComun("Cuerpo", nThen, nElse);
-                                                                                                                                                                          $$.obj = new NodoComun("If", (Nodo)$3.obj,cuerpo);}
+                                                                                                                                                                          $$.obj = new NodoComun("If", (Nodo)$3.obj,cuerpo);
+                                                                                                                                                                          if ((cantReturns == 2) && (enFuncion)){
+                                                                                                                                                                               hasReturn = true;
+                                                                                                                                                                          }
+                                                                                                                                                                          cantReturns = 0;
+                                                                                                                                                                          }
 
     | encabezado_if '(' condicion ')' THEN cuerpo_if_bloque ELSE cuerpo_if_bloque fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false; NodoComun nThen = new NodoComun("Then", (Nodo)$6.obj);
                                                                                                                                                                     NodoComun nElse = new NodoComun("Else", (Nodo)$8.obj);
                                                                                                                                                                     Nodo cuerpo  = new NodoComun("Cuerpo", nThen, nElse);
-                                                                                                                                                                    $$.obj = new NodoComun("If", (Nodo)$3.obj,cuerpo);}
+                                                                                                                                                                    $$.obj = new NodoComun("If", (Nodo)$3.obj,cuerpo);
+                                                                                                                                                                    if ((cantReturns == 2) && (enFuncion)){
+                                                                                                                                                                        hasReturn = true;
+                                                                                                                                                                    }
+                                                                                                                                                                    cantReturns = 0;
+                                                                                                                                                                    }
 
     | encabezado_if '(' condicion ')' THEN cuerpo_if_unico ELSE cuerpo_if_bloque fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false; NodoComun nThen = new NodoComun("Then", (Nodo)$6.obj);
                                                                                                                                                                    NodoComun nElse = new NodoComun("Else", (Nodo)$8.obj);
                                                                                                                                                                    Nodo cuerpo  = new NodoComun("Cuerpo", nThen, nElse);
-                                                                                                                                                                   $$.obj = new NodoComun("If", (Nodo)$3.obj,cuerpo);}
+                                                                                                                                                                   $$.obj = new NodoComun("If", (Nodo)$3.obj,cuerpo);
+
+                                                                                                                                                                   if ((cantReturns == 2) && (enFuncion)){
+                                                                                                                                                                        hasReturn = true;
+                                                                                                                                                                   }
+                                                                                                                                                                   cantReturns = 0;
+                                                                                                                                                                   }
 
     | encabezado_if '(' condicion ')' THEN cuerpo_if_bloque ELSE cuerpo_if_unico fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false; NodoComun nThen = new NodoComun("Then", (Nodo)$6.obj);
                                                                                                                                                                    NodoComun nElse = new NodoComun("Else", (Nodo)$8.obj);
                                                                                                                                                                    Nodo cuerpo  = new NodoComun("Cuerpo", nThen, nElse);
-                                                                                                                                                                   $$.obj = new NodoComun("If", (Nodo)$3.obj,cuerpo);}
+                                                                                                                                                                   $$.obj = new NodoComun("If", (Nodo)$3.obj,cuerpo);
+
+                                                                                                                                                                   if ((cantReturns == 2) && (enFuncion)){
+                                                                                                                                                                        hasReturn = true;
+                                                                                                                                                                   }
+                                                                                                                                                                   cantReturns = 0;
+                                                                                                                                                                   }
     | encabezado_if '(' condicion ')' cuerpo_if_bloque ELSE cuerpo_if_unico fin_if {yyerror("Falta THEN en IF");}
     | encabezado_if '(' condicion ')' THEN cuerpo_if_bloque cuerpo_if_unico fin_if {yyerror("Falta ELSE en IF");}
     | encabezado_if '(' condicion ')' cuerpo_if_bloque ELSE cuerpo_if_unico {yyerror("Falta END_IF en IF");}
@@ -561,11 +583,12 @@ bloque_if:
 
 cuerpo_if_unico:
     sentencia_ejecutable ';' {$$ = $1;}
-    | sentencia_return ';' {$$ = $1;}
+    | sentencia_return ';' {$$ = $1; cantReturns++;}
     ;
 
 cuerpo_if_bloque:
     BEGIN list_sentencias_ejecutables END {$$ = $2;}
+    | BEGIN list_sentencias_ejecutables sentencia_return END {$$ = $2; cantReturns++;}
     | BEGIN error {yyerror("Se esperaba 'END' después del bloque BEGIN en el cuerpo IF/ELSE");}
     | list_sentencias_ejecutables END  {yyerror("Se encontró 'END' sin un bloque BEGIN correspondiente en el cuerpo IF/ELSE");}
     | error {yyerror("Se esperaba BEGIN y END por sentencias multiples");}
@@ -664,6 +687,8 @@ static NodoComun raiz;
 static String ambito = "main";
 static boolean inIF = false;
 static boolean hasReturn = false;
+static boolean enFuncion = false;
+static int cantReturns = 0;
 static List<String> varDeclaradas = new ArrayList<>();
 static String tipoActual;
 static List<String> erroresSemanticos = new ArrayList<>();

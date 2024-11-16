@@ -1,5 +1,10 @@
 prog
 begin
-    ulongint r;
-    r := 2 + 1;
-end                                         
+    SINGLE FUN F1(Single x)
+    BEGIN
+        IF (3>2) THEN
+            RET(2+2);
+        END_IF;
+        RET(2+2);
+    END;
+end     

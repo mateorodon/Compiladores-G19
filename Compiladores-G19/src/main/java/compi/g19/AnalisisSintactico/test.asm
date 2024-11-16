@@ -15,9 +15,6 @@ OperacionEnteroNegativo db "El resultado de la operacion no puede ser negativo."
 OverflowSumaDouble db "Se produjo un un overflow en la suma de doubles.", 0 
 error db "Error", 0 
 printMensaje db "Print", 0 
-_1 dd 1
-_2 dd 2
-_r:main dd ?
 
 .code
 invoke MessageBox, NULL, addr AutoinvocacionFunciones, addr error, MB_OK 
