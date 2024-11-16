@@ -588,21 +588,53 @@ comparacion:
 
 condicion:
     expresion comparacion expresion {$$.obj = new NodoComun($2.sval, (Nodo)$1.obj, (Nodo)$3.obj);}
-    | '(' bloque_list_expresiones ')' comparacion '(' bloque_list_expresiones ')' { $$.obj = new NodoComun($4.sval, (Nodo)$2.obj, (Nodo)$4.obj);
-                                                                                    AnalizadorLexico.agregarEstructura("Se reconocio pattern matching");
-                                                                                  }
+    | '(' {inList1 = true;} bloque_list_expresiones {inList1 = false;} ')' comparacion '(' {inList2 = true;} bloque_list_expresiones {inList2 = false;} ')'
+    { $$.obj = new NodoComun($4.sval, (Nodo)$2.obj, (Nodo)$4.obj);
+      AnalizadorLexico.agregarEstructura("Se reconocio pattern matching");
+      if (expresiones1.size() == expresiones2.size()){
+        for (int i = 0; i < expresiones1.size(); i++) {
+            Nodo exp1 = expresiones1.get(i);
+            Nodo exp2 = expresiones2.get(i);
+            if (!(exp1.getTipo().equals(exp2.getTipo())))
+                agregarErrorSemantico("Las expresiones en la posicion " + i + " no tienen el mismo tipo");
+        }
+      }
+      else {
+        agregarErrorSemantico("La cantidad de elementos a comparar en pattern matching no coincide");
+      }
+      expresiones1.clear();
+      expresiones2.clear();
+    }
 
     | error {yyerror("Falta comparador en la condicion");}
     ;
 
 //tema 19
 bloque_list_expresiones:
-    list_expresiones ',' expresion {$$ = new NodoComun("Sentencia", (Nodo) $1.obj, (Nodo) $3.obj);}
+    list_expresiones ',' expresion {
+    if (inList1)
+            expresiones1.add((Nodo)$3.obj);
+        if (inList2)
+            expresiones2.add((Nodo)$3.obj);
+    $$ = new NodoComun("Sentencia", (Nodo) $1.obj, (Nodo) $3.obj);
+    }
     ;
 
 list_expresiones:
-    list_expresiones ',' expresion  {$$ = new NodoComun("Sentencia", (Nodo) $1.obj, (Nodo) $3.obj);}
-    | expresion {$$=$1;}
+    list_expresiones ',' expresion  {
+    if (inList1)
+        expresiones1.add((Nodo)$3.obj);
+    if (inList2)
+        expresiones2.add((Nodo)$3.obj);
+    $$ = new NodoComun("Sentencia", (Nodo) $1.obj, (Nodo) $3.obj);
+    }
+    | expresion {
+    if (inList1)
+        expresiones1.add((Nodo)$1.obj);
+    if (inList2)
+        expresiones2.add((Nodo)$1.obj);
+    $$=$1;
+    }
     | error {yyerror("Falta expresion en pattern matching");}
     ;
 
@@ -637,6 +669,10 @@ static String tipoActual;
 static List<String> erroresSemanticos = new ArrayList<>();
 static Map<String,String> tiposDeclarados = new HashMap<>(); //clave: lexema del tipo ; valor: tipo del tipo
 public static Map<String,NodoComun> funcionesDeclaradas = new HashMap<>();
+static List<Nodo> expresiones1 = new ArrayList<>();
+static List<Nodo> expresiones2 = new ArrayList<>();
+static boolean inList1 = false;
+static boolean inList2 = false;
 
 public int yylex() throws IOException {
     Token t = AnalizadorLexico.obtenerToken();
