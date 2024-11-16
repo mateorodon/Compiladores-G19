@@ -1,20 +1,5 @@
 prog
 begin
-    ulongint x;
-    x := 2 + 1;
-    single FUN rr(ulongint m)
-    begin
-        m := 2;
-        IF (m < 3) THEN
-            x := 8 + m;
-        ELSE
-            OUTF({hola});
-        END_IF;
-        ret(m);
-    end;
-
-    FOR (x := 6 ; x<5 ; UP 1)
-    BEGIN
-        x := 2;
-    END;
-end                                  
+    ulongint r;
+    r := 2 + 1;
+end                                         

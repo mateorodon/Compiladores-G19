@@ -15,6 +15,7 @@ public class TablaSimbolos {
         - Cadenas
      */
 
+    @Getter
     private static Map<String, Token> simbolos = new HashMap<>(); // <Lexema, Token>
 
     public static void addSimbolo(String lexema,Token t){

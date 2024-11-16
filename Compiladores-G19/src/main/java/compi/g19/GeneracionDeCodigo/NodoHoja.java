@@ -24,4 +24,7 @@ public class NodoHoja extends Nodo {
 
     @Override
     public String getAssembler() {return this.getNombre();}
+
+    @Override
+    public NodoHoja getUltimoNodo() {return this;}
 }

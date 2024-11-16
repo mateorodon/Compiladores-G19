@@ -1,152 +1,24 @@
-----------TOKENS DETECTADOS -----------
-Token{id=257, lexema=prog, linea=1, tipo=null}
-Token{id=267, lexema=begin, linea=2, tipo=null}
-Token{id=274, lexema=ulongint, linea=3, tipo=null}
-Token{id=257, lexema=x, linea=3, tipo=ulongint}
-Token{id=59, lexema=;, linea=3, tipo=null}
-Token{id=257, lexema=x, linea=4, tipo=ulongint}
-Token{id=258, lexema=:=, linea=4, tipo=ulongint}
-Token{id=262, lexema=2, linea=4, tipo=ulongint}
-Token{id=43, lexema=+, linea=4, tipo=null}
-Token{id=262, lexema=1, linea=4, tipo=ulongint}
-Token{id=59, lexema=;, linea=4, tipo=null}
-Token{id=275, lexema=single, linea=5, tipo=null}
-Token{id=272, lexema=FUN, linea=5, tipo=null}
-Token{id=257, lexema=rr, linea=5, tipo=null}
-Token{id=40, lexema=(, linea=5, tipo=null}
-Token{id=274, lexema=ulongint, linea=5, tipo=null}
-Token{id=257, lexema=m, linea=5, tipo=null}
-Token{id=41, lexema=), linea=5, tipo=null}
-Token{id=267, lexema=begin, linea=6, tipo=null}
-Token{id=257, lexema=m, linea=7, tipo=null}
-Token{id=258, lexema=:=, linea=7, tipo=null}
-Token{id=262, lexema=2, linea=7, tipo=ulongint}
-Token{id=59, lexema=;, linea=7, tipo=null}
-Token{id=264, lexema=IF, linea=8, tipo=null}
-Token{id=40, lexema=(, linea=8, tipo=null}
-Token{id=257, lexema=m, linea=8, tipo=null}
-Token{id=60, lexema=<, linea=8, tipo=null}
-Token{id=262, lexema=3, linea=8, tipo=ulongint}
-Token{id=41, lexema=), linea=8, tipo=null}
-Token{id=265, lexema=THEN, linea=8, tipo=null}
-Token{id=257, lexema=x, linea=9, tipo=ulongint}
-Token{id=258, lexema=:=, linea=9, tipo=ulongint}
-Token{id=262, lexema=8, linea=9, tipo=ulongint}
-Token{id=43, lexema=+, linea=9, tipo=null}
-Token{id=257, lexema=m, linea=9, tipo=null}
-Token{id=59, lexema=;, linea=9, tipo=null}
-Token{id=266, lexema=ELSE, linea=10, tipo=null}
-Token{id=270, lexema=OUTF, linea=11, tipo=null}
-Token{id=40, lexema=(, linea=11, tipo=null}
-Token{id=263, lexema=hola, linea=11, tipo=null}
-Token{id=41, lexema=), linea=11, tipo=null}
-Token{id=59, lexema=;, linea=11, tipo=null}
-Token{id=269, lexema=END_IF, linea=12, tipo=null}
-Token{id=59, lexema=;, linea=12, tipo=null}
-Token{id=273, lexema=ret, linea=13, tipo=null}
-Token{id=40, lexema=(, linea=13, tipo=null}
-Token{id=257, lexema=m, linea=13, tipo=null}
-Token{id=41, lexema=), linea=13, tipo=null}
-Token{id=59, lexema=;, linea=13, tipo=null}
-Token{id=268, lexema=end, linea=14, tipo=null}
-Token{id=59, lexema=;, linea=14, tipo=null}
-Token{id=276, lexema=FOR, linea=16, tipo=null}
-Token{id=40, lexema=(, linea=16, tipo=null}
-Token{id=257, lexema=x, linea=16, tipo=ulongint}
-Token{id=258, lexema=:=, linea=16, tipo=ulongint}
-Token{id=262, lexema=6, linea=16, tipo=ulongint}
-Token{id=59, lexema=;, linea=16, tipo=null}
-Token{id=257, lexema=x, linea=16, tipo=ulongint}
-Token{id=60, lexema=<, linea=16, tipo=null}
-Token{id=262, lexema=5, linea=16, tipo=ulongint}
-Token{id=59, lexema=;, linea=16, tipo=null}
-Token{id=278, lexema=UP, linea=16, tipo=null}
-Token{id=262, lexema=1, linea=16, tipo=ulongint}
-Token{id=41, lexema=), linea=16, tipo=null}
-Token{id=267, lexema=BEGIN, linea=17, tipo=null}
-Token{id=257, lexema=x, linea=18, tipo=ulongint}
-Token{id=258, lexema=:=, linea=18, tipo=ulongint}
-Token{id=262, lexema=2, linea=18, tipo=ulongint}
-Token{id=59, lexema=;, linea=18, tipo=null}
-Token{id=268, lexema=END, linea=19, tipo=null}
-Token{id=59, lexema=;, linea=19, tipo=null}
-Token{id=268, lexema=end, linea=20, tipo=null}
 ----------ARBOL SINTACTICO -----------
 PROGRAMA
-    SENTENCIA
-        SENTENCIA
-            SENTENCIA
-                Sentencia Declarativa
-                :=
-                    x:main
-                    +
-                        2
-                        1
-            Sentencia Declarativa
-        FOR
-            ENCABEZADO FOR
-                ASIGNACION E INCREMENTO
-                    :=
-                        x:main
-                        6
-                    INCREMENTO
-                        UP
-                        1
-                <
-                    x:main
-                    5
-            :=
-                x:main
+    Sentencia
+        Sentencia Declarativa
+        :=
+            r:main
+            +
                 2
+                1
 ----------ARBOL SINTACTICO FUNCIONES -----------
-rr:main
-    m
-    SENTENCIA
-        SENTENCIA
-            :=
-                m:main:rr
-                2
-            IF
-                <
-                    m:main:rr
-                    3
-                CUERPO
-                    THEN
-                        :=
-                            x:main
-                            +
-                                8
-                                m
-                    ELSE
-                        OUTF
-                            hola
-        RETURN
-            m:main:rr
+----------GENERACION DE ASSEMBLER -----------
 ----------ESTRUCTURAS RECONOCIDAS-----------
 Se reconocio declaracion de variable/s en la línea 3
 Se reconocio una asignacion en la línea 4
-Se reconocio una asignacion en la línea 7
-Se reconocio una asignacion en la línea 9
-Se reconocio salida de mensaje por pantalla en la línea 11
-Se reconocio un IF/ELSE en la línea 12
-Se reconocio sentencia de retorno en la línea 13
-Se reconocio declaracion de funcion en la línea 14
-Se reconoció un FOR de 3 en la línea 16
-Se reconocio una asignacion en la línea 18
-Se reconocio el programa en la línea 20
+Se reconocio el programa en la línea 5
 ----------TABLA DE SIMBOLOS-----------
-Token{id=257, lexema=rr:main, linea=5, tipo=single}
-Token{id=262, lexema=1, linea=4, tipo=ulongint}
-Token{id=257, lexema=x:main, linea=3, tipo=ulongint}
-Token{id=262, lexema=2, linea=4, tipo=ulongint}
-Token{id=262, lexema=3, linea=8, tipo=ulongint}
-Token{id=262, lexema=5, linea=16, tipo=ulongint}
-Token{id=262, lexema=6, linea=16, tipo=ulongint}
-Token{id=262, lexema=8, linea=9, tipo=ulongint}
-Token{id=257, lexema=x, linea=18, tipo=ulongint}
-Token{id=257, lexema=m:main:rr, linea=5, tipo=ulongint}
-Token{id=263, lexema=hola, linea=11, tipo=cadena}
-Token{id=257, lexema=prog, linea=1, tipo=null}
+Token{id=262, lexema=1, linea=4, tipo=ulongint, valor = 1}
+Token{id=257, lexema=r, linea=4, tipo=null, valor = null}
+Token{id=262, lexema=2, linea=4, tipo=ulongint, valor = 2}
+Token{id=257, lexema=r:main, linea=3, tipo=ulongint, valor = null}
+Token{id=257, lexema=prog, linea=1, tipo=null, valor = null}
 -----------ERRORES LEXICOS----------
 -----------ERRORES SINTACTICOS----------
 -----------ERRORES SEMANTICOS----------

@@ -4,14 +4,8 @@ import compi.g19.AnalisisSintactico.*;
 import compi.g19.GeneracionAssembler.GeneradorAssembler;
 import compi.g19.GeneracionDeCodigo.Nodo;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;
+
 public class Main {
     public static void main(String[] args) {
         try{
@@ -46,25 +40,24 @@ public class Main {
                         funcion.recorrerArbol(0);
                 }
             }
+
+            System.out.println("----------GENERACION DE ASSEMBLER -----------");
+            GeneradorAssembler generador = new GeneradorAssembler(parser);
+            File f = new File(args[0].substring(0,args[0].length()-4)+".asm");
+            f.createNewFile();
+            PrintWriter pw;
+            try {
+                pw = new PrintWriter(args[0].substring(0,args[0].length()-4)+".asm");
+                pw.print(generador.getAssembler());
+                pw.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
             imprimirEstructurasYErrores();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        /*
-        GeneradorAssembler generador = new GeneradorAssembler(parser);
-        File f = new File(archivo.substring(0,archivo.length()-4)+".asm");
-        f.createNewFile();
-        PrintWriter pw;
-        try {
-            pw = new PrintWriter(archivo.substring(0,archivo.length()-4)+".asm");
-            pw.print(generador.getAssembler());
-            pw.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-         */
-
     }
 
     public static void armarArchivoSalida(String archivo_entrada) throws FileNotFoundException {

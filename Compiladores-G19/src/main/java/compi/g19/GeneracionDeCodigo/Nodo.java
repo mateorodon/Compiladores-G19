@@ -5,12 +5,22 @@ import compi.g19.AnalisisSintactico.ParserVal;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Stack;
+
 
 public abstract class Nodo extends ParserVal {
 
     @Getter @Setter
     protected String nombre;
     protected Token token;
+
+    protected static int numeroLabel = 0;
+    protected static int numeroPrint = 0;
+    public static String data = "";
+    protected static Stack<String> pilaLabels = new Stack();
+
+    static int numeroVariableAuxiliar=0;
+
 
     public Nodo(String nombre){
         this.nombre = nombre;
@@ -65,6 +75,22 @@ public abstract class Nodo extends ParserVal {
 
     public abstract String getAssembler();
 
+    public abstract NodoHoja getUltimoNodo();
+
+    public static String getVariableAuxiliar() {
+        ++numeroVariableAuxiliar;
+        return "@aux" + numeroVariableAuxiliar;
+    }
+
+    public static String getVariablePrint() {
+        ++numeroPrint;
+        return "@print" + numeroPrint;
+    }
+
+    public static String getLabel() {
+        ++numeroLabel;
+        return "label" + numeroLabel;
+    }
 
     protected void imprimirNodo(String nombre, int nivel) {
         for (int i = 0; i < nivel; i++) {
