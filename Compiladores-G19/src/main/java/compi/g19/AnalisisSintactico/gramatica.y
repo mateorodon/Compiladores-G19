@@ -40,6 +40,13 @@ sentencia_declarativa:
                          for (String var: varDeclaradas){
                             Token t = TablaSimbolos.getToken(var);
                             if (!TablaSimbolos.existeSimbolo(var + ":" + ambito)){
+                                String tipo = t.getTipo();
+                                if (tipo != null){
+                                    if (tipo.toLowerCase().equals(tipoActual.toLowerCase()))
+                                        AnalizadorLexico.agregarWarning("La variable '" + var + "' ya esta declarada");
+                                    else
+                                        AnalizadorLexico.agregarWarning("La variable '" + var + "' ya estaba declarada. Se cambio su tipo a " + tipoActual);
+                                }
                                 t.getLexema().setLength(0);
                                 t.getLexema().append(var).append(":").append(ambito);
                                 t.setAmbito(ambito);
@@ -163,8 +170,25 @@ up_down:
 asignacion:
     ID ASIGNACION expresion { String ambitoVar = buscarAmbito(ambito,$1.sval);
                               Nodo asignacion = null;
-                              if (ambitoVar.equals(""))
-                                  agregarErrorSemantico("La variable '" + $1.sval + "' no fue declarada");
+                              if (ambitoVar.equals("")){
+                                  Token t = TablaSimbolos.getToken($1.sval);
+                                  if (t == null)
+                                        agregarErrorSemantico("La variable '" + $1.sval + "' no fue declarada");
+                                  else {
+                                        String var = $1.sval;
+                                        if (var.charAt(0) == 's' || var.charAt(0) == 'S')
+                                            t.setTipo(FLOTANTE);
+                                        if (var.charAt(0) == 'x' || var.charAt(0) == 'X' || var.charAt(0) == 'y'
+                                        || var.charAt(0) == 'Y' || var.charAt(0) == 'z' || var.charAt(0) == 'Z')
+                                            t.setTipo(ENTERO);
+                                        t.getLexema().setLength(0);
+                                        t.getLexema().append(var).append(":").append(ambito);
+                                        t.setAmbito(ambito);
+                                        t.setUso("variable");
+                                        TablaSimbolos.removeToken(var);
+                                        TablaSimbolos.addSimbolo(t.getLexema().toString(),t);
+                                  }
+                              }
                               else {
                                   Token t = TablaSimbolos.getToken($1.sval + ":" + ambitoVar);
                                   if (!(t.getUso().equals("variable") || t.getUso().equals("parametro"))){
@@ -240,6 +264,9 @@ declaracion_funcion:
                                                          Nodo parametro = (Nodo)$3.obj;
                                                          Token t = TablaSimbolos.getToken(parametro.getNombre());
                                                          if (!TablaSimbolos.existeSimbolo(parametro.getNombre() + ":" + ambito)){
+                                                             String tipo = t.getTipo();
+                                                             if (tipo != null)
+                                                                AnalizadorLexico.agregarWarning("La variable '" + parametro.getNombre() + "' ya esta declarada");
                                                              t.getLexema().setLength(0);
                                                              t.getLexema().append(parametro.getNombre()).append(":").append(ambito);
                                                              t.setAmbito(ambito);
@@ -465,9 +492,9 @@ declaracion_tipo:
 
 invocacion_funcion:
     ID '(' expresion ')' {
-                            String ambitoVar = buscarAmbito(ambito,$1.sval);
-                             if (ambitoVar.equals(""))
-        agregarErrorSemantico("La funcion '" + $1.sval + "' no fue declarada");
+        String ambitoVar = buscarAmbito(ambito,$1.sval);
+        if (ambitoVar.equals(""))
+            agregarErrorSemantico("La funcion '" + $1.sval + "' no fue declarada");
         else {
         if (funcionesDeclaradas.containsKey($1.sval + ":" + ambitoVar)){
             Nodo exp = (Nodo)$3.obj;
@@ -501,11 +528,9 @@ encabezado_if:
     ;
 
 bloque_if:
-    encabezado_if '(' condicion ')' THEN cuerpo_if_unico fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF");inIF=false; $$.obj = new NodoComun("Cuerpo",(Nodo)$6.obj);
-                                                                                                                                              Nodo cuerpo = (Nodo)$$.obj;
+    encabezado_if '(' condicion ')' THEN cuerpo_if_unico fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF");inIF=false; Nodo cuerpo = new NodoComun("Cuerpo",(Nodo)$6.obj);
                                                                                                                                               $$.obj = new NodoComun("If", (Nodo)$3.obj, cuerpo);}
-    | encabezado_if '(' condicion ')' THEN cuerpo_if_bloque fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF"); inIF=false; $$.obj = new NodoComun("Cuerpo", (Nodo)$6.obj);
-                                                                                                                                          Nodo cuerpo = (Nodo)$$.obj;
+    | encabezado_if '(' condicion ')' THEN cuerpo_if_bloque fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF"); inIF=false; Nodo cuerpo = new NodoComun("Cuerpo", (Nodo)$6.obj);
                                                                                                                                           $$.obj = new NodoComun("If", (Nodo)$3.obj, cuerpo);}
 
 
@@ -514,7 +539,7 @@ bloque_if:
                                                                                                                                                                           Nodo cuerpo  = new NodoComun("Cuerpo", nThen, nElse);
                                                                                                                                                                           $$.obj = new NodoComun("If", (Nodo)$3.obj,cuerpo);}
 
-    | encabezado_if '(' condicion ')' THEN cuerpo_if_bloque ELSE cuerpo_if_bloque fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false; $$.obj = NodoComun nThen = new NodoComun("Then", (Nodo)$6.obj);
+    | encabezado_if '(' condicion ')' THEN cuerpo_if_bloque ELSE cuerpo_if_bloque fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false; NodoComun nThen = new NodoComun("Then", (Nodo)$6.obj);
                                                                                                                                                                     NodoComun nElse = new NodoComun("Else", (Nodo)$8.obj);
                                                                                                                                                                     Nodo cuerpo  = new NodoComun("Cuerpo", nThen, nElse);
                                                                                                                                                                     $$.obj = new NodoComun("If", (Nodo)$3.obj,cuerpo);}
@@ -720,10 +745,6 @@ private Nodo generarLlamadoFuncion(NodoComun funcion, Token copia){
 
 public NodoComun getRaiz(){
     return this.raiz;
-}
-
-private boolean idCompatible(String id){
-    return id.startsWith("x") || id.startsWith("s");
 }
 
 public static List<Nodo> getFuncionesDeclaradas(){
