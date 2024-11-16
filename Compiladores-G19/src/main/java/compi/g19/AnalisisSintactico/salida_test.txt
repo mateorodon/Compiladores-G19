@@ -1,12 +1,10 @@
 ----------ARBOL SINTACTICO -----------
+PROGRAMA
+    Sentencia
+        Sentencia Declarativa
+        :=
+            rr:main
+            +
+                2
+                1
 ----------ARBOL SINTACTICO FUNCIONES -----------
-----------GENERACION DE ASSEMBLER -----------
-----------ESTRUCTURAS RECONOCIDAS-----------
-----------TABLA DE SIMBOLOS-----------
-Token{id=257, lexema=prog, linea=1, tipo=null, valor = null}
------------ERRORES LEXICOS----------
------------ERRORES SINTACTICOS----------
-ERROR SINTACTICO: syntax error en la línea 3
-ERROR SINTACTICO: stack underflow. aborting... en la línea 3
------------ERRORES SEMANTICOS----------
-----------WARNINGS-----------

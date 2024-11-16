@@ -2,6 +2,7 @@ package compi.g19.GeneracionAssembler;
 
 
 import compi.g19.AnalisisLexico.TablaSimbolos;
+import compi.g19.AnalisisLexico.Token;
 import compi.g19.AnalisisSintactico.Parser;
 import compi.g19.GeneracionDeCodigo.Nodo;
 import compi.g19.GeneracionDeCodigo.NodoComun;
@@ -52,8 +53,9 @@ public class GeneradorAssembler {
     private void generarData(){
 
         for (String k :  TablaSimbolos.getSimbolos().keySet()){
-            String uso = TablaSimbolos.getToken(k).getUso();
-            String tipo = TablaSimbolos.getToken(k).getTipo();
+            Token t = TablaSimbolos.getToken(k);
+            String uso = t.getUso();
+            String tipo = t.getTipo();
             if(uso != null){
                 if(uso.equals("constante")){
                     String prefijo = "_";
@@ -80,6 +82,7 @@ public class GeneradorAssembler {
                     }
                     if(tipo.equals("ULONGINT"))
                     {
+
                         data += prefijo +  k + " db " + "?" + "\n";
                     }
                     else if(tipo.equals("SINGLE"))

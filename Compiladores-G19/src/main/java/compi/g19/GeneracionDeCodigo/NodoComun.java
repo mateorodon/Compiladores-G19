@@ -90,7 +90,7 @@ public class NodoComun extends Nodo{
     @Override
     public String getAssembler() {
         String salida = "";
-        switch(super.getLexema()) {
+        switch(super.getNombre()) {
 
             case "Sentencia":
                 if (getIzq() != null)

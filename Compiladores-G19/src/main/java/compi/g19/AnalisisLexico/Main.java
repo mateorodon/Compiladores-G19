@@ -41,7 +41,6 @@ public class Main {
                 }
             }
 
-            System.out.println("----------GENERACION DE ASSEMBLER -----------");
             GeneradorAssembler generador = new GeneradorAssembler(parser);
             File f = new File(args[0].substring(0,args[0].length()-4)+".asm");
             f.createNewFile();
