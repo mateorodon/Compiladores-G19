@@ -23,7 +23,7 @@ public class NodoHoja extends Nodo {
     }
 
     @Override
-    public String getAssembler() {return this.getNombre();}
+    public String getAssembler() {return "";}
 
     @Override
     public NodoHoja getUltimoNodo() {return this;}

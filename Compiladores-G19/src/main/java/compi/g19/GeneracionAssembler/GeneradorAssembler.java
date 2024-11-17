@@ -10,6 +10,8 @@ import compi.g19.GeneracionDeCodigo.NodoComun;
 public class GeneradorAssembler {
     private String data, code, codigoArbol, bibliotecas, codigoFunciones;
     private Nodo arbol;
+    private static final String ENTERO = "ulongint";
+    private static final String FLOTANTE = "single";
 
 
     public GeneradorAssembler(Parser parser){
@@ -59,11 +61,11 @@ public class GeneradorAssembler {
             if(uso != null){
                 if(uso.equals("constante")){
                     String prefijo = "_";
-                    if(tipo.equals("ULONGINT"))
+                    if(tipo.equals(ENTERO))
                     {
                         data += prefijo + k + " db " + k + "\n";
                     }
-                    else if(tipo.equals("SINGLE"))
+                    else if(tipo.equals(FLOTANTE))
                     {
                         data += prefijo + k + " dq " + k + "\n";
                     }
@@ -80,12 +82,12 @@ public class GeneradorAssembler {
                     {
                         prefijo = "_";
                     }
-                    if(tipo.equals("ULONGINT"))
+                    if(tipo.equals(ENTERO))
                     {
 
                         data += prefijo +  k + " db " + "?" + "\n";
                     }
-                    else if(tipo.equals("SINGLE"))
+                    else if(tipo.equals(FLOTANTE))
                     {
                         data += prefijo + k + " dq " + "?" + "\n";
                     }

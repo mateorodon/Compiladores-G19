@@ -1194,7 +1194,7 @@ case 38:
                                     agregarErrorSemantico("La expresion en la parte izquierda de la asignación debe ser una variable. Se encontró un elemento no asignable (" + t.getUso() + ")" );
                                     asignacion = new NodoHoja("error semantico");
                                   }else {
-                                    NodoHoja id = new NodoHoja(val_peek(2).sval +":"+ambitoVar);
+                                    NodoHoja id = new NodoHoja(val_peek(2).sval +":"+ambitoVar, t);
                                     asignacion= new NodoComun(val_peek(1).sval ,id, (Nodo)val_peek(0).obj);
                                   }
                               }
@@ -1222,11 +1222,11 @@ case 42:
 break;
 case 43:
 //#line 225 "gramatica.y"
-{tipoActual = val_peek(0).sval;}
+{tipoActual = ENTERO;}
 break;
 case 44:
 //#line 226 "gramatica.y"
-{tipoActual = val_peek(0).sval;}
+{tipoActual = FLOTANTE;}
 break;
 case 45:
 //#line 230 "gramatica.y"
@@ -1367,7 +1367,7 @@ case 66:
                             Nodo nIzq = new NodoHoja(val_peek(2).sval, tIzq);
 
                             Token tDer = TablaSimbolos.getToken(val_peek(0).sval);
-                            Nodo nDer = new NodoHoja(val_peek(0).sval, tIzq);
+                            Nodo nDer = new NodoHoja(val_peek(0).sval, tDer);
 
                             yyval.obj = controlarTipos(nIzq,val_peek(1).sval,nDer);
                           }
@@ -1378,7 +1378,7 @@ case 67:
                               Nodo nIzq = new NodoHoja(val_peek(2).sval, tIzq);
 
                               Token tDer = TablaSimbolos.getToken(val_peek(0).sval);
-                              Nodo nDer = new NodoHoja(val_peek(0).sval, tIzq);
+                              Nodo nDer = new NodoHoja(val_peek(0).sval, tDer);
 
                               yyval.obj = controlarTipos(nIzq,val_peek(1).sval,nDer);
                              }
@@ -1401,7 +1401,7 @@ case 71:
                          Nodo nIzq = new NodoHoja(val_peek(2).sval, tIzq);
 
                          Token tDer = TablaSimbolos.getToken(val_peek(0).sval);
-                         Nodo nDer = new NodoHoja(val_peek(0).sval, tIzq);
+                         Nodo nDer = new NodoHoja(val_peek(0).sval, tDer);
 
                          yyval.obj = controlarTipos(nIzq,val_peek(1).sval,nDer);
                         }
@@ -1412,7 +1412,7 @@ case 72:
                            Nodo nIzq = new NodoHoja(val_peek(2).sval, tIzq);
 
                            Token tDer = TablaSimbolos.getToken(val_peek(0).sval);
-                           Nodo nDer = new NodoHoja(val_peek(0).sval, tIzq);
+                           Nodo nDer = new NodoHoja(val_peek(0).sval, tDer);
 
                            yyval.obj = controlarTipos(nIzq,val_peek(1).sval,nDer);
                           }

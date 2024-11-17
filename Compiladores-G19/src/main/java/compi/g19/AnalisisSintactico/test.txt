@@ -1,5 +1,25 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 prog
 begin
     ULONGINT rr;
-    rr := 2+1;
-end           
+    rr := 8;
+    IF (rr > 4) THEN
+        rr := 2+1;
+    ELSE
+        rr := 2;
+    END_IF;
+end                                                

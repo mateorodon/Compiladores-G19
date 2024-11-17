@@ -1,10 +1,43 @@
 ----------ARBOL SINTACTICO -----------
 PROGRAMA
     Sentencia
-        Sentencia Declarativa
-        :=
-            rr:main
-            +
-                2
-                1
+        Sentencia
+            Sentencia Declarativa
+            :=
+                rr:main
+                8
+        If
+            >
+                rr:main
+                4
+            Cuerpo
+                Then
+                    :=
+                        rr:main
+                        +
+                            2
+                            1
+                Else
+                    :=
+                        rr:main
+                        2
 ----------ARBOL SINTACTICO FUNCIONES -----------
+----------ESTRUCTURAS RECONOCIDAS-----------
+Se reconocio declaracion de variable/s en la línea 18
+Se reconocio una asignacion en la línea 19
+Se reconocio una asignacion en la línea 21
+Se reconocio una asignacion en la línea 23
+Se reconocio un IF/ELSE en la línea 24
+Se reconocio el programa en la línea 25
+----------TABLA DE SIMBOLOS-----------
+Token{id=257, lexema=rr:main, linea=18, tipo=ulongint, valor = null}
+Token{id=257, lexema=rr, linea=21, tipo=null, valor = null}
+Token{id=262, lexema=1, linea=21, tipo=ulongint, valor = 1}
+Token{id=262, lexema=2, linea=21, tipo=ulongint, valor = 2}
+Token{id=262, lexema=4, linea=20, tipo=ulongint, valor = 4}
+Token{id=262, lexema=8, linea=19, tipo=ulongint, valor = 8}
+Token{id=257, lexema=prog, linea=16, tipo=null, valor = null}
+-----------ERRORES LEXICOS----------
+-----------ERRORES SINTACTICOS----------
+-----------ERRORES SEMANTICOS----------
+----------WARNINGS-----------

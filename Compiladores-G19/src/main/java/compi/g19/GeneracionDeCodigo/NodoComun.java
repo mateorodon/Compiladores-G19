@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class NodoComun extends Nodo{
+public class NodoComun extends Nodo {
 
     /*
 
@@ -22,26 +22,31 @@ public class NodoComun extends Nodo{
     private Nodo izq;
     private Nodo der; //Si tiene un solo hijo, der es null
 
-
     //ASSEMBLER
-    private String varLabel;
+    private String label;
     private String labelFin;
     private NodoHoja ultimoNodo;
     private String varAuxiliar;
+    private static final String ENTERO = "ulongint";
+    private static final String FLOTANTE = "single";
 
-    public NodoComun(String nombre){
+    public static String getLabel() {
+        return Nodo.getLabel();
+    }
+
+    public NodoComun(String nombre) {
         super(nombre, new Token());
         izq = null;
         der = null;
     }
 
-    public NodoComun(String nombre, Nodo nodoIzq){
+    public NodoComun(String nombre, Nodo nodoIzq) {
         super(nombre, new Token());
         izq = nodoIzq;
         der = null;
     }
 
-    public NodoComun(String nombre, Nodo nodoIzq, Nodo nodoDer){
+    public NodoComun(String nombre, Nodo nodoIzq, Nodo nodoDer) {
         super(nombre, new Token());
         izq = nodoIzq;
         der = nodoDer;
@@ -61,15 +66,7 @@ public class NodoComun extends Nodo{
     /*
     CASOS A TRATAR EN ASSEMBLER:
     Sentencia
-    For
-    Encabezado For
     := (Asignacion)
-    Incremento
-    Asignacion e Incremento ?? no lo se
-    Condicion
-    Condiciones  ?? no lo se
-    Funcion (viene dado por el nopmbre mas ambito de la funcion)
-    Return
     +
     -
     *
@@ -80,6 +77,15 @@ public class NodoComun extends Nodo{
     =
     >
     <
+
+    For
+    Encabezado For
+    Incremento
+    Asignacion e Incremento ?? no lo se
+    Condicion
+    Condiciones  ?? no lo se
+    Funcion (viene dado por el nopmbre mas ambito de la funcion)
+    Return
     If
     Then
     Else
@@ -90,8 +96,12 @@ public class NodoComun extends Nodo{
     @Override
     public String getAssembler() {
         String salida = "";
-        switch(super.getNombre()) {
-
+        switch (super.getNombre()) {
+            case "PROGRAMA":
+                if (getIzq() != null) {
+                    salida = getIzq().getAssembler();
+                }
+                break;
             case "Sentencia":
                 if (getIzq() != null)
                     salida += getIzq().getAssembler();
@@ -100,12 +110,12 @@ public class NodoComun extends Nodo{
                 break;
             case ":=":
                 salida += getDer().getAssembler() + getIzq().getAssembler();
-                if(getIzq().getTipo().equals("ULONGINT")){
-                    salida+= "MOV EAX , " + getDer().getUltimoNodo().getLexema() + "\n";
-                    salida+= "MOV " + getIzq().getUltimoNodo().getLexema() + ", " + "EAX" + "\n";
-                }else {
-                    salida += "FLD " + getDer().getUltimoNodo().getLexema() + "\n";
-                    salida += "FST " + getIzq().getUltimoNodo().getLexema() + "\n";
+                if (getIzq().getTipo().equals(ENTERO)) {
+                    salida += "MOV EAX , " + getDer().getUltimoNodo().getNombre() + "\n";
+                    salida += "MOV " + getIzq().getUltimoNodo().getNombre() + ", " + "EAX" + "\n";
+                } else {
+                    salida += "FLD " + getDer().getUltimoNodo().getNombre() + "\n";
+                    salida += "FST " + getIzq().getUltimoNodo().getNombre() + "\n";
                 }
                 break;
             case "+":
@@ -116,204 +126,268 @@ public class NodoComun extends Nodo{
                 this.ultimoNodo.setTipo(this.getIzq().getTipo());
                 this.ultimoNodo.setUso("variableAuxiliar");
 
-                if(getIzq().getTipo().equals("ULONGINT")) {
-                    salida += "MOV EAX, " + getIzq().getUltimoNodo().getLexema() + "\n";
-                    salida += "ADD EAX, " + getDer().getUltimoNodo().getLexema() + "\n";
+                if (getIzq().getTipo().equals(ENTERO)) {
+                    salida += "MOV EAX, " + getIzq().getUltimoNodo().getNombre() + "\n";
+                    salida += "ADD EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
                     salida += "MOV " + varAuxiliar + ", EAX" + "\n";
-                }
-                else
-                {
-                    salida += "FLD " + getIzq().getUltimoNodo().getLexema() + "\n";
-                    salida += "FADD " + getDer().getUltimoNodo().getLexema() + "\n";
+                } else {
+                    salida += "FLD " + getIzq().getUltimoNodo().getNombre() + "\n";
+                    salida += "FADD " + getDer().getUltimoNodo().getNombre() + "\n";
                     salida += "JO errorSumaDouble\n";
-                    salida += "FST "+ varAuxiliar + "\n";
+                    salida += "FST " + varAuxiliar + "\n";
                 }
                 break;
             case "-":
-                salida += getDer().getAssembler() + getIzq().getAssembler();
+                if (getIzq() != null) {
+                    salida += getIzq().getAssembler();
+                }
+                if (getDer() != null) {
+                    salida += getDer().getAssembler();
+                }
                 varAuxiliar = Nodo.getVariableAuxiliar();
 
                 this.ultimoNodo = new NodoHoja(varAuxiliar);
                 this.ultimoNodo.setTipo(this.getIzq().getTipo());
                 this.ultimoNodo.setUso("variableAuxiliar");
 
-                if (getIzq().getTipo().equals("ULONGINT")) {
-                    salida += "MOV EAX, " + getIzq().getUltimoNodo().getLexema() + "\n";
-                    salida += "SUB EAX, " + getDer().getUltimoNodo().getLexema() + "\n";
+                if (getIzq().getTipo().equals(ENTERO)) {
+                    salida += "MOV EAX, " + getIzq().getUltimoNodo().getNombre() + "\n";
+                    salida += "SUB EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
                     salida += "JO errorRestaEnteros\n";
                     salida += "MOV " + varAuxiliar + ", EAX" + "\n";
 
-                } else
-                {
-                    salida += "FLD " + getIzq().getUltimoNodo().getLexema() + "\n";
-                    salida += "FSUB " + getDer().getUltimoNodo().getLexema() + "\n";
+                } else {
+                    salida += "FLD " + getIzq().getUltimoNodo().getNombre() + "\n";
+                    salida += "FSUB " + getDer().getUltimoNodo().getNombre() + "\n";
 
                     salida += "FST " + varAuxiliar + "\n";
                 }
                 break;
             case "*":
-                salida += getDer().getAssembler() + getIzq().getAssembler();
+                if (getIzq() != null) {
+                    salida += getIzq().getAssembler();
+                }
+                if (getDer() != null) {
+                    salida += getDer().getAssembler();
+                }
                 varAuxiliar = Nodo.getVariableAuxiliar();
 
                 this.ultimoNodo = new NodoHoja(varAuxiliar);
                 this.ultimoNodo.setTipo(this.getIzq().getTipo());
                 this.ultimoNodo.setUso("variableAuxiliar");
 
-                if (getIzq().getTipo().equals("ULONGINT")) {
-                    salida += "MOV EAX, " + getIzq().getUltimoNodo().getLexema() + "\n";
-                    salida += "IMUL EAX, " + getDer().getUltimoNodo().getLexema() + "\n";
+                if (getIzq().getTipo().equals(ENTERO)) {
+                    salida += "MOV EAX, " + getIzq().getUltimoNodo().getNombre() + "\n";
+                    salida += "IMUL EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
 
                     salida += "MOV " + varAuxiliar + ", EAX" + "\n";
 
                 } else {
-                    salida += "FLD " + getIzq().getUltimoNodo().getLexema() + "\n";
-                    salida += "FMUL " + getDer().getUltimoNodo().getLexema() + "\n";
+                    salida += "FLD " + getIzq().getUltimoNodo().getNombre() + "\n";
+                    salida += "FMUL " + getDer().getUltimoNodo().getNombre() + "\n";
                     salida += "FST " + varAuxiliar + "\n";
                 }
                 break;
             case "/":
-                salida += getDer().getAssembler() + getIzq().getAssembler();
+                if (getIzq() != null) {
+                    salida += getIzq().getAssembler();
+                }
+                if (getDer() != null) {
+                    salida += getDer().getAssembler();
+                }
                 varAuxiliar = Nodo.getVariableAuxiliar();
 
                 this.ultimoNodo = new NodoHoja(varAuxiliar);
                 this.ultimoNodo.setTipo(this.getIzq().getTipo());
                 this.ultimoNodo.setUso("variableAuxiliar");
 
-                if (getIzq().getTipo().equals("ULONGINT")) {
-                    salida += "CMP " + getDer().getUltimoNodo().getLexema() + ", 0\n";
+                if (getIzq().getTipo().equals(ENTERO)) {
+                    salida += "CMP " + getDer().getUltimoNodo().getNombre() + ", 0\n";
 
-                    salida += "MOV EAX, " + getIzq().getUltimoNodo().getLexema() + "\n";
-                    salida += "IDIV " + getDer().getUltimoNodo().getLexema() + "\n";
+                    salida += "MOV EAX, " + getIzq().getUltimoNodo().getNombre() + "\n";
+                    salida += "IDIV " + getDer().getUltimoNodo().getNombre() + "\n";
                     salida += "MOV " + varAuxiliar + ", EAX" + "\n";
 
                 } else {
-                    salida += "FLD " + getDer().getUltimoNodo().getLexema() + "\n";
-                    salida += "FSUB " + getDer().getUltimoNodo().getLexema() + "\n";
+                    salida += "FLD " + getDer().getUltimoNodo().getNombre() + "\n";
+                    salida += "FSUB " + getDer().getUltimoNodo().getNombre() + "\n";
                     salida += "FTST ";
 
-                    salida += "FLD " + getIzq().getUltimoNodo().getLexema() + "\n";
-                    salida += "FDIV " + getDer().getUltimoNodo().getLexema() + "\n";
+                    salida += "FLD " + getIzq().getUltimoNodo().getNombre() + "\n";
+                    salida += "FDIV " + getDer().getUltimoNodo().getNombre() + "\n";
                     salida += "FST " + varAuxiliar + "\n";
                 }
                 break;
             case "=":
-                salida += getDer().getAssembler() + getIzq().getAssembler();
+                if (getIzq() != null) {
+                    salida += getIzq().getAssembler();
+                }
+                if (getDer() != null) {
+                    salida += getDer().getAssembler();
+                }
                 varAuxiliar = Nodo.getVariableAuxiliar();
-                varLabel = pilaLabels.pop();
+                label = pilaLabels.pop();
 
                 this.ultimoNodo = new NodoHoja(varAuxiliar);
                 this.ultimoNodo.setTipo(this.getIzq().getTipo());
                 this.ultimoNodo.setUso("variableAuxiliar");
 
-                if (getIzq().getTipo().equals("ULONGINT")) {
-                    salida += "MOV EAX, " + getIzq().getUltimoNodo().getLexema() + "\n";
-                    salida += "CMP EAX, " + getDer().getUltimoNodo().getLexema() + "\n";
-                    salida += "JNE " + varLabel + "\n";
+                if (getIzq().getTipo().equals(ENTERO)) {
+                    salida += "MOV EAX, " + getIzq().getUltimoNodo().getNombre() + "\n";
+                    salida += "CMP EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
+                    salida += "JNE " + label + "\n";
                 } else {
-                    salida += "FLD " + getIzq().getUltimoNodo().getLexema() + "\n";
-                    salida += "FCOM " + getDer().getUltimoNodo().getLexema() + "\n";
-                    salida += "JNE " + varLabel + "\n";
+                    salida += "FLD " + getIzq().getUltimoNodo().getNombre() + "\n";
+                    salida += "FCOM " + getDer().getUltimoNodo().getNombre() + "\n";
+                    salida += "JNE " + label + "\n";
                 }
                 break;
 
             case "!=":
-                salida += getDer().getAssembler() + getIzq().getAssembler();
+                if (getIzq() != null) {
+                    salida += getIzq().getAssembler();
+                }
+                if (getDer() != null) {
+                    salida += getDer().getAssembler();
+                }
                 varAuxiliar = Nodo.getVariableAuxiliar();
-                varLabel = pilaLabels.pop();
+                label = pilaLabels.pop();
 
                 this.ultimoNodo = new NodoHoja(varAuxiliar);
                 this.ultimoNodo.setTipo(this.getIzq().getTipo());
                 this.ultimoNodo.setUso("variableAuxiliar");
 
-                if (getIzq().getTipo().equals("ULONGINT")) {
-                    salida += "MOV EAX, " + getIzq().getUltimoNodo().getLexema() + "\n";
-                    salida += "CMP EAX, " + getDer().getUltimoNodo().getLexema() + "\n";
-                    salida += "JE " + varLabel + "\n";
+                if (getIzq().getTipo().equals(ENTERO)) {
+                    salida += "MOV EAX, " + getIzq().getUltimoNodo().getNombre() + "\n";
+                    salida += "CMP EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
+                    salida += "JE " + label + "\n";
                 } else {
-                    salida += "FLD " + getIzq().getUltimoNodo().getLexema() + "\n";
-                    salida += "FCOM " + getDer().getUltimoNodo().getLexema() + "\n";
-                    salida += "JE " + varLabel + "\n";
+                    salida += "FLD " + getIzq().getUltimoNodo().getNombre() + "\n";
+                    salida += "FCOM " + getDer().getUltimoNodo().getNombre() + "\n";
+                    salida += "JE " + label + "\n";
                 }
                 break;
 
             case ">":
-                salida += getDer().getAssembler() + getIzq().getAssembler();
+                salida += getIzq().getAssembler() + getDer().getAssembler();
+
                 varAuxiliar = Nodo.getVariableAuxiliar();
-                varLabel = pilaLabels.pop();
+                label = pilaLabels.peek();
 
                 this.ultimoNodo = new NodoHoja(varAuxiliar);
                 this.ultimoNodo.setTipo(this.getIzq().getTipo());
                 this.ultimoNodo.setUso("variableAuxiliar");
 
-                if (getIzq().getTipo().equals("ULONGINT")) {
-                    salida += "MOV EAX, " + getIzq().getUltimoNodo().getLexema() + "\n";
-                    salida += "CMP EAX, " + getDer().getUltimoNodo().getLexema() + "\n";
-                    salida += "JLE " + varLabel + "\n";
+                if (getIzq().getTipo().equals(ENTERO)) {
+                    salida += "MOV EAX, " + getIzq().getUltimoNodo().getNombre() + "\n";
+                    salida += "CMP EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
+                    salida += "JLE " + label + "\n";
                 } else {
-                    salida += "FLD " + getIzq().getUltimoNodo().getLexema() + "\n";
-                    salida += "FCOM " + getDer().getUltimoNodo().getLexema() + "\n";
-                    salida += "JLE " + varLabel + "\n";
+                    salida += "FLD " + getIzq().getUltimoNodo().getNombre() + "\n";
+                    salida += "FCOM " + getDer().getUltimoNodo().getNombre() + "\n";
+                    salida += "JLE " + label + "\n";
                 }
                 break;
 
             case ">=":
-                salida += getDer().getAssembler() + getIzq().getAssembler();
+                if (getIzq() != null) {
+                    salida += getIzq().getAssembler();
+                }
+                if (getDer() != null) {
+                    salida += getDer().getAssembler();
+                }
                 varAuxiliar = Nodo.getVariableAuxiliar();
-                varLabel = pilaLabels.pop();
+                label = pilaLabels.pop();
 
                 this.ultimoNodo = new NodoHoja(varAuxiliar);
                 this.ultimoNodo.setTipo(this.getIzq().getTipo());
                 this.ultimoNodo.setUso("variableAuxiliar");
 
                 if (getIzq().getTipo().equals("ULONGINT")) {
-                    salida += "MOV EAX, " + getIzq().getUltimoNodo().getLexema() + "\n";
-                    salida += "CMP EAX, " + getDer().getUltimoNodo().getLexema() + "\n";
-                    salida += "JL " + varLabel + "\n";
+                    salida += "MOV EAX, " + getIzq().getUltimoNodo().getNombre() + "\n";
+                    salida += "CMP EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
+                    salida += "JL " + label + "\n";
                 } else {
-                    salida += "FLD " + getIzq().getUltimoNodo().getLexema() + "\n";
-                    salida += "FCOM " + getDer().getUltimoNodo().getLexema() + "\n";
-                    salida += "JL " + varLabel + "\n";
+                    salida += "FLD " + getIzq().getUltimoNodo().getNombre() + "\n";
+                    salida += "FCOM " + getDer().getUltimoNodo().getNombre() + "\n";
+                    salida += "JL " + label + "\n";
                 }
                 break;
 
             case "<":
-                salida += getDer().getAssembler() + getIzq().getAssembler();
+                if (getIzq() != null) {
+                    salida += getIzq().getAssembler();
+                }
+                if (getDer() != null) {
+                    salida += getDer().getAssembler();
+                }
                 varAuxiliar = Nodo.getVariableAuxiliar();
-                varLabel = pilaLabels.pop();
+                label = pilaLabels.pop();
 
                 this.ultimoNodo = new NodoHoja(varAuxiliar);
                 this.ultimoNodo.setTipo(this.getIzq().getTipo());
                 this.ultimoNodo.setUso("variableAuxiliar");
 
                 if (getIzq().getTipo().equals("ULONGINT")) {
-                    salida += "MOV EAX, " + getIzq().getUltimoNodo().getLexema() + "\n";
-                    salida += "CMP EAX, " + getDer().getUltimoNodo().getLexema() + "\n";
-                    salida += "JGE " + varLabel + "\n";
+                    salida += "MOV EAX, " + getIzq().getUltimoNodo().getNombre() + "\n";
+                    salida += "CMP EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
+                    salida += "JGE " + label + "\n";
                 } else {
-                    salida += "FLD " + getIzq().getUltimoNodo().getLexema() + "\n";
-                    salida += "FCOM " + getDer().getUltimoNodo().getLexema() + "\n";
-                    salida += "JGE " + varLabel + "\n";
+                    salida += "FLD " + getIzq().getUltimoNodo().getNombre() + "\n";
+                    salida += "FCOM " + getDer().getUltimoNodo().getNombre() + "\n";
+                    salida += "JGE " + label + "\n";
                 }
                 break;
 
             case "<=":
-                salida += getDer().getAssembler() + getIzq().getAssembler();
+                if (getIzq() != null) {
+                    salida += getIzq().getAssembler();
+                }
+                if (getDer() != null) {
+                    salida += getDer().getAssembler();
+                }
                 varAuxiliar = Nodo.getVariableAuxiliar();
-                varLabel = pilaLabels.pop();
+                label = pilaLabels.peek();
 
                 this.ultimoNodo = new NodoHoja(varAuxiliar);
                 this.ultimoNodo.setTipo(this.getIzq().getTipo());
                 this.ultimoNodo.setUso("variableAuxiliar");
 
                 if (getIzq().getTipo().equals("ULONGINT")) {
-                    salida += "MOV EAX, " + getIzq().getUltimoNodo().getLexema() + "\n";
-                    salida += "CMP EAX, " + getDer().getUltimoNodo().getLexema() + "\n";
-                    salida += "JG " + varLabel + "\n";
+                    salida += "MOV EAX, " + getIzq().getUltimoNodo().getNombre() + "\n";
+                    salida += "CMP EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
+                    salida += "JG " + label + "\n";
                 } else {
-                    salida += "FLD " + getIzq().getUltimoNodo().getLexema() + "\n";
-                    salida += "FCOM " + getDer().getUltimoNodo().getLexema() + "\n";
-                    salida += "JG " + varLabel + "\n";
+                    salida += "FLD " + getIzq().getUltimoNodo().getNombre() + "\n";
+                    salida += "FCOM " + getDer().getUltimoNodo().getNombre() + "\n";
+                    salida += "JG " + label + "\n";
                 }
+                break;
+            case "If":
+                label = getLabel();
+                pilaLabels.push(label);
+                salida += getIzq().getAssembler() + getDer().getAssembler()  +  "\n";
+                break;
+            case "Then":
+            case "Else":
+                if (getIzq() != null) {
+                    salida += getIzq().getAssembler();
+                }
+                break;
+
+            case "Cuerpo":
+
+                salida += getIzq().getAssembler();
+
+                //Si es != null es porque tiene Else.
+                if (getDer() != null) {
+                    labelFin = getLabel();
+                    salida += "JMP " + labelFin + "\n";
+                    salida += pilaLabels.pop() + ":\n";
+                    pilaLabels.push(labelFin);
+                    salida += getDer().getAssembler() + pilaLabels.peek() + ":\n";
+                }
+
                 break;
         }
         return salida;

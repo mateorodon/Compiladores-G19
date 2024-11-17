@@ -195,7 +195,7 @@ asignacion:
                                     agregarErrorSemantico("La expresion en la parte izquierda de la asignación debe ser una variable. Se encontró un elemento no asignable (" + t.getUso() + ")" );
                                     asignacion = new NodoHoja("error semantico");
                                   }else {
-                                    NodoHoja id = new NodoHoja($1.sval +":"+ambitoVar);
+                                    NodoHoja id = new NodoHoja($1.sval +":"+ambitoVar, t);
                                     asignacion= new NodoComun($2.sval ,id, (Nodo)$3.obj);
                                   }
                               }
@@ -222,8 +222,8 @@ tipo:
     ;
 
 tipo_base:
-    ULONGINT {tipoActual = $1.sval;}
-    | SINGLE {tipoActual = $1.sval;}
+    ULONGINT {tipoActual = ENTERO;}
+    | SINGLE {tipoActual = FLOTANTE;}
     ;
 
 list_variables:
@@ -345,7 +345,7 @@ expresion:
                             Nodo nIzq = new NodoHoja($1.sval, tIzq);
 
                             Token tDer = TablaSimbolos.getToken($3.sval);
-                            Nodo nDer = new NodoHoja($3.sval, tIzq);
+                            Nodo nDer = new NodoHoja($3.sval, tDer);
 
                             $$.obj = controlarTipos(nIzq,$2.sval,nDer);
                           }
@@ -354,7 +354,7 @@ expresion:
                               Nodo nIzq = new NodoHoja($1.sval, tIzq);
 
                               Token tDer = TablaSimbolos.getToken($3.sval);
-                              Nodo nDer = new NodoHoja($3.sval, tIzq);
+                              Nodo nDer = new NodoHoja($3.sval, tDer);
 
                               $$.obj = controlarTipos(nIzq,$2.sval,nDer);
                              }
@@ -368,7 +368,7 @@ termino:
                          Nodo nIzq = new NodoHoja($1.sval, tIzq);
 
                          Token tDer = TablaSimbolos.getToken($3.sval);
-                         Nodo nDer = new NodoHoja($3.sval, tIzq);
+                         Nodo nDer = new NodoHoja($3.sval, tDer);
 
                          $$.obj = controlarTipos(nIzq,$2.sval,nDer);
                         }
@@ -376,7 +376,7 @@ termino:
                            Nodo nIzq = new NodoHoja($1.sval, tIzq);
 
                            Token tDer = TablaSimbolos.getToken($3.sval);
-                           Nodo nDer = new NodoHoja($3.sval, tIzq);
+                           Nodo nDer = new NodoHoja($3.sval, tDer);
 
                            $$.obj = controlarTipos(nIzq,$2.sval,nDer);
                           }
