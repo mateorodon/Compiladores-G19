@@ -57,6 +57,12 @@ public class NodoComun extends Nodo {
         der = nodoDer;
     }
 
+    public NodoComun(NodoComun nodo, Nodo nodoIzq, Nodo nodoDer) {
+        super(nodo.getNombre(), nodo.getToken());
+        izq = nodoIzq;
+        der = nodoDer;
+    }
+
     @Override
     public void recorrerArbol(int nivel) {
         imprimirNodo(nombre, nivel);
@@ -485,18 +491,6 @@ public class NodoComun extends Nodo {
                 pilaVariablesAuxiliares.pop();
                 salida += "JMP errorFun";
                 return salida;
-
-            //Invocacion a funcion
-            default:
-                if (this.getDer() != null) {
-                    salida += salida + this.getDer().getAssembler();
-                }
-                //variable = "@aux@" + this.getDer().getNombre();
-                String varAux = getVariableAuxiliar();
-                this.ultimoNodo = new NodoHoja(varAux);
-                this.ultimoNodo.setUso("variableAuxiliar");
-                salida += salida + "call " + this.getDer().getLexema() + "\n";
-                break;
 
 
         }
