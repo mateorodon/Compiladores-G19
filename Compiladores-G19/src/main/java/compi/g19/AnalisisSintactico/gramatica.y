@@ -257,7 +257,7 @@ encabezado_funcion:
                         variableYaDeclarada(idFuncion);
                      }
                      NodoComun encabezado = new NodoComun(idFuncion + ":" + ambito);
-                     encabezado.setTipo(tipoActual);
+                     encabezado.setToken(t);
                      $$.obj = encabezado;
                  }
                  else {
@@ -311,10 +311,10 @@ parametro:
                    t.setUso("parametro");
                    t.setTipo(tipoActual);
                    TablaSimbolos.removeToken($2.sval);
-                   TablaSimbolos.addSimbolo(String.valueOf(t.getLexema()),t);
+                   TablaSimbolos.addSimbolo(t.getLexema().toString(),t);
                }
-              Nodo param = new NodoHoja($2.sval, t);
-              param.setTipo($1.sval);
+              Nodo param = new NodoHoja(t.getLexema().toString(), t);
+              param.setTipo(tipoActual);
               $$.obj = param;
             }
     | ID {yyerror("El parametro debe tener su tipo");}
