@@ -18,6 +18,7 @@ public abstract class Nodo extends ParserVal {
     protected static int numeroPrint = 0;
     public static String data = "";
     protected static Stack<String> pilaLabels = new Stack();
+    protected static Stack<String> pilaVariablesAuxiliares = new Stack<String>();
 
     static int numeroVariableAuxiliar=0;
 

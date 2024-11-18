@@ -1075,7 +1075,7 @@ case 26:
                                                                            idAsignacion = new NodoHoja("error semantico"); /*??*/
                                                                        }
                                                                        else {
-                                                                           idAsignacion = new NodoHoja(val_peek(7).sval + ":" + ambitoVar);
+                                                                           idAsignacion = new NodoHoja(val_peek(7).sval + ":" + ambitoVar, t);
                                                                        }
                                                                    }
 

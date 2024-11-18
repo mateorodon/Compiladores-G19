@@ -4,6 +4,8 @@ import compi.g19.AnalisisLexico.Token;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Stack;
+
 @Getter
 @Setter
 public class NodoComun extends Nodo {
@@ -29,6 +31,9 @@ public class NodoComun extends Nodo {
     private String varAuxiliar;
     private static final String ENTERO = "ulongint";
     private static final String FLOTANTE = "single";
+    private static Stack<String> varFor = new Stack<>();
+    private static boolean inFor;
+    private static String codigoIncremento = "";
 
     public static String getLabel() {
         return Nodo.getLabel();
@@ -77,6 +82,14 @@ public class NodoComun extends Nodo {
     =
     >
     <
+    If
+    Then
+    Else
+    Cuerpo
+    Return
+    Outf
+
+
 
     For
     Encabezado For
@@ -85,12 +98,6 @@ public class NodoComun extends Nodo {
     Condicion
     Condiciones  ?? no lo se
     Funcion (viene dado por el nopmbre mas ambito de la funcion)
-    Return
-    If
-    Then
-    Else
-    Cuerpo
-    Outf
      */
 
     @Override
@@ -109,6 +116,8 @@ public class NodoComun extends Nodo {
                     salida += getDer().getAssembler();
                 break;
             case ":=":
+                if (inFor)
+                    varFor.add(getIzq().getNombre());
                 salida += getDer().getAssembler() + getIzq().getAssembler();
                 if (getIzq().getTipo().equals(ENTERO)) {
                     salida += "MOV EAX , " + getDer().getUltimoNodo().getNombre() + "\n";
@@ -303,7 +312,7 @@ public class NodoComun extends Nodo {
                 this.ultimoNodo.setTipo(this.getIzq().getTipo());
                 this.ultimoNodo.setUso("variableAuxiliar");
 
-                if (getIzq().getTipo().equals("ULONGINT")) {
+                if (getIzq().getTipo().equals(ENTERO)) {
                     salida += "MOV EAX, " + getIzq().getUltimoNodo().getNombre() + "\n";
                     salida += "CMP EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
                     salida += "JL " + label + "\n";
@@ -328,7 +337,7 @@ public class NodoComun extends Nodo {
                 this.ultimoNodo.setTipo(this.getIzq().getTipo());
                 this.ultimoNodo.setUso("variableAuxiliar");
 
-                if (getIzq().getTipo().equals("ULONGINT")) {
+                if (getIzq().getTipo().equals(ENTERO)) {
                     salida += "MOV EAX, " + getIzq().getUltimoNodo().getNombre() + "\n";
                     salida += "CMP EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
                     salida += "JGE " + label + "\n";
@@ -347,13 +356,13 @@ public class NodoComun extends Nodo {
                     salida += getDer().getAssembler();
                 }
                 varAuxiliar = Nodo.getVariableAuxiliar();
-                label = pilaLabels.peek();
+                label = pilaLabels.pop();
 
                 this.ultimoNodo = new NodoHoja(varAuxiliar);
                 this.ultimoNodo.setTipo(this.getIzq().getTipo());
                 this.ultimoNodo.setUso("variableAuxiliar");
 
-                if (getIzq().getTipo().equals("ULONGINT")) {
+                if (getIzq().getTipo().equals(ENTERO)) {
                     salida += "MOV EAX, " + getIzq().getUltimoNodo().getNombre() + "\n";
                     salida += "CMP EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
                     salida += "JG " + label + "\n";
@@ -366,7 +375,7 @@ public class NodoComun extends Nodo {
             case "If":
                 label = getLabel();
                 pilaLabels.push(label);
-                salida += getIzq().getAssembler() + getDer().getAssembler()  +  "\n";
+                salida += getIzq().getAssembler() + getDer().getAssembler() + "\n";
                 break;
             case "Then":
             case "Else":
@@ -384,12 +393,118 @@ public class NodoComun extends Nodo {
                     labelFin = getLabel();
                     salida += "JMP " + labelFin + "\n";
                     salida += pilaLabels.pop() + ":\n";
-                    pilaLabels.push(labelFin);
-                    salida += getDer().getAssembler() + pilaLabels.peek() + ":\n";
+                    salida += getDer().getAssembler() + labelFin + ":\n";
                 }
 
                 break;
+            case "Return":
+                salida += getIzq().getAssembler();
+                if (getIzq().getTipo().equals(ENTERO)) {
+                    salida += "MOV EAX, " + getIzq().getUltimoNodo().getNombre() + "\n";
+                    salida += "MOV " + getVariableAuxiliar() + ", EAX" + "\n";
+                } else {
+                    salida += "FLD " + getIzq().getUltimoNodo().getNombre() + "\n";
+                    salida += "FST " + pilaVariablesAuxiliares.pop() + "\n";
+                }
+                salida += "ret \n";
+                break;
+            case "Outf":
+                String variablePrint = getVariablePrint();
+                data = variablePrint + " db \"" + this.getIzq().getUltimoNodo().getNombre() + "\", 0 \n";
+                salida += salida + "invoke MessageBox, NULL, addr " + variablePrint + ", addr printMensaje, MB_OK\n";
+                break;
+            case "Asignacion e Incremento":
+            case "Condiciones":
+                if (getIzq() != null) {
+                    salida += getIzq().getAssembler();
+                }
+                if (getDer() != null) {
+                    salida += getDer().getAssembler();
+                }
+                break;
+            case "For":
+                label = getLabel();
+                pilaLabels.push(label);
+                if (getIzq() != null) {
+                    salida += getIzq().getAssembler();
+                }
+                String end_loop = getLabel();
+                salida += "JMP "+ end_loop +":"+"\n";
+                salida += label +":"+"\n";
+                if (getDer() != null) {
+                    salida += getDer().getAssembler();
+                }
+                labelFin = getLabel();
+                pilaLabels.push(labelFin);
+                salida += codigoIncremento;
+                salida +="JMP " + label + "\n";
+                salida += end_loop+ ":" + "\n";
+
+                break;
+            case "Encabezado For":
+                if (getIzq() != null) {
+                    inFor = true;
+                    salida += getIzq().getAssembler();
+                    inFor = false;
+                }
+                if (getDer() != null) {
+                    salida += getDer().getAssembler();
+                }
+
+                break;
+
+            case "Incremento":
+                varAuxiliar = Nodo.getVariableAuxiliar();
+
+                this.ultimoNodo = new NodoHoja(varAuxiliar);
+                this.ultimoNodo.setTipo(this.getIzq().getTipo());
+                this.ultimoNodo.setUso("variableAuxiliar");
+
+                String var = varFor.pop();
+
+                if (getIzq().getNombre().equals("DOWN")) {
+                    codigoIncremento += "MOV EAX, " + var + "\n";
+                    codigoIncremento += "SUB EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
+                    codigoIncremento += "JO errorRestaEnteros\n";
+                    codigoIncremento += "MOV " + varAuxiliar + ", EAX" + "\n";
+                } else {
+                    codigoIncremento += "MOV EAX, " + var + "\n";
+                    codigoIncremento += "ADD EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
+                    codigoIncremento += "MOV " + varAuxiliar + ", EAX" + "\n";
+                }
+
+                break;
+
+            case "Funcion":
+                NodoHoja n = (new NodoHoja("@aux@" + getIzq().getNombre()));
+                n.setTipo(getIzq().getTipo());
+                n.setUso("variableAuxiliar");
+                pilaVariablesAuxiliares.push("@aux@" + getIzq().getNombre());
+                salida += getIzq().getNombre() + ":\n";
+                salida += getIzq().getAssembler();
+                pilaVariablesAuxiliares.pop();
+                salida += "JMP errorFun";
+                return salida;
+
+            //Invocacion a funcion
+            default:
+                if (this.getDer() != null) {
+                    salida += salida + this.getDer().getAssembler();
+                }
+                //variable = "@aux@" + this.getDer().getNombre();
+                String varAux = getVariableAuxiliar();
+                this.ultimoNodo = new NodoHoja(varAux);
+                this.ultimoNodo.setUso("variableAuxiliar");
+                salida += salida + "call " + this.getDer().getLexema() + "\n";
+                break;
+
+
         }
         return salida;
     }
+
+    /*
+    Incremento
+    Funcion (viene dado por el nopmbre mas ambito de la funcion)
+     */
 }

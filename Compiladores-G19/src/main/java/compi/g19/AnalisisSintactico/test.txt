@@ -1,18 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 prog
 begin
     ULONGINT rr;
@@ -22,4 +7,13 @@ begin
     ELSE
         rr := 2;
     END_IF;
-end                                                
+    OUTF ({hola});
+
+    ULONGINT m;
+    FOR (m := 6 ; m<5 ; UP 1)
+        BEGIN
+            m := 2;
+        END;
+
+    
+end                  

@@ -102,7 +102,7 @@ encabezado_for1:
                                                                            idAsignacion = new NodoHoja("error semantico"); //??
                                                                        }
                                                                        else {
-                                                                           idAsignacion = new NodoHoja($1.sval + ":" + ambitoVar);
+                                                                           idAsignacion = new NodoHoja($1.sval + ":" + ambitoVar, t);
                                                                        }
                                                                    }
 

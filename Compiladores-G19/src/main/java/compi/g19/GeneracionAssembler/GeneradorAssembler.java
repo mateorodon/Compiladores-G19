@@ -40,15 +40,12 @@ public class GeneradorAssembler {
         this.codigoArbol="";
         this.arbol=parser.getRaiz();
 
-
-
         for (Nodo a : Parser.getFuncionesDeclaradas()) {
             codigoFunciones += a.getAssembler()+"\n";
         }
         codigoArbol +=this.arbol.getAssembler();
         generarCode();
         generarData();
-
     }
 
 

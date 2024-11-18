@@ -18,8 +18,11 @@ printMensaje db "Print", 0
 _rr:main db ?
 _1 db 1
 _2 db 2
+_m:main db ?
 _4 db 4
+_5 db 5
 _8 db 8
+@print1 db "hola", 0 
 
 .code
 invoke MessageBox, NULL, addr AutoinvocacionFunciones, addr error, MB_OK 
@@ -45,5 +48,20 @@ MOV EAX , 2
 MOV rr:main, EAX
 label2:
 
+invoke MessageBox, NULL, addr @print1, addr printMensaje, MB_OK
+MOV EAX , 6
+MOV m:main, EAX
+MOV EAX, m:main
+CMP EAX, 5
+JGE label3
+JMP label4:
+label3:
+MOV EAX , 2
+MOV m:main, EAX
+MOV EAX, m:main
+ADD EAX, 1
+MOV @aux3, EAX
+JMP label3
+label4:
 invoke ExitProcess, 0 
 end main
