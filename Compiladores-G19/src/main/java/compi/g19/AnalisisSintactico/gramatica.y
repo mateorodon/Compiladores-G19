@@ -197,7 +197,7 @@ asignacion:
                                     agregarErrorSemantico("La expresion en la parte izquierda de la asignación debe ser una variable. Se encontró un elemento no asignable (" + t.getUso() + ")" );
                                     asignacion = new NodoHoja("error semantico");
                                   }else {
-                                    NodoHoja id = new NodoHoja($1.sval +":"+ambitoVar);
+                                    NodoHoja id = new NodoHoja($1.sval +":"+ambitoVar, t);
                                     asignacion= new NodoComun($2.sval ,id, (Nodo)$3.obj);
                                   }
                               }
@@ -255,6 +255,7 @@ encabezado_funcion:
                     variableYaDeclarada(idFuncion);
                  }
                  NodoComun encabezado = new NodoComun(idFuncion + ":" + ambito);
+                 encabezado.setUso("funcion");
                  encabezado.setTipo(tipoActual);
                  addAmbito(idFuncion);
                  $$.obj = encabezado;

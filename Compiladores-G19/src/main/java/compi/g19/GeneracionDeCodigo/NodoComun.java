@@ -24,7 +24,6 @@ public class NodoComun extends Nodo {
     private Nodo izq;
     private Nodo der; //Si tiene un solo hijo, der es null
 
-    //ASSEMBLER
     private String label;
     private String labelFin;
     private NodoHoja ultimoNodo;
@@ -51,6 +50,12 @@ public class NodoComun extends Nodo {
         der = null;
     }
 
+    public NodoComun(String nombre, Token t) {
+        super(nombre, t);
+        izq = null;
+        der = null;
+    }
+
     public NodoComun(String nombre, Nodo nodoIzq, Nodo nodoDer) {
         super(nombre, new Token());
         izq = nodoIzq;
@@ -67,38 +72,6 @@ public class NodoComun extends Nodo {
             der.recorrerArbol(nivel + 1);
         }
     }
-
-    /*
-    CASOS A TRATAR EN ASSEMBLER:
-    Sentencia
-    := (Asignacion)
-    +
-    -
-    *
-    /
-    >=
-    <=
-    !=
-    =
-    >
-    <
-    If
-    Then
-    Else
-    Cuerpo
-    Return
-    Outf
-
-
-
-    For
-    Encabezado For
-    Incremento
-    Asignacion e Incremento ?? no lo se
-    Condicion
-    Condiciones  ?? no lo se
-    Funcion (viene dado por el nopmbre mas ambito de la funcion)
-     */
 
     @Override
     public String getAssembler() {
@@ -429,16 +402,16 @@ public class NodoComun extends Nodo {
                     salida += getIzq().getAssembler();
                 }
                 String end_loop = getLabel();
-                salida += "JMP "+ end_loop +":"+"\n";
-                salida += label +":"+"\n";
+                salida += "JMP " + end_loop + ":" + "\n";
+                salida += label + ":" + "\n";
                 if (getDer() != null) {
                     salida += getDer().getAssembler();
                 }
                 labelFin = getLabel();
                 pilaLabels.push(labelFin);
                 salida += codigoIncremento;
-                salida +="JMP " + label + "\n";
-                salida += end_loop+ ":" + "\n";
+                salida += "JMP " + label + "\n";
+                salida += end_loop + ":" + "\n";
 
                 break;
             case "Encabezado For":
@@ -475,30 +448,29 @@ public class NodoComun extends Nodo {
 
                 break;
 
-            case "Funcion":
-                NodoHoja n = (new NodoHoja("@aux@" + getIzq().getNombre()));
-                n.setTipo(getIzq().getTipo());
-                n.setUso("variableAuxiliar");
-                pilaVariablesAuxiliares.push("@aux@" + getIzq().getNombre());
-                salida += getIzq().getNombre() + ":\n";
-                salida += getIzq().getAssembler();
-                pilaVariablesAuxiliares.pop();
-                salida += "JMP errorFun";
-                return salida;
-
-            //Invocacion a funcion
+            //Declaracion o invocacion a funcion
             default:
-                if (this.getDer() != null) {
-                    salida += salida + this.getDer().getAssembler();
+                String uso = this.getUso();
+                if (uso.equals("funcion")) {
+                    NodoHoja n = (new NodoHoja("@aux@" + getIzq().getNombre()));
+                    n.setTipo(getIzq().getTipo());
+                    n.setUso("variableAuxiliar");
+                    pilaVariablesAuxiliares.push("@aux@" + getIzq().getNombre());
+                    salida += getIzq().getNombre() + ":\n";
+                    salida += getIzq().getAssembler();
+                    pilaVariablesAuxiliares.pop();
+                    salida += "JMP errorFun";
+                } else if (getUso().equals("llamado")){
+                    if (getIzq() != null) {
+                        salida += salida + getIzq().getAssembler();
+                    }
+                    //variable = "@aux@" + this.getDer().getNombre();
+                    String varAux = getVariableAuxiliar();
+                    this.ultimoNodo = new NodoHoja(varAux);
+                    this.ultimoNodo.setUso("variableAuxiliar");
+                    salida += salida + "call " + this.getIzq().getNombre() + "\n";
                 }
-                //variable = "@aux@" + this.getDer().getNombre();
-                String varAux = getVariableAuxiliar();
-                this.ultimoNodo = new NodoHoja(varAux);
-                this.ultimoNodo.setUso("variableAuxiliar");
-                salida += salida + "call " + this.getDer().getLexema() + "\n";
                 break;
-
-
         }
         return salida;
     }

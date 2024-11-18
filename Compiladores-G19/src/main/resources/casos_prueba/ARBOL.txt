@@ -5,14 +5,13 @@ begin
     single FUN rr(ulongint m)
     begin
         IF (m < 3) THEN
-            x := 8 + m;
+            x := 8 + 9;
         ELSE
             OUTF({hola});
         END_IF;
         ret(m);
     end;
     rr(j);
-
 
     FOR (x := 6 ; x<5 ; UP 1)
     BEGIN

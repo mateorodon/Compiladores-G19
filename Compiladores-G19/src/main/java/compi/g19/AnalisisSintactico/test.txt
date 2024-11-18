@@ -1,19 +1,10 @@
 prog
 begin
-    ULONGINT rr;
-    rr := 8;
-    IF (rr > 4) THEN
-        rr := 2+1;
-    ELSE
-        rr := 2;
-    END_IF;
-    OUTF ({hola});
-
-    ULONGINT m;
-    FOR (m := 6 ; m<5 ; UP 1)
-        BEGIN
-            m := 2;
-        END;
-
-    
-end                  
+    ulongint rr;
+    rr := 2 + 1;
+    single FUN p(ulongint m)
+    begin
+       m := 2;
+       ret(m);
+    end;
+end         
