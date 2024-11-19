@@ -1,16 +1,12 @@
 PROG_base
 BEGIN
     ULONGINT rr;
-    ulongint m;
-    m := 10;
-    rr := 5;
-    rr := 5 + m;
-    OUTF(m);
-    OUTF(rr);
-    SINGLE FUN f1(ULONGINT j)
-    BEGIN
-        j := 2 + 1;
-        RET(j);
-    END;
-    rr := f1(m);
-END                       
+    rr := 2;
+    TYPEDEF TRIPLE <ULONGINT> w;
+    w[2] := rr;
+    if ((rr, 2, 3) > (1,1,2)) then
+        OUTF(rr);
+    else
+        rr := 2;
+    end_if;
+END                                                            

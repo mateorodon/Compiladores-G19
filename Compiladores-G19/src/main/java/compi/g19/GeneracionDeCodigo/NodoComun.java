@@ -207,21 +207,23 @@ public class NodoComun extends Nodo {
                 if (getDer() != null) {
                     salida += getDer().getAssembler();
                 }
-                varAuxiliar = Nodo.getVariableAuxiliar();
-                label = pilaLabels.pop();
+                if (!(getIzq().getNombre().contains("=") || getDer().getNombre().contains("="))) {
+                    varAuxiliar = Nodo.getVariableAuxiliar();
+                    label = pilaLabels.pop();
 
-                this.ultimoNodo = new NodoHoja(varAuxiliar);
-                this.ultimoNodo.setTipo(this.getIzq().getTipo());
-                this.ultimoNodo.setUso("variableAuxiliar");
+                    this.ultimoNodo = new NodoHoja(varAuxiliar);
+                    this.ultimoNodo.setTipo(this.getIzq().getTipo());
+                    this.ultimoNodo.setUso("variableAuxiliar");
 
-                if (getIzq().getTipo().equals(ENTERO)) {
-                    salida += "MOV EAX, " + getIzq().getUltimoNodo().getNombre() + "\n";
-                    salida += "CMP EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
-                    salida += "JNE " + label + "\n";
-                } else {
-                    salida += "FLD " + getIzq().getUltimoNodo().getNombre() + "\n";
-                    salida += "FCOM " + getDer().getUltimoNodo().getNombre() + "\n";
-                    salida += "JNE " + label + "\n";
+                    if (getIzq().getTipo().equals(ENTERO)) {
+                        salida += "MOV EAX, " + getIzq().getUltimoNodo().getNombre() + "\n";
+                        salida += "CMP EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
+                        salida += "JNE " + label + "\n";
+                    } else {
+                        salida += "FLD " + getIzq().getUltimoNodo().getNombre() + "\n";
+                        salida += "FCOM " + getDer().getUltimoNodo().getNombre() + "\n";
+                        salida += "JNE " + label + "\n";
+                    }
                 }
                 break;
 
@@ -232,42 +234,46 @@ public class NodoComun extends Nodo {
                 if (getDer() != null) {
                     salida += getDer().getAssembler();
                 }
-                varAuxiliar = Nodo.getVariableAuxiliar();
-                label = pilaLabels.pop();
+                if (!(getIzq().getNombre().contains("!=") || getDer().getNombre().contains("!="))) {
+                    varAuxiliar = Nodo.getVariableAuxiliar();
+                    label = pilaLabels.pop();
 
-                this.ultimoNodo = new NodoHoja(varAuxiliar);
-                this.ultimoNodo.setTipo(this.getIzq().getTipo());
-                this.ultimoNodo.setUso("variableAuxiliar");
+                    this.ultimoNodo = new NodoHoja(varAuxiliar);
+                    this.ultimoNodo.setTipo(this.getIzq().getTipo());
+                    this.ultimoNodo.setUso("variableAuxiliar");
 
-                if (getIzq().getTipo().equals(ENTERO)) {
-                    salida += "MOV EAX, " + getIzq().getUltimoNodo().getNombre() + "\n";
-                    salida += "CMP EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
-                    salida += "JE " + label + "\n";
-                } else {
-                    salida += "FLD " + getIzq().getUltimoNodo().getNombre() + "\n";
-                    salida += "FCOM " + getDer().getUltimoNodo().getNombre() + "\n";
-                    salida += "JE " + label + "\n";
+                    if (getIzq().getTipo().equals(ENTERO)) {
+                        salida += "MOV EAX, " + getIzq().getUltimoNodo().getNombre() + "\n";
+                        salida += "CMP EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
+                        salida += "JE " + label + "\n";
+                    } else {
+                        salida += "FLD " + getIzq().getUltimoNodo().getNombre() + "\n";
+                        salida += "FCOM " + getDer().getUltimoNodo().getNombre() + "\n";
+                        salida += "JE " + label + "\n";
+                    }
                 }
                 break;
 
             case ">":
-                salida += getIzq().getAssembler() + getDer().getAssembler();
+                    salida += getIzq().getAssembler() + getDer().getAssembler();
+                if (!(getIzq().getNombre().contains(">") || getDer().getNombre().contains(">"))){
 
-                varAuxiliar = Nodo.getVariableAuxiliar();
-                label = pilaLabels.peek();
+                    varAuxiliar = Nodo.getVariableAuxiliar();
+                    label = pilaLabels.peek();
 
-                this.ultimoNodo = new NodoHoja(varAuxiliar);
-                this.ultimoNodo.setTipo(this.getIzq().getTipo());
-                this.ultimoNodo.setUso("variableAuxiliar");
+                    this.ultimoNodo = new NodoHoja(varAuxiliar);
+                    this.ultimoNodo.setTipo(this.getIzq().getTipo());
+                    this.ultimoNodo.setUso("variableAuxiliar");
 
-                if (getIzq().getTipo().equals(ENTERO)) {
-                    salida += "MOV EAX, " + getIzq().getUltimoNodo().getNombre() + "\n";
-                    salida += "CMP EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
-                    salida += "JLE " + label + "\n";
-                } else {
-                    salida += "FLD " + getIzq().getUltimoNodo().getNombre() + "\n";
-                    salida += "FCOM " + getDer().getUltimoNodo().getNombre() + "\n";
-                    salida += "JLE " + label + "\n";
+                    if (getIzq().getTipo().equals(ENTERO)) {
+                        salida += "MOV EAX, " + getIzq().getUltimoNodo().getNombre() + "\n";
+                        salida += "CMP EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
+                        salida += "JLE " + label + "\n";
+                    } else {
+                        salida += "FLD " + getIzq().getUltimoNodo().getNombre() + "\n";
+                        salida += "FCOM " + getDer().getUltimoNodo().getNombre() + "\n";
+                        salida += "JLE " + label + "\n";
+                    }
                 }
                 break;
 
@@ -278,21 +284,23 @@ public class NodoComun extends Nodo {
                 if (getDer() != null) {
                     salida += getDer().getAssembler();
                 }
-                varAuxiliar = Nodo.getVariableAuxiliar();
-                label = pilaLabels.pop();
+                if (!(getIzq().getNombre().contains(">=") || getDer().getNombre().contains(">="))) {
+                    varAuxiliar = Nodo.getVariableAuxiliar();
+                    label = pilaLabels.pop();
 
-                this.ultimoNodo = new NodoHoja(varAuxiliar);
-                this.ultimoNodo.setTipo(this.getIzq().getTipo());
-                this.ultimoNodo.setUso("variableAuxiliar");
+                    this.ultimoNodo = new NodoHoja(varAuxiliar);
+                    this.ultimoNodo.setTipo(this.getIzq().getTipo());
+                    this.ultimoNodo.setUso("variableAuxiliar");
 
-                if (getIzq().getTipo().equals(ENTERO)) {
-                    salida += "MOV EAX, " + getIzq().getUltimoNodo().getNombre() + "\n";
-                    salida += "CMP EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
-                    salida += "JL " + label + "\n";
-                } else {
-                    salida += "FLD " + getIzq().getUltimoNodo().getNombre() + "\n";
-                    salida += "FCOM " + getDer().getUltimoNodo().getNombre() + "\n";
-                    salida += "JL " + label + "\n";
+                    if (getIzq().getTipo().equals(ENTERO)) {
+                        salida += "MOV EAX, " + getIzq().getUltimoNodo().getNombre() + "\n";
+                        salida += "CMP EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
+                        salida += "JL " + label + "\n";
+                    } else {
+                        salida += "FLD " + getIzq().getUltimoNodo().getNombre() + "\n";
+                        salida += "FCOM " + getDer().getUltimoNodo().getNombre() + "\n";
+                        salida += "JL " + label + "\n";
+                    }
                 }
                 break;
 
@@ -303,21 +311,23 @@ public class NodoComun extends Nodo {
                 if (getDer() != null) {
                     salida += getDer().getAssembler();
                 }
-                varAuxiliar = Nodo.getVariableAuxiliar();
-                label = pilaLabels.pop();
+                if (!(getIzq().getNombre().contains("<") || getDer().getNombre().contains("<"))) {
+                    varAuxiliar = Nodo.getVariableAuxiliar();
+                    label = pilaLabels.pop();
 
-                this.ultimoNodo = new NodoHoja(varAuxiliar);
-                this.ultimoNodo.setTipo(this.getIzq().getTipo());
-                this.ultimoNodo.setUso("variableAuxiliar");
+                    this.ultimoNodo = new NodoHoja(varAuxiliar);
+                    this.ultimoNodo.setTipo(this.getIzq().getTipo());
+                    this.ultimoNodo.setUso("variableAuxiliar");
 
-                if (getIzq().getTipo().equals(ENTERO)) {
-                    salida += "MOV EAX, " + getIzq().getUltimoNodo().getNombre() + "\n";
-                    salida += "CMP EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
-                    salida += "JGE " + label + "\n";
-                } else {
-                    salida += "FLD " + getIzq().getUltimoNodo().getNombre() + "\n";
-                    salida += "FCOM " + getDer().getUltimoNodo().getNombre() + "\n";
-                    salida += "JGE " + label + "\n";
+                    if (getIzq().getTipo().equals(ENTERO)) {
+                        salida += "MOV EAX, " + getIzq().getUltimoNodo().getNombre() + "\n";
+                        salida += "CMP EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
+                        salida += "JGE " + label + "\n";
+                    } else {
+                        salida += "FLD " + getIzq().getUltimoNodo().getNombre() + "\n";
+                        salida += "FCOM " + getDer().getUltimoNodo().getNombre() + "\n";
+                        salida += "JGE " + label + "\n";
+                    }
                 }
                 break;
 
@@ -328,21 +338,23 @@ public class NodoComun extends Nodo {
                 if (getDer() != null) {
                     salida += getDer().getAssembler();
                 }
-                varAuxiliar = Nodo.getVariableAuxiliar();
-                label = pilaLabels.pop();
+                if (!(getIzq().getNombre().contains("<=") || getDer().getNombre().contains("<="))) {
+                    varAuxiliar = Nodo.getVariableAuxiliar();
+                    label = pilaLabels.pop();
 
-                this.ultimoNodo = new NodoHoja(varAuxiliar);
-                this.ultimoNodo.setTipo(this.getIzq().getTipo());
-                this.ultimoNodo.setUso("variableAuxiliar");
+                    this.ultimoNodo = new NodoHoja(varAuxiliar);
+                    this.ultimoNodo.setTipo(this.getIzq().getTipo());
+                    this.ultimoNodo.setUso("variableAuxiliar");
 
-                if (getIzq().getTipo().equals(ENTERO)) {
-                    salida += "MOV EAX, " + getIzq().getUltimoNodo().getNombre() + "\n";
-                    salida += "CMP EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
-                    salida += "JG " + label + "\n";
-                } else {
-                    salida += "FLD " + getIzq().getUltimoNodo().getNombre() + "\n";
-                    salida += "FCOM " + getDer().getUltimoNodo().getNombre() + "\n";
-                    salida += "JG " + label + "\n";
+                    if (getIzq().getTipo().equals(ENTERO)) {
+                        salida += "MOV EAX, " + getIzq().getUltimoNodo().getNombre() + "\n";
+                        salida += "CMP EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
+                        salida += "JG " + label + "\n";
+                    } else {
+                        salida += "FLD " + getIzq().getUltimoNodo().getNombre() + "\n";
+                        salida += "FCOM " + getDer().getUltimoNodo().getNombre() + "\n";
+                        salida += "JG " + label + "\n";
+                    }
                 }
                 break;
             case "If":

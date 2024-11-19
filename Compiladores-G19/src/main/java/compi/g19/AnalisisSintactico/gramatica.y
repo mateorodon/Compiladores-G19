@@ -204,7 +204,34 @@ asignacion:
                               $$.obj = asignacion;
                               TablaSimbolos.removeToken($1.sval);
                             }
-    | ID '[' CONSTANTE ']' ASIGNACION expresion
+    | ID '[' CONSTANTE ']' ASIGNACION expresion {
+                                                String ambitoVar = buscarAmbito(ambito,$1.sval);
+                                                if (ambitoVar.equals("")){
+                                                    agregarErrorSemantico("La variable '" + $1.sval + "' no fue declarada");
+                                                    $$.obj = new NodoHoja("error");
+                                                }
+                                                else {
+                                                    Token t = TablaSimbolos.getToken($1.sval + ":" + ambitoVar);
+                                                    String tipo = $1.sval;
+                                                    if (tiposDeclarados.containsKey(tipo)){
+                                                        String tipoTriple = tiposDeclarados.get(tipo);
+                                                        NodoHoja nodo = new NodoHoja($1.sval + $2.sval + $3.sval + $4.sval, t);
+                                                        nodo.setTipo(tipoTriple);
+                                                        $$.obj = new NodoComun($5.sval,nodo,(Nodo)$6.obj);
+                                                    }
+                                                    else {
+                                                        agregarErrorSemantico("La variable '" + $1.sval + "' no es de un tipo TRIPLE definido");
+                                                        $$.obj = new NodoHoja("error");
+                                                    }
+                                                }
+                                                String index = TablaSimbolos.getToken($3.sval).getLexema().toString();
+                                                if (!(index != null && (index.equals("1") || index.equals("2") || index.equals("3")))){
+                                                    agregarErrorSemantico("El indice esta fuera de rango. Debe estar entre 1 y 3");
+                                                    $$.obj = new NodoHoja("error");
+                                                }
+                                                TablaSimbolos.removeToken($1.sval);
+
+                                                }
     | ID ASIGNACION error {yyerror("Falta parte derecha de la asignacion");}
     ;
 
@@ -433,7 +460,7 @@ factor:
                                 }
                                 else {
                                     Token t = TablaSimbolos.getToken($1.sval + ":" + ambitoVar);
-                                    String tipo = t.getTipo();
+                                    String tipo = $1.sval;
                                     if (tiposDeclarados.containsKey(tipo)){
                                         String tipoTriple = tiposDeclarados.get(tipo);
                                         NodoHoja nodo = new NodoHoja($1.sval + $2.sval + $3.sval + $4.sval, t);
@@ -490,7 +517,7 @@ factor:
                                 }
                                 else {
                                     Token t = TablaSimbolos.getToken($2.sval + ":" + ambitoVar);
-                                    String tipo = t.getTipo();
+                                    String tipo = $1.sval;
                                     if (tiposDeclarados.containsKey(tipo)){
                                         String tipoTriple = tiposDeclarados.get(tipo);
                                         NodoHoja nodo = new NodoHoja($1.sval + $2.sval + $3.sval + $4.sval + $5.sval, t);
@@ -514,7 +541,7 @@ factor:
 declaracion_tipo:
     TYPEDEF TRIPLE '<' tipo_base '>' ID {String idTipo = $6.sval;
                                          Token t = TablaSimbolos.getToken(idTipo);
-                                         if (t.getTipo() != null){
+                                         if (t.getTipo() == null){
                                              if (!TablaSimbolos.existeSimbolo(idTipo + ":" + ambito)){
                                                 t.getLexema().setLength(0);
                                                 t.getLexema().append(idTipo).append(":").append(ambito);
@@ -524,7 +551,7 @@ declaracion_tipo:
                                                 TablaSimbolos.removeToken(idTipo);
                                                 TablaSimbolos.addSimbolo(t.getLexema().toString(),t);
                                                 tiposDeclarados.put($6.sval, $4.sval);
-                                                }
+                                             }
                                              else {
                                                 TablaSimbolos.removeToken(idTipo);
                                                 variableYaDeclarada(idTipo);
@@ -713,21 +740,37 @@ condicion:
                                         }
                                     }
     | '(' {inList1 = true;} bloque_list_expresiones {inList1 = false;} ')' comparacion '(' {inList2 = true;} bloque_list_expresiones {inList2 = false;} ')'
-    { $$.obj = new NodoComun($4.sval, (Nodo)$2.obj, (Nodo)$4.obj);
+    { NodoComun salida = new NodoComun($6.sval);
       AnalizadorLexico.agregarEstructura("Se reconocio pattern matching");
       if (expresiones1.size() == expresiones2.size()){
-        for (int i = 0; i < expresiones1.size(); i++) {
-            Nodo exp1 = expresiones1.get(i);
-            Nodo exp2 = expresiones2.get(i);
-            if (!(exp1.getTipo().equals(exp2.getTipo())))
-                agregarErrorSemantico("Las expresiones en la posicion " + i + " no tienen el mismo tipo");
-        }
+            Nodo aux;
+            for (int i = 0; i < expresiones1.size(); i++) {
+                Nodo exp1 = expresiones1.get(i);
+                Nodo exp2 = expresiones2.get(i);
+                if (!(exp1.getTipo().equals(exp2.getTipo()))){
+                    agregarErrorSemantico("Las expresiones en la posicion " + i + " no tienen el mismo tipo");
+                    aux = new NodoHoja("error");
+                    }
+                else {
+                    aux = new NodoComun($6.sval, exp1, exp2);
+                }
+                if (salida.getIzq() == null)
+                    salida.setIzq(aux);
+                else {
+                    if (salida.getDer() == null)
+                        salida.setDer(aux);
+                    else {
+                        salida = new NodoComun($6.sval,salida,aux);
+                    }
+                }
+            }
       }
       else {
         agregarErrorSemantico("La cantidad de elementos a comparar en pattern matching no coincide");
       }
       expresiones1.clear();
       expresiones2.clear();
+      $$.obj = salida;
     }
     | error {yyerror("Falta comparador en la condicion");}
     ;
@@ -739,7 +782,7 @@ bloque_list_expresiones:
             expresiones1.add((Nodo)$3.obj);
         if (inList2)
             expresiones2.add((Nodo)$3.obj);
-    $$ = new NodoComun("Sentencia", (Nodo) $1.obj, (Nodo) $3.obj);
+    $$.obj = new NodoComun("Sentencia", (Nodo) $1.obj, (Nodo) $3.obj);
     }
     ;
 
@@ -749,14 +792,14 @@ list_expresiones:
         expresiones1.add((Nodo)$3.obj);
     if (inList2)
         expresiones2.add((Nodo)$3.obj);
-    $$ = new NodoComun("Sentencia", (Nodo) $1.obj, (Nodo) $3.obj);
+    $$.obj = new NodoComun("Sentencia", (Nodo) $1.obj, (Nodo) $3.obj);
     }
     | expresion {
     if (inList1)
         expresiones1.add((Nodo)$1.obj);
     if (inList2)
         expresiones2.add((Nodo)$1.obj);
-    $$=$1;
+    $$ = $1;
     }
     | error {yyerror("Falta expresion en pattern matching");}
     ;
