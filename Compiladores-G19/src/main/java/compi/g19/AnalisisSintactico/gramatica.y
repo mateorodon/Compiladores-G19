@@ -274,24 +274,12 @@ declaracion_funcion:
                                                             yyerror("Falta sentencia RET en la función");
                                                          }
                                                          Nodo parametro = (Nodo)$3.obj;
-                                                         Token t = TablaSimbolos.getToken(parametro.getNombre());
-                                                         if (!TablaSimbolos.existeSimbolo(parametro.getNombre() + ":" + ambito)){
-                                                             String tipo = t.getTipo();
-                                                             if (tipo != null)
-                                                                AnalizadorLexico.agregarWarning("La variable '" + parametro.getNombre() + "' ya esta declarada");
-                                                             t.getLexema().setLength(0);
-                                                             t.getLexema().append(parametro.getNombre()).append(":").append(ambito);
-                                                             t.setAmbito(ambito);
-                                                             t.setUso("parametro");
-                                                             t.setTipo(tipoActual);
-                                                             TablaSimbolos.removeToken(parametro.getNombre());
-                                                             TablaSimbolos.addSimbolo(t.getLexema().toString(),t);
-                                                         }
                                                          NodoComun funcion = (NodoComun)$1.obj; //Encabezado con nombre funcion, este tiene el tipo
+                                                         NodoComun cuerpo = (NodoComun)$6.obj;
 
                                                          funcion.setUso("funcion");
-                                                         funcion.setIzq(parametro); //Parametro
-                                                         funcion.setDer((Nodo)$6.obj); //Cuerpo funcion
+                                                         funcion.setIzq(parametro);
+                                                         funcion.setDer(cuerpo);
 
                                                          funcionesDeclaradas.put(funcion.getNombre(),funcion);
                                                          removeAmbito();
@@ -305,6 +293,8 @@ parametro:
     tipo ID {
                Token t = TablaSimbolos.getToken($2.sval);
                if (t != null){
+                   if (t.getTipo() != null)
+                        AnalizadorLexico.agregarWarning("La variable '" + $2.sval + "' ya esta declarada");
                    t.getLexema().setLength(0);
                    t.getLexema().append($2.sval).append(":").append(ambito);
                    t.setAmbito(ambito);
@@ -708,12 +698,19 @@ comparacion:
     ;
 
 condicion:
-    expresion comparacion expresion {   if (!((Nodo)$1.obj).getTipo().equals(((Nodo)$1.obj).getTipo())){
-                                            agregarErrorSemantico("Los tipos son incompatibles en la condicion");
+    expresion comparacion expresion {   Nodo exp1 = (Nodo)$1.obj;
+                                        Nodo exp2 = (Nodo)$3.obj;
+                                        if (!(exp1.getNombre().contains("error") || exp2.getNombre().contains("error"))) {
+                                            if (!((Nodo)$1.obj).getTipo().equals(((Nodo)$3.obj).getTipo())){
+                                                agregarErrorSemantico("Los tipos son incompatibles en la condicion");
+                                                $$.obj = new NodoHoja("error");
+                                            }
+                                            else
+                                                $$.obj = new NodoComun($2.sval, (Nodo)$1.obj, (Nodo)$3.obj);
+                                        }
+                                        else {
                                             $$.obj = new NodoHoja("error");
                                         }
-                                        else
-                                            $$.obj = new NodoComun($2.sval, (Nodo)$1.obj, (Nodo)$3.obj);
                                     }
     | '(' {inList1 = true;} bloque_list_expresiones {inList1 = false;} ')' comparacion '(' {inList2 = true;} bloque_list_expresiones {inList2 = false;} ')'
     { $$.obj = new NodoComun($4.sval, (Nodo)$2.obj, (Nodo)$4.obj);
