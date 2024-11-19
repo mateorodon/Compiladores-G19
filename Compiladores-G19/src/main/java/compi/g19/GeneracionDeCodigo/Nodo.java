@@ -10,7 +10,8 @@ import java.util.Stack;
 
 public abstract class Nodo extends ParserVal {
 
-    @Getter @Setter
+    @Getter
+    @Setter
     protected String nombre;
     protected Token token;
 
@@ -20,10 +21,10 @@ public abstract class Nodo extends ParserVal {
     protected static Stack<String> pilaLabels = new Stack();
     protected static Stack<String> pilaVariablesAuxiliares = new Stack<String>();
 
-    static int numeroVariableAuxiliar=0;
+    static int numeroVariableAuxiliar = 0;
 
 
-    public Nodo(String nombre){
+    public Nodo(String nombre) {
         this.nombre = nombre;
         this.token = null;
     }
@@ -33,8 +34,13 @@ public abstract class Nodo extends ParserVal {
         this.token = token;
     }
 
-    public Token getToken(){return this.token;}
-    public void setToken(Token token){this.token = token;}
+    public Token getToken() {
+        return this.token;
+    }
+
+    public void setToken(Token token) {
+        this.token = token;
+    }
 
     public String getTipo(){
         return token.getTipo();

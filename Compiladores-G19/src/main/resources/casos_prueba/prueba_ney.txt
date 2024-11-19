@@ -1,0 +1,16 @@
+PROG_base
+BEGIN
+    ULONGINT rr;
+    ulongint m;
+    m := 10;
+    rr := 5;
+    rr := 5 + m;
+    OUTF(m);
+    OUTF(rr);
+    SINGLE FUN f1(ULONGINT j)
+    BEGIN
+        j := 2 + 1;
+        RET(j);
+    END;
+    rr := f1(m);
+END                       

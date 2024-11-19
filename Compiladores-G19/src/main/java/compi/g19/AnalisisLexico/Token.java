@@ -36,6 +36,10 @@ public class Token {
         this.linea = linea;
     }
 
+    public void setTipo(String tipo){
+        this.tipo = tipo.toLowerCase();
+    }
+
     public Integer esPR(StringBuilder lexema){
         return palabrasReservadas.get(lexema.toString().toLowerCase());
     }
