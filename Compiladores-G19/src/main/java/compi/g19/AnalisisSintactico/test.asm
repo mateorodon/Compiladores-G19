@@ -26,13 +26,29 @@ invoke MessageBox, NULL, addr OperacionEnteroNegativo, addr error, MB_OK
 invoke ExitProcess, 0 
 invoke MessageBox, NULL, addr OverflowSumaDouble, addr error, MB_OK 
 invoke ExitProcess, 0 
-m:
+p:main:
+MOV EAX , 2
+MOV m:main:p, EAX
+MOV EAX, m:main:p
+MOV @aux1, EAX
+ret 
 JMP errorFun
 main:
 MOV EAX, 2
 ADD EAX, 1
-MOV @aux1, EAX
-MOV EAX , @aux1
+MOV @aux2, EAX
+MOV EAX , @aux2
 MOV rr:main, EAX
+MOV EAX , 2
+MOV m:main:p, EAX
+MOV EAX, m:main:p
+MOV @aux3, EAX
+ret 
+MOV EAX , 2
+MOV m:main:p, EAX
+MOV EAX, m:main:p
+MOV @aux3, EAX
+ret 
+call p:main
 invoke ExitProcess, 0 
 end main

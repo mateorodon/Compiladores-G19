@@ -456,19 +456,19 @@ public class NodoComun extends Nodo {
                     n.setTipo(getIzq().getTipo());
                     n.setUso("variableAuxiliar");
                     pilaVariablesAuxiliares.push("@aux@" + getIzq().getNombre());
-                    salida += getIzq().getNombre() + ":\n";
-                    salida += getIzq().getAssembler();
+                    salida += getNombre() + ":\n";
+                    salida += getDer().getAssembler();
                     pilaVariablesAuxiliares.pop();
                     salida += "JMP errorFun";
                 } else if (getUso().equals("llamado")){
                     if (getIzq() != null) {
-                        salida += salida + getIzq().getAssembler();
+                        salida += salida + getDer().getAssembler();
                     }
                     //variable = "@aux@" + this.getDer().getNombre();
                     String varAux = getVariableAuxiliar();
                     this.ultimoNodo = new NodoHoja(varAux);
                     this.ultimoNodo.setUso("variableAuxiliar");
-                    salida += salida + "call " + this.getIzq().getNombre() + "\n";
+                    salida += salida + "call " + getNombre() + "\n";
                 }
                 break;
         }

@@ -2,9 +2,10 @@ prog
 begin
     ulongint rr;
     rr := 2 + 1;
-    single FUN p(ulongint m)
+    ulongint FUN p(ulongint m)
     begin
        m := 2;
        ret(m);
     end;
-end                
+    p(rr);
+end
