@@ -313,7 +313,7 @@ parametro:
                    TablaSimbolos.removeToken($2.sval);
                    TablaSimbolos.addSimbolo(t.getLexema().toString(),t);
                }
-              Nodo param = new NodoHoja(t.getLexema().toString(), t);
+              Nodo param = new NodoHoja(t.getLexema().toString() + ambito, t);
               param.setTipo(tipoActual);
               $$.obj = param;
             }
@@ -904,7 +904,7 @@ private Nodo generarLlamadoFuncion(NodoComun funcion, Nodo copia){
         Nodo param = funcion.getIzq();
         if (param.getTipo().equals(copia.getTipo())){
             param.setNombre(copia.getNombre());
-            salida = new NodoComun(funcion,param,funcion.getDer());
+            salida = new NodoComun(funcion.getNombre(),param,funcion.getDer());
             salida.setUso("llamado");
         }
         else {

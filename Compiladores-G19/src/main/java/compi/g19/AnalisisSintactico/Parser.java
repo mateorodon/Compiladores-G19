@@ -770,7 +770,7 @@ private Nodo generarLlamadoFuncion(NodoComun funcion, Nodo copia){
         Nodo param = funcion.getIzq();
         if (param.getTipo().equals(copia.getTipo())){
             param.setNombre(copia.getNombre());
-            salida = new NodoComun(funcion,param,funcion.getDer());
+            salida = new NodoComun(funcion.getNombre(),param,funcion.getDer());
             salida.setUso("llamado");
         }
         else {
@@ -1277,7 +1277,7 @@ case 48:
                         variableYaDeclarada(idFuncion);
                      }
                      NodoComun encabezado = new NodoComun(idFuncion + ":" + ambito);
-                     encabezado.setTipo(tipoActual);
+                     encabezado.setToken(t);
                      yyval.obj = encabezado;
                  }
                  else {
@@ -1340,10 +1340,10 @@ case 54:
                    t.setUso("parametro");
                    t.setTipo(tipoActual);
                    TablaSimbolos.removeToken(val_peek(0).sval);
-                   TablaSimbolos.addSimbolo(String.valueOf(t.getLexema()),t);
+                   TablaSimbolos.addSimbolo(t.getLexema().toString(),t);
                }
-              Nodo param = new NodoHoja(val_peek(0).sval, t);
-              param.setTipo(val_peek(1).sval);
+              Nodo param = new NodoHoja(t.getLexema().toString() + ambito, t);
+              param.setTipo(tipoActual);
               yyval.obj = param;
             }
 break;

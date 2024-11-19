@@ -474,9 +474,4 @@ public class NodoComun extends Nodo {
         }
         return salida;
     }
-
-    /*
-    Incremento
-    Funcion (viene dado por el nopmbre mas ambito de la funcion)
-     */
 }
