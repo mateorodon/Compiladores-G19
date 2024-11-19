@@ -1,11 +1,23 @@
+
+
+
+
+
+
+
+
+
 prog
 begin
     ulongint rr;
     rr := 2 + 1;
+    TYPEDEF TRIPLE <ulongint> t1;
+    t1[1] := 2;
+    rr := t1[1] * 8;
     ulongint FUN p(ulongint m)
     begin
-       m := 2;
+       m := m + 2;
        ret(m);
     end;
     p(rr);
-end
+end          

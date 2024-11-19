@@ -33,6 +33,7 @@ public class NodoComun extends Nodo {
     private static Stack<String> varFor = new Stack<>();
     private static boolean inFor;
     private static String codigoIncremento = "";
+    private static String auxParam;
 
     public static String getLabel() {
         return Nodo.getLabel();
@@ -93,8 +94,12 @@ public class NodoComun extends Nodo {
                     varFor.add(getIzq().getNombre());
                 salida += getDer().getAssembler() + getIzq().getAssembler();
                 if (getIzq().getTipo().equals(ENTERO)) {
-                    salida += "MOV EAX , " + getDer().getUltimoNodo().getNombre() + "\n";
-                    salida += "MOV " + getIzq().getUltimoNodo().getNombre() + ", " + "EAX" + "\n";
+                    if (getDer().getUltimoNodo().getUso().equals("variableAuxiliar"))
+                        salida += "MOV "+getIzq().getUltimoNodo().getNombre()+" ," + getDer().getUltimoNodo().getNombre() + "\n";
+                    else {
+                        salida += "MOV EAX ," + getDer().getUltimoNodo().getNombre() + "\n";
+                        salida += "MOV " + getIzq().getUltimoNodo().getNombre() + ", " + "EAX" + "\n";
+                    }
                 } else {
                     salida += "FLD " + getDer().getUltimoNodo().getNombre() + "\n";
                     salida += "FST " + getIzq().getUltimoNodo().getNombre() + "\n";
@@ -383,15 +388,16 @@ public class NodoComun extends Nodo {
 
                 break;
             case "Return":
+                String ret = getVariableAuxiliar();
                 salida += getIzq().getAssembler();
                 if (getIzq().getTipo().equals(ENTERO)) {
                     salida += "MOV EAX, " + getIzq().getUltimoNodo().getNombre() + "\n";
-                    salida += "MOV " + getVariableAuxiliar() + ", EAX" + "\n";
+                    salida += "MOV " + ret + ", EAX" + "\n";
                 } else {
                     salida += "FLD " + getIzq().getUltimoNodo().getNombre() + "\n";
-                    salida += "FST " + pilaVariablesAuxiliares.pop() + "\n";
+                    salida += "FST " + ret + "\n";
                 }
-                salida += "ret \n";
+                salida += "ret " +"\n";
                 break;
             case "Outf":
                 String variablePrint = getVariablePrint();
@@ -473,14 +479,13 @@ public class NodoComun extends Nodo {
                     pilaVariablesAuxiliares.pop();
                     salida += "JMP errorFun";
                 } else if (getUso().equals("llamado")){
-                    if (getIzq() != null) {
-                        salida += salida + getDer().getAssembler();
-                    }
-                    //variable = "@aux@" + this.getDer().getNombre();
-                    String varAux = getVariableAuxiliar();
-                    this.ultimoNodo = new NodoHoja(varAux);
-                    this.ultimoNodo.setUso("variableAuxiliar");
-                    salida += salida + "call " + getNombre() + "\n";
+
+                    //String varAux = getVariableAuxiliar();
+                    auxParam = getIzq().getNombre();
+                    salida += "MOV " + "EAX" + ", " + getIzq().getNombre() + "\n";
+                    //this.ultimoNodo = new NodoHoja(varAux);
+                    //this.ultimoNodo.setUso("variableAuxiliar");
+                    salida += salida + "call " + getNombre() +"\n";
                 }
                 break;
         }

@@ -3,19 +3,33 @@ PROGRAMA
     Sentencia
         Sentencia
             Sentencia
-                Sentencia Declarativa
+                Sentencia
+                    Sentencia
+                        Sentencia
+                            Sentencia Declarativa
+                            :=
+                                rr:main
+                                +
+                                    2
+                                    1
+                        Sentencia Declarativa
+                    :=
+                        t1[1]
+                        2
                 :=
                     rr:main
-                    +
-                        2
-                        1
+                    *
+                        t1[1]
+                        8
             Sentencia Declarativa
         p:main
             rr:main
             Sentencia
                 :=
                     m:main:p
-                    2
+                    +
+                        m:main:p
+                        2
                 Return
                     m:main:p
 ----------ARBOL SINTACTICO FUNCIONES -----------
@@ -24,25 +38,32 @@ p:main
     Sentencia
         :=
             m:main:p
-            2
+            +
+                m:main:p
+                2
         Return
             m:main:p
 ----------ESTRUCTURAS RECONOCIDAS-----------
-Se reconocio declaracion de variable/s en la línea 3
-Se reconocio una asignacion en la línea 4
-Se reconocio una asignacion en la línea 7
-Se reconocio sentencia de retorno en la línea 8
-Se reconocio declaracion de funcion en la línea 9
-Se reconocio invocacion a funcion en la línea 10
-Se reconocio una invocacion a funcion en la línea 10
-Se reconocio el programa en la línea 11
+Se reconocio declaracion de variable/s en la línea 12
+Se reconocio una asignacion en la línea 13
+Se reconocio declaracion de tipo en la línea 14
+Se reconocio una asignacion en la línea 15
+Se reconocio una asignacion en la línea 16
+Se reconocio una asignacion en la línea 19
+Se reconocio sentencia de retorno en la línea 20
+Se reconocio declaracion de funcion en la línea 21
+Se reconocio invocacion a funcion en la línea 22
+Se reconocio una invocacion a funcion en la línea 22
+Se reconocio el programa en la línea 23
 ----------TABLA DE SIMBOLOS-----------
-Token{id=257, lexema=rr:main, linea=3, tipo=ulongint, valor = null}
-Token{id=257, lexema=p:main, linea=5, tipo=ulongint, valor = null}
-Token{id=262, lexema=1, linea=4, tipo=ulongint, valor = 1}
-Token{id=262, lexema=2, linea=4, tipo=ulongint, valor = 2}
-Token{id=257, lexema=prog, linea=1, tipo=null, valor = null}
-Token{id=257, lexema=m:main:p, linea=5, tipo=ulongint, valor = null}
+Token{id=257, lexema=rr:main, linea=12, tipo=ulongint, valor = null}
+Token{id=257, lexema=p:main, linea=17, tipo=ulongint, valor = null}
+Token{id=262, lexema=1, linea=13, tipo=ulongint, valor = 1}
+Token{id=262, lexema=2, linea=13, tipo=ulongint, valor = 2}
+Token{id=257, lexema=t1:main, linea=14, tipo=ulongint, valor = null}
+Token{id=262, lexema=8, linea=16, tipo=ulongint, valor = 8}
+Token{id=257, lexema=prog, linea=10, tipo=null, valor = null}
+Token{id=257, lexema=m:main:p, linea=17, tipo=ulongint, valor = null}
 -----------ERRORES LEXICOS----------
 -----------ERRORES SINTACTICOS----------
 -----------ERRORES SEMANTICOS----------
