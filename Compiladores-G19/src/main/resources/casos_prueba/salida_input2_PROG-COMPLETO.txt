@@ -1,176 +1,150 @@
-----------TOKENS DETECTADOS -----------
-Token{id=257, lexema=PROG_COMPLETO, linea=1, tipo=null}
-Token{id=267, lexema=begin, linea=2, tipo=null}
-Token{id=274, lexema=ulongint, linea=3, tipo=null}
-Token{id=257, lexema=x, linea=3, tipo=ulongint}
-Token{id=44, lexema=,, linea=3, tipo=null}
-Token{id=257, lexema=y, linea=3, tipo=ulongint}
-Token{id=44, lexema=,, linea=3, tipo=null}
-Token{id=257, lexema=z, linea=3, tipo=ulongint}
-Token{id=59, lexema=;, linea=3, tipo=null}
-Token{id=257, lexema=x, linea=4, tipo=ulongint}
-Token{id=258, lexema=:=, linea=4, tipo=ulongint}
-Token{id=262, lexema=3, linea=4, tipo=ulongint}
-Token{id=59, lexema=;, linea=4, tipo=null}
-Token{id=257, lexema=y, linea=5, tipo=ulongint}
-Token{id=258, lexema=:=, linea=5, tipo=ulongint}
-Token{id=262, lexema=2, linea=5, tipo=ulongint}
-Token{id=59, lexema=;, linea=5, tipo=null}
-Token{id=257, lexema=z, linea=6, tipo=ulongint}
-Token{id=258, lexema=:=, linea=6, tipo=ulongint}
-Token{id=257, lexema=x, linea=6, tipo=ulongint}
-Token{id=43, lexema=+, linea=6, tipo=null}
-Token{id=257, lexema=y, linea=6, tipo=ulongint}
-Token{id=59, lexema=;, linea=6, tipo=null}
-Token{id=275, lexema=Single, linea=7, tipo=null}
-Token{id=272, lexema=fun, linea=7, tipo=null}
-Token{id=257, lexema=f3, linea=7, tipo=null}
-Token{id=40, lexema=(, linea=7, tipo=null}
-Token{id=274, lexema=ulongint, linea=7, tipo=null}
-Token{id=257, lexema=z, linea=7, tipo=ulongint}
-Token{id=41, lexema=), linea=7, tipo=null}
-Token{id=267, lexema=BEGIN, linea=8, tipo=null}
-Token{id=264, lexema=IF, linea=9, tipo=null}
-Token{id=40, lexema=(, linea=9, tipo=null}
-Token{id=40, lexema=(, linea=9, tipo=null}
-Token{id=257, lexema=x, linea=9, tipo=ulongint}
-Token{id=44, lexema=,, linea=9, tipo=null}
-Token{id=257, lexema=z, linea=9, tipo=ulongint}
-Token{id=41, lexema=), linea=9, tipo=null}
-Token{id=259, lexema=>=, linea=9, tipo=null}
-Token{id=40, lexema=(, linea=9, tipo=null}
-Token{id=262, lexema=2, linea=9, tipo=ulongint}
-Token{id=44, lexema=,, linea=9, tipo=null}
-Token{id=262, lexema=4, linea=9, tipo=ulongint}
-Token{id=41, lexema=), linea=9, tipo=null}
-Token{id=41, lexema=), linea=9, tipo=null}
-Token{id=265, lexema=THEN, linea=9, tipo=null}
-Token{id=270, lexema=outf, linea=10, tipo=null}
-Token{id=40, lexema=(, linea=10, tipo=null}
-Token{id=257, lexema=z, linea=10, tipo=ulongint}
-Token{id=41, lexema=), linea=10, tipo=null}
-Token{id=59, lexema=;, linea=10, tipo=null}
-Token{id=266, lexema=ELSE, linea=11, tipo=null}
-Token{id=267, lexema=begin, linea=12, tipo=null}
-Token{id=257, lexema=z, linea=13, tipo=ulongint}
-Token{id=258, lexema=:=, linea=13, tipo=ulongint}
-Token{id=262, lexema=1, linea=13, tipo=ulongint}
-Token{id=59, lexema=;, linea=13, tipo=null}
-Token{id=270, lexema=OUTF, linea=14, tipo=null}
-Token{id=40, lexema=(, linea=14, tipo=null}
-Token{id=263, lexema=z es igual a 1, linea=14, tipo=null}
-Token{id=41, lexema=), linea=14, tipo=null}
-Token{id=59, lexema=;, linea=14, tipo=null}
-Token{id=268, lexema=end, linea=15, tipo=null}
-Token{id=269, lexema=END_IF, linea=16, tipo=null}
-Token{id=59, lexema=;, linea=16, tipo=null}
-Token{id=273, lexema=RET, linea=17, tipo=null}
-Token{id=40, lexema=(, linea=17, tipo=null}
-Token{id=257, lexema=z, linea=17, tipo=ulongint}
-Token{id=41, lexema=), linea=17, tipo=null}
-Token{id=59, lexema=;, linea=17, tipo=null}
-Token{id=268, lexema=END, linea=18, tipo=null}
-Token{id=59, lexema=;, linea=18, tipo=null}
-Token{id=257, lexema=f3, linea=19, tipo=null}
-Token{id=40, lexema=(, linea=19, tipo=null}
-Token{id=274, lexema=ulongint, linea=19, tipo=null}
-Token{id=40, lexema=(, linea=19, tipo=null}
-Token{id=257, lexema=x, linea=19, tipo=ulongint}
-Token{id=41, lexema=), linea=19, tipo=null}
-Token{id=41, lexema=), linea=19, tipo=null}
-Token{id=59, lexema=;, linea=19, tipo=null}
-Token{id=257, lexema=f3, linea=20, tipo=null}
-Token{id=40, lexema=(, linea=20, tipo=null}
-Token{id=257, lexema=y, linea=20, tipo=ulongint}
-Token{id=41, lexema=), linea=20, tipo=null}
-Token{id=59, lexema=;, linea=20, tipo=null}
-Token{id=271, lexema=TYPEDEF, linea=21, tipo=null}
-Token{id=280, lexema=TRIPLE, linea=21, tipo=null}
-Token{id=60, lexema=<, linea=21, tipo=null}
-Token{id=275, lexema=SINGLE, linea=21, tipo=null}
-Token{id=62, lexema=>, linea=21, tipo=null}
-Token{id=257, lexema=t1, linea=21, tipo=null}
-Token{id=59, lexema=;, linea=21, tipo=null}
-Token{id=257, lexema=t1, linea=22, tipo=null}
-Token{id=91, lexema=[, linea=22, tipo=null}
-Token{id=262, lexema=1, linea=22, tipo=ulongint}
-Token{id=93, lexema=], linea=22, tipo=null}
-Token{id=258, lexema=:=, linea=22, tipo=null}
-Token{id=262, lexema=2.0, linea=22, tipo=single}
-Token{id=59, lexema=;, linea=22, tipo=null}
-Token{id=257, lexema=x, linea=23, tipo=ulongint}
-Token{id=258, lexema=:=, linea=23, tipo=ulongint}
-Token{id=257, lexema=t1, linea=23, tipo=null}
-Token{id=91, lexema=[, linea=23, tipo=null}
-Token{id=262, lexema=1, linea=23, tipo=ulongint}
-Token{id=93, lexema=], linea=23, tipo=null}
-Token{id=59, lexema=;, linea=23, tipo=null}
-SE RECONOCIO UN COMENTARIO EN LA LINEA 24
-Token{id=276, lexema=FOR, linea=25, tipo=null}
-Token{id=40, lexema=(, linea=25, tipo=null}
-Token{id=257, lexema=i, linea=25, tipo=null}
-Token{id=258, lexema=:=, linea=25, tipo=null}
-Token{id=262, lexema=0, linea=25, tipo=ulongint}
-Token{id=59, lexema=;, linea=25, tipo=null}
-Token{id=257, lexema=i, linea=25, tipo=null}
-Token{id=60, lexema=<, linea=25, tipo=null}
-Token{id=257, lexema=x, linea=25, tipo=ulongint}
-Token{id=59, lexema=;, linea=25, tipo=null}
-Token{id=278, lexema=UP, linea=25, tipo=null}
-Token{id=262, lexema=1, linea=25, tipo=ulongint}
-Token{id=41, lexema=), linea=25, tipo=null}
-Token{id=267, lexema=BEGIN, linea=26, tipo=null}
-Token{id=270, lexema=outf, linea=27, tipo=null}
-Token{id=40, lexema=(, linea=27, tipo=null}
-Token{id=263, lexema=en el for, linea=27, tipo=null}
-Token{id=41, lexema=), linea=27, tipo=null}
-Token{id=59, lexema=;, linea=27, tipo=null}
-Token{id=270, lexema=outf, linea=28, tipo=null}
-Token{id=40, lexema=(, linea=28, tipo=null}
-Token{id=257, lexema=i, linea=28, tipo=null}
-Token{id=41, lexema=), linea=28, tipo=null}
-Token{id=59, lexema=;, linea=28, tipo=null}
-Token{id=268, lexema=END, linea=29, tipo=null}
-Token{id=59, lexema=;, linea=29, tipo=null}
-Token{id=268, lexema=end, linea=30, tipo=null}
+SE RECONOCIO UN COMENTARIO EN LA LINEA 3
+SE RECONOCIO UN COMENTARIO EN LA LINEA 29
+----------ARBOL SINTACTICO -----------
+PROGRAMA
+    Sentencia
+        Sentencia
+            Sentencia
+                Sentencia
+                    Sentencia
+                        Sentencia
+                            Sentencia
+                                Sentencia
+                                    Sentencia
+                                        Sentencia
+                                            Sentencia Declarativa
+                                            :=
+                                                x:main
+                                                3
+                                        :=
+                                            y:main
+                                            2
+                                    :=
+                                        z:main
+                                        +
+                                            x:main
+                                            y:main
+                                For
+                                    Encabezado For
+                                        Asignacion e Incremento
+                                            :=
+                                                i:
+                                                1
+                                            Incremento
+                                                Up
+                                        Condiciones
+                                            error
+                                            error
+                                    Outf
+                                        en el for
+                            Sentencia Declarativa
+                        f3:main
+                            y:main
+                            Sentencia
+                                If
+                                    >=
+                                        >=
+                                            x:main
+                                            2
+                                        >=
+                                            z:main:f3
+                                            4
+                                    Cuerpo
+                                        Then
+                                            Outf
+                                                z:main:f3
+                                        Else
+                                Return
+                                    z:main:f3
+                    f3:main
+                        y:main
+                        Sentencia
+                            If
+                                >=
+                                    >=
+                                        x:main
+                                        2
+                                    >=
+                                        z:main:f3
+                                        4
+                                Cuerpo
+                                    Then
+                                        Outf
+                                            z:main:f3
+                                    Else
+                            Return
+                                z:main:f3
+                Sentencia Declarativa
+            :=
+                t1[1]
+                2.0
+        :=
+            x:main
+            t1[1]
+----------ARBOL SINTACTICO FUNCIONES -----------
+f3:main
+    y:main
+    Sentencia
+        If
+            >=
+                >=
+                    x:main
+                    2
+                >=
+                    z:main:f3
+                    4
+            Cuerpo
+                Then
+                    Outf
+                        z:main:f3
+                Else
+        Return
+            z:main:f3
 ----------ESTRUCTURAS RECONOCIDAS-----------
-Se reconocio declaracion de variable/s en la línea 3
-Se reconocio una asignacion en la línea 4
+Se reconocio declaracion de variable/s en la línea 4
 Se reconocio una asignacion en la línea 5
 Se reconocio una asignacion en la línea 6
-Se reconocio pattern matching en la línea 9
+Se reconocio una asignacion en la línea 7
+Se reconoció un FOR con condición en la línea 8
 Se reconocio salida de mensaje por pantalla en la línea 10
-Se reconocio una asignacion en la línea 13
-Se reconocio salida de mensaje por pantalla en la línea 14
-Se reconocio un IF_ELSE en la línea 16
-Se reconocio sentencia de retorno en la línea 17
-Se reconocio declaracion de funcion en la línea 18
-Se reconocio conversion en la línea 19
-Se reconocio una invocacion a funcion en la línea 19
-Se reconocio una invocacion a funcion en la línea 20
-Se reconocio declaracion de tipo en la línea 21
-Se reconocio una asignacion  en la línea 22
-Se reconocio una asignacion en la línea 23
-Se reconocio un FOR en la línea 25
-Se reconocio salida de mensaje por pantalla en la línea 27
-Se reconocio salida de mensaje por pantalla en la línea 28
+Se reconocio pattern matching en la línea 14
+Se reconocio salida de mensaje por pantalla en la línea 15
+Se reconocio una asignacion en la línea 18
+Se reconocio salida de mensaje por pantalla en la línea 19
+Se reconocio un IF/ELSE en la línea 21
+Se reconocio sentencia de retorno en la línea 22
+Se reconocio declaracion de funcion en la línea 23
+Se reconocio conversion en la línea 24
+Se reconocio una invocacion a funcion en la línea 24
+Se reconocio invocacion a funcion en la línea 25
+Se reconocio una invocacion a funcion en la línea 25
+Se reconocio declaracion de tipo en la línea 26
+Se reconocio una asignacion en la línea 27
+Se reconocio una asignacion en la línea 28
 Se reconocio el programa en la línea 30
 ----------TABLA DE SIMBOLOS-----------
-Token{id=263, lexema=en el for, linea=27, tipo=null}
-Token{id=257, lexema=i, linea=28, tipo=null}
-Token{id=257, lexema=f3, linea=20, tipo=null}
-Token{id=262, lexema=0, linea=25, tipo=ulongint}
-Token{id=262, lexema=1, linea=25, tipo=ulongint}
-Token{id=257, lexema=PROG_COMPLETO, linea=1, tipo=null}
-Token{id=262, lexema=2, linea=9, tipo=ulongint}
-Token{id=262, lexema=3, linea=4, tipo=ulongint}
-Token{id=262, lexema=4, linea=9, tipo=ulongint}
-Token{id=262, lexema=2.0, linea=22, tipo=single}
-Token{id=263, lexema=z es igual a 1, linea=14, tipo=null}
-Token{id=257, lexema=x, linea=25, tipo=ulongint}
-Token{id=257, lexema=y, linea=20, tipo=ulongint}
-Token{id=257, lexema=z, linea=17, tipo=ulongint}
-Token{id=257, lexema=t1, linea=23, tipo=null}
+Token{id=257, lexema=f3:main, linea=12, tipo=single, valor = null}
+Token{id=257, lexema=t1:main, linea=26, tipo=single, valor = null}
+Token{id=257, lexema=y:main, linea=4, tipo=ulongint, valor = null}
+Token{id=263, lexema=en el for, linea=10, tipo=cadena, valor = null}
+Token{id=257, lexema=z:main:f3, linea=12, tipo=ulongint, valor = null}
+Token{id=257, lexema=z:main, linea=4, tipo=ulongint, valor = null}
+Token{id=262, lexema=1, linea=8, tipo=ulongint, valor = 1}
+Token{id=257, lexema=PROG_COMPLETO, linea=1, tipo=null, valor = null}
+Token{id=257, lexema=x:main, linea=5, tipo=ulongint, valor = null}
+Token{id=262, lexema=2, linea=6, tipo=ulongint, valor = 2}
+Token{id=262, lexema=3, linea=5, tipo=ulongint, valor = 3}
+Token{id=262, lexema=4, linea=14, tipo=ulongint, valor = 4}
+Token{id=262, lexema=2.0, linea=27, tipo=single, valor = 2.0}
+Token{id=263, lexema=z es igual a 1, linea=19, tipo=cadena, valor = null}
+Token{id=0, lexema=i:main, linea=8, tipo=ulongint, valor = null}
+Token{id=262, lexema=10, linea=8, tipo=ulongint, valor = 10}
 -----------ERRORES LEXICOS----------
 -----------ERRORES SINTACTICOS----------
+-----------ERRORES SEMANTICOS----------
+La variable 'i' no fue declarada en la linea 8
+La variable 'a' no fue declarada en la linea 8
 ----------WARNINGS-----------
+WARNING: La variable 'y' ya esta declarada en la línea 4
+WARNING: La variable 'z' ya esta declarada en la línea 4
+WARNING: La variable 'z' ya esta declarada en la línea 12

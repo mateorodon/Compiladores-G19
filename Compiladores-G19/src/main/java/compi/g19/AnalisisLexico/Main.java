@@ -40,19 +40,21 @@ public class Main {
                         funcion.recorrerArbol(0);
                 }
             }
+            if (Parser.noHayErrores()) {
+                GeneradorAssembler generador = new GeneradorAssembler(parser);
+                File f = new File(args[0].substring(0, args[0].length() - 4) + ".asm");
+                f.createNewFile();
+                PrintWriter pw;
+                try {
+                    pw = new PrintWriter(args[0].substring(0, args[0].length() - 4) + ".asm");
+                    pw.print(generador.getAssembler());
+                    pw.close();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
 
-            GeneradorAssembler generador = new GeneradorAssembler(parser);
-            File f = new File(args[0].substring(0,args[0].length()-4)+".asm");
-            f.createNewFile();
-            PrintWriter pw;
-            try {
-                pw = new PrintWriter(args[0].substring(0,args[0].length()-4)+".asm");
-                pw.print(generador.getAssembler());
-                pw.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                imprimirEstructurasYErrores();
             }
-
             imprimirEstructurasYErrores();
         } catch (IOException e) {
             e.printStackTrace();

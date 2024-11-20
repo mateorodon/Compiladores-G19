@@ -1,0 +1,67 @@
+SE RECONOCIO UN COMENTARIO EN LA LINEA 24
+----------ARBOL SINTACTICO -----------
+PROGRAMA
+    Sentencia
+        Sentencia
+            Sentencia
+                Sentencia
+                    Sentencia Declarativa
+                    Sentencia Declarativa
+                :=
+                    a:main
+                    1
+            :=
+                b:main
+                5
+        :=
+            c:main
+            10
+----------ARBOL SINTACTICO FUNCIONES -----------
+devuelveUno:main
+    z:main:devuelveUnomain:devuelveUno
+    Sentencia
+        If
+            >
+                1
+                2
+            Cuerpo
+                Return
+                    1
+        Return
+            1
+----------ESTRUCTURAS RECONOCIDAS-----------
+Se reconocio sentencia de retorno en la línea 7
+Se reconocio un IF en la línea 8
+Se reconocio sentencia de retorno en la línea 9
+Se reconocio declaracion de funcion en la línea 10
+Se reconocio declaracion de variable/s en la línea 13
+Se reconocio una asignacion en la línea 14
+Se reconocio una asignacion en la línea 15
+Se reconocio una asignacion en la línea 16
+Se reconocio declaracion de variable/s en la línea 17
+Se reconocio declaracion de variable/s en la línea 21
+Se reconocio una invocacion a funcion en la línea 22
+Se reconocio una asignacion en la línea 22
+Se reconocio una asignacion en la línea 25
+Se reconocio el programa en la línea 27
+----------TABLA DE SIMBOLOS-----------
+Token{id=257, lexema=devuelveUno:main, linea=4, tipo=single, valor = null}
+Token{id=257, lexema=c:main, linea=13, tipo=ulongint, valor = null}
+Token{id=257, lexema=z:main:devuelveUno, linea=4, tipo=ulongint, valor = null}
+Token{id=257, lexema=total:main, linea=21, tipo=ulongint, valor = null}
+Token{id=257, lexema=b:main, linea=13, tipo=ulongint, valor = null}
+Token{id=262, lexema=1, linea=6, tipo=ulongint, valor = 1}
+Token{id=262, lexema=2, linea=6, tipo=ulongint, valor = 2}
+Token{id=257, lexema=devuelveUno, linea=22, tipo=null, valor = null}
+Token{id=262, lexema=5, linea=15, tipo=ulongint, valor = 5}
+Token{id=257, lexema=PROG_AMBITOS, linea=1, tipo=null, valor = null}
+Token{id=257, lexema=a:main, linea=13, tipo=ulongint, valor = null}
+Token{id=262, lexema=10, linea=16, tipo=ulongint, valor = 10}
+-----------ERRORES LEXICOS----------
+-----------ERRORES SINTACTICOS----------
+ERROR SINTACTICO: syntax error en la línea 27
+ERROR SINTACTICO: stack underflow. aborting... en la línea 27
+-----------ERRORES SEMANTICOS----------
+Ya existe una variable con el nombre 'c' definida en este ámbito en la linea 17
+----------WARNINGS-----------
+WARNING: La variable 'z' ya esta declarada en la línea 4

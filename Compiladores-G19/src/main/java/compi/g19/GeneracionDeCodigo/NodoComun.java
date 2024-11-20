@@ -212,7 +212,7 @@ public class NodoComun extends Nodo {
                 }
                 if (!(getIzq().getNombre().contains("=") || getDer().getNombre().contains("="))) {
                     varAuxiliar = Nodo.getVariableAuxiliar();
-                    label = pilaLabels.pop();
+                    label = pilaLabels.peek();
 
                     this.ultimoNodo = new NodoHoja(varAuxiliar);
                     this.ultimoNodo.setTipo(this.getIzq().getTipo());
@@ -239,7 +239,7 @@ public class NodoComun extends Nodo {
                 }
                 if (!(getIzq().getNombre().contains("!=") || getDer().getNombre().contains("!="))) {
                     varAuxiliar = Nodo.getVariableAuxiliar();
-                    label = pilaLabels.pop();
+                    label = pilaLabels.peek();
 
                     this.ultimoNodo = new NodoHoja(varAuxiliar);
                     this.ultimoNodo.setTipo(this.getIzq().getTipo());
@@ -289,7 +289,7 @@ public class NodoComun extends Nodo {
                 }
                 if (!(getIzq().getNombre().contains(">=") || getDer().getNombre().contains(">="))) {
                     varAuxiliar = Nodo.getVariableAuxiliar();
-                    label = pilaLabels.pop();
+                    label = pilaLabels.peek();
 
                     this.ultimoNodo = new NodoHoja(varAuxiliar);
                     this.ultimoNodo.setTipo(this.getIzq().getTipo());
@@ -316,7 +316,7 @@ public class NodoComun extends Nodo {
                 }
                 if (!(getIzq().getNombre().contains("<") || getDer().getNombre().contains("<"))) {
                     varAuxiliar = Nodo.getVariableAuxiliar();
-                    label = pilaLabels.pop();
+                    label = pilaLabels.peek();
 
                     this.ultimoNodo = new NodoHoja(varAuxiliar);
                     this.ultimoNodo.setTipo(this.getIzq().getTipo());
@@ -343,7 +343,7 @@ public class NodoComun extends Nodo {
                 }
                 if (!(getIzq().getNombre().contains("<=") || getDer().getNombre().contains("<="))) {
                     varAuxiliar = Nodo.getVariableAuxiliar();
-                    label = pilaLabels.pop();
+                    label = pilaLabels.peek();
 
                     this.ultimoNodo = new NodoHoja(varAuxiliar);
                     this.ultimoNodo.setTipo(this.getIzq().getTipo());
