@@ -1,0 +1,25 @@
+PROG_AMBITOS
+begin
+
+    Single fun devuelveUno (ulongint z)
+        BEGIN
+             IF (1>2) THEN
+                RET (1);
+             END_IF;
+             RET(1);
+    end;
+
+    ulongint a, b, c;
+    a := 1;
+    b := 5;
+    c := 10;
+    ulongint c;
+
+    ulongint total;
+    total := devuelveUno(a);
+
+    /# Intento de acceso fuera de ámbito de resultado #/
+    y := 2;
+
+end;
+                            

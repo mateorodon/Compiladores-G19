@@ -1,0 +1,26 @@
+PROG_COMPLETO
+begin
+/#ESTE PROGRAMA ES RECONOCIDO EN SU TOTALIDAD. NO TIENE ERRORES#/
+    ulongint x,y,z;
+    x := 3;
+    y:= 2;
+    z := x + y;
+    Single fun f3 (ulongint z)
+        BEGIN
+            IF (x>3) THEN
+                outf(z);
+            ELSE
+                begin
+                    z := 1;
+                    OUTF({z es igual a 1});
+                end
+            END_IF;
+        RET (2+2);
+        end;
+    f3(ulongint(x));
+    f3(y);
+    TYPEDEF TRIPLE <SINGLE> t1;
+    t1[1] := 2.0;
+    x := t1[1];
+    /#COMENTARIO DE PRUEBA#/
+end  

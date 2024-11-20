@@ -1,47 +1,19 @@
 ----------ARBOL SINTACTICO -----------
 PROGRAMA
     Sentencia
-        Sentencia Declarativa
-        Sentencia Declarativa
+        Sentencia
+            Sentencia
+                Sentencia
+                    Sentencia Declarativa
+                    :=
+                        x:main
+                        1
+                Sentencia Declarativa
+            :=
+                y:main
+                +
+                    1
+                    x:main
+        Outf
+            y:main
 ----------ARBOL SINTACTICO FUNCIONES -----------
-----------ESTRUCTURAS RECONOCIDAS-----------
-Se reconocio declaracion de variable/s en la línea 3
-Se reconocio declaracion de variable/s en la línea 4
-Se reconocio una asignacion en la línea 6
-Se reconocio declaracion de variable/s en la línea 6
-Se reconocio declaracion de tipo en la línea 10
-Se reconocio declaracion de variable/s en la línea 11
-Se reconocio una asignacion en la línea 12
-Se reconoció un FOR con condición en la línea 14
-Se reconocio una asignacion en la línea 20
-Se reconocio una asignacion en la línea 21
-Se reconocio una asignacion en la línea 22
-Se reconocio un IF/ELSE en la línea 24
-Se reconocio sentencia de retorno en la línea 25
-Se reconocio declaracion de funcion en la línea 26
-Se reconocio una invocacion a funcion en la línea 27
-Se reconocio el programa en la línea 28
-----------TABLA DE SIMBOLOS-----------
-Token{id=257, lexema=prog_base, linea=1, tipo=null, valor = null}
-Token{id=257, lexema=identificadormu:main, linea=3, tipo=ulongint, valor = null}
-Token{id=263, lexema=en el for, linea=16, tipo=null, valor = null}
-Token{id=257, lexema=w:main, linea=8, tipo=ulongint, valor = null}
-Token{id=257, lexema=f3, linea=8, tipo=null, valor = null}
-Token{id=262, lexema=1, linea=14, tipo=ulongint, valor = null}
-Token{id=257, lexema=x:main, linea=4, tipo=ulongint, valor = null}
-Token{id=262, lexema=2, linea=5, tipo=ulongint, valor = 2}
-Token{id=262, lexema=1.0, linea=13, tipo=single, valor = 1.0}
-Token{id=262, lexema=2.0, linea=22, tipo=single, valor = 2.0}
-Token{id=262, lexema=1.2, linea=12, tipo=single, valor = 1.2}
-Token{id=262, lexema=0.3, linea=22, tipo=single, valor = 0.3}
-Token{id=257, lexema=i:main, linea=6, tipo=ulongint, valor = null}
-Token{id=262, lexema=10, linea=14, tipo=ulongint, valor = 10}
------------ERRORES LEXICOS----------
------------ERRORES SINTACTICOS----------
-ERROR SINTACTICO: Las sentencias deben terminar con ; en la línea 6
-ERROR SINTACTICO: No puede haber una sentencia de retorno fuera de una funcion en la línea 25
------------ERRORES SEMANTICOS----------
-Ya existe una variable con el nombre 'x' definida en este ámbito en la linea 11
-----------WARNINGS-----------
-WARNING: El identificador 'identificadormuylargo' fue truncado a 'identificadormu' en la línea 3
-WARNING: La variable 'x' ya esta declarada en la línea 4
