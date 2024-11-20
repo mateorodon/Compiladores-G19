@@ -144,8 +144,11 @@ encabezado_for2:
                                                                                              }
                                                                                        }
 
-                                                                                       Nodo asignacion = new NodoComun("Asignacion", idAsignacion, (Nodo)$3.obj); //Cambie sval x obj
-                                                                                       Nodo incremento = new NodoComun("Incremento", (Nodo)$7.obj, (Nodo)$8.obj); //Idem
+                                                                                        NodoHoja constante = new NodoHoja($3.sval, TablaSimbolos.getToken($3.sval));
+                                                                                       Nodo asignacion = new NodoComun($2.sval, idAsignacion, constante); //Cambie sval x obj
+                                                                                       NodoHoja constante2 = new NodoHoja($8.sval, TablaSimbolos.getToken($8.sval));
+
+                                                                                       Nodo incremento = new NodoComun("Incremento", (Nodo)$7.obj, constante2); //Idem
                                                                                        Nodo condicion = (Nodo)$5.obj;
                                                                                        Nodo iteradorCondicion = (Nodo)$11.obj;
 
@@ -586,6 +589,9 @@ invocacion_funcion:
                 if (funcionesDeclaradas.containsKey($1.sval + ":" + ambitoVar)){
                     Nodo exp = (Nodo)$3.obj;
                     NodoComun funcion = funcionesDeclaradas.get($1.sval + ":" + ambitoVar);
+                    if(funcionesDeclaradas.containsKey(funcion.getNombre())){
+                        funcionAutoinvocada = true;
+                    }
                     $$.obj = generarLlamadoFuncion(funcion,exp);
                 }
                 else {
@@ -615,6 +621,9 @@ invocacion_funcion:
                         Nodo exp = (Nodo)$5.obj;
                         exp.setTipo($3.sval);
                         NodoComun funcion = funcionesDeclaradas.get($1.sval + ":" + ambitoVar);
+                        if(funcionesDeclaradas.containsKey(funcion.getNombre())){
+                            funcionAutoinvocada = true;
+                        }
                         $$.obj = generarLlamadoFuncion(funcion,exp);
                     }
                     else {
@@ -843,6 +852,7 @@ static List<Nodo> expresiones1 = new ArrayList<>();
 static List<Nodo> expresiones2 = new ArrayList<>();
 static boolean inList1 = false;
 static boolean inList2 = false;
+static boolean funcionAutoinvocada = false;
 
 public int yylex() throws IOException {
     Token t = AnalizadorLexico.obtenerToken();
@@ -851,6 +861,10 @@ public int yylex() throws IOException {
       return (int) t.getId();
     }
     return 0;
+}
+
+public static boolean getFuncionAutoinvocada(){
+    return funcionAutoinvocada;
 }
 
 public static void yyerror(String error){

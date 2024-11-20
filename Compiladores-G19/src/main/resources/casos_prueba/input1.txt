@@ -5,21 +5,19 @@ begin
     Single fun f3 (ulongint w)
     begin
         TYPEDEF TRIPLE <ulongint> t1;
-        single x;
-        x := 1.2;
+        single j;
     IF (x < 1.0) then
-        FOR (i := 1; i < 10 ; up 1 ; (a> 10))
-        begin
+
             Outf ({en el for});
-        end;
+
     ELSE
         begin
             t1[1] := 2;
-            x := t1[1];
-            x:= 2.0 + 3.0s-1;
+            j := t1[1];
+            j:= 2.0 + 3.0s-1;
         end
     END_IF;
-    RET (x+y);
+    RET (j+y);
     end;
-    f3(ulongint(x));
+    f3(ulongint(j));
 end

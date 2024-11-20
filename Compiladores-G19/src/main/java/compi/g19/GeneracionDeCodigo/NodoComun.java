@@ -6,6 +6,8 @@ import lombok.Setter;
 
 import java.util.Stack;
 
+import static compi.g19.AnalisisSintactico.Parser.getFuncionAutoinvocada;
+
 @Getter
 @Setter
 public class NodoComun extends Nodo {
@@ -94,12 +96,8 @@ public class NodoComun extends Nodo {
                     varFor.add(getIzq().getNombre());
                 salida += getDer().getAssembler() + getIzq().getAssembler();
                 if (getIzq().getTipo().equals(ENTERO)) {
-                    if (getDer().getUltimoNodo().getUso().equals("variableAuxiliar"))
-                        salida += "MOV "+getIzq().getUltimoNodo().getNombre()+" ," + getDer().getUltimoNodo().getNombre() + "\n";
-                    else {
-                        salida += "MOV EAX ," + getDer().getUltimoNodo().getNombre() + "\n";
-                        salida += "MOV " + getIzq().getUltimoNodo().getNombre() + ", " + "EAX" + "\n";
-                    }
+                    salida += "MOV EAX ," + getDer().getUltimoNodo().getNombre() + "\n";
+                    salida += "MOV " + getIzq().getUltimoNodo().getNombre() + ", " + "EAX" + "\n";
                 } else {
                     salida += "FLD " + getDer().getUltimoNodo().getNombre() + "\n";
                     salida += "FST " + getIzq().getUltimoNodo().getNombre() + "\n";
@@ -260,11 +258,11 @@ public class NodoComun extends Nodo {
                 break;
 
             case ">":
-                    salida += getIzq().getAssembler() + getDer().getAssembler();
-                if (!(getIzq().getNombre().contains(">") || getDer().getNombre().contains(">"))){
+                salida += getIzq().getAssembler() + getDer().getAssembler();
+                if (!(getIzq().getNombre().contains(">") || getDer().getNombre().contains(">"))) {
 
                     varAuxiliar = Nodo.getVariableAuxiliar();
-                    label = pilaLabels.peek();
+                    label = pilaLabels.pop();
 
                     this.ultimoNodo = new NodoHoja(varAuxiliar);
                     this.ultimoNodo.setTipo(this.getIzq().getTipo());
@@ -397,7 +395,7 @@ public class NodoComun extends Nodo {
                     salida += "FLD " + getIzq().getUltimoNodo().getNombre() + "\n";
                     salida += "FST " + ret + "\n";
                 }
-                salida += "ret " +"\n";
+                salida += "ret " + "\n";
                 break;
             case "Outf":
                 String variablePrint = getVariablePrint();
@@ -448,7 +446,6 @@ public class NodoComun extends Nodo {
                 varAuxiliar = Nodo.getVariableAuxiliar();
 
                 this.ultimoNodo = new NodoHoja(varAuxiliar);
-                this.ultimoNodo.setTipo(this.getIzq().getTipo());
                 this.ultimoNodo.setUso("variableAuxiliar");
 
                 String var = varFor.pop();
@@ -477,15 +474,18 @@ public class NodoComun extends Nodo {
                     salida += getNombre() + ":\n";
                     salida += getDer().getAssembler();
                     pilaVariablesAuxiliares.pop();
-                    salida += "JMP errorFun";
-                } else if (getUso().equals("llamado")){
+                    if (getFuncionAutoinvocada())
+                        salida += " JMP AutoinvocacionFunciones\n";
+                    else
+                        salida += "JMP errorFun";
+                } else if (getUso().equals("llamado")) {
 
                     //String varAux = getVariableAuxiliar();
                     auxParam = getIzq().getNombre();
                     salida += "MOV " + "EAX" + ", " + getIzq().getNombre() + "\n";
                     //this.ultimoNodo = new NodoHoja(varAux);
                     //this.ultimoNodo.setUso("variableAuxiliar");
-                    salida += salida + "call " + getNombre() +"\n";
+                    salida += salida + "call " + getNombre() + "\n";
                 }
                 break;
         }
