@@ -362,6 +362,7 @@ public class NodoComun extends Nodo {
                 break;
             case "If":
                 label = getLabel();
+                pilaLabels.push(label); //Condicion
                 pilaLabels.push(label);
                 salida += getIzq().getAssembler() + getDer().getAssembler() + "\n";
                 break;
@@ -413,6 +414,7 @@ public class NodoComun extends Nodo {
                 break;
             case "For":
                 label = getLabel();
+                pilaLabels.push(label); //Condicion
                 pilaLabels.push(label);
                 if (getIzq() != null) {
                     salida += getIzq().getAssembler();

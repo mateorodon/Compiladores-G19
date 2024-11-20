@@ -1,20 +1,20 @@
 prog_base
 begin
     ulongint identificadormuylargo;
-    x := 3.0s-1;
+    ulongint x;
+    x := 2
     ulongint i;
+
     Single fun f3 (ulongint w)
     begin
         TYPEDEF TRIPLE <ulongint> t1;
         single x;
         x := 1.2;
     IF (x < 1.0) then
-
-        FOR (i := 1; i < 10 ; up 1 ; (a> 10))
+        FOR (i := 1; i < 10 ; up 1 ; ( 2 > 10))
         begin
             Outf ({en el for});
         end;
-
     ELSE
         begin
             t1[1] := 2;
@@ -25,4 +25,4 @@ begin
     RET (x);
     end;
     f3(ulongint(x));
-end             
+end      

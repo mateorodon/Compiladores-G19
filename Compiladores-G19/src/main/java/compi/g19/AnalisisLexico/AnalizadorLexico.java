@@ -18,8 +18,8 @@ public class AnalizadorLexico {
     private static int[][] matrizEstados = GeneradorMatriz.matrizEstados;
     private static AccionSemantica[][] matrizAS = GeneradorMatriz.matrizAS;
     static List<String> warning = new ArrayList<>();
-    static List<String> errorSintactico = new ArrayList<>();
-    static List<String> errorLexico = new ArrayList<>();
+    public static List<String> errorSintactico = new ArrayList<>();
+    public static List<String> errorLexico = new ArrayList<>();
     static List<String> estructuraReconocida = new ArrayList();
 
     public AnalizadorLexico(BufferedReader entrada) {
