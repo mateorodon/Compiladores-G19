@@ -91,65 +91,26 @@ encabezado_for:
     ;
 
 encabezado_for1:
-    ID ASIGNACION CONSTANTE ';' condicion ';' up_down CONSTANTE {
-
-                                                                    String ambitoVar = buscarAmbito(ambito,$1.sval);
-                                                                    NodoHoja idAsignacion = null;
-                                                                    if (!ambitoVar.equals("")) {
-                                                                        agregarErrorSemantico("La variable '" + $1.sval + "' ya fue declarada");
-                                                                        idAsignacion = new NodoHoja("error");
-                                                                    }
-                                                                    else {
-                                                                        Token t = new Token();
-                                                                        t.setTipo(ENTERO);
-                                                                        t.getLexema().setLength(0);
-                                                                        t.getLexema().append($1.sval).append(":").append(ambito);
-                                                                        t.setAmbito(ambito);
-                                                                        t.setUso("variable");
-                                                                        TablaSimbolos.addSimbolo(t.getLexema().toString(),t);
-                                                                        idAsignacion = new NodoHoja($1.sval + ":" + ambitoVar, t);
-                                                                    }
-
-                                                                    Nodo asignacion = new NodoComun(":=", idAsignacion, new NodoHoja($3.sval,TablaSimbolos.getToken($3.sval)));
-                                                                    NodoHoja constanteUpDown = new NodoHoja($8.sval,TablaSimbolos.getToken($8.sval));
-                                                                    Nodo incremento = new NodoComun("Incremento", (Nodo)$7.obj, constanteUpDown); //Idem
-                                                                    Nodo condicion = (Nodo)$5.obj;
-
-                                                                    Nodo asgnacionIncremento = new NodoComun("Asignacion e Incremento", asignacion, incremento);
-
-                                                                    $$.obj = new NodoComun ("Encabezado For", asgnacionIncremento, condicion);
-
-                                                                    AnalizadorLexico.agregarEstructura("Se reconoció un FOR de 3");
-                                                                    TablaSimbolos.removeToken($1.sval);
-                                                                }
-    | ID ASIGNACION CONSTANTE ';' condicion ';' CONSTANTE {yyerror("Falta UP/DOWN en el FOR");}
-    | ID ASIGNACION CONSTANTE condicion ';' up_down CONSTANTE {yyerror("Falta ';' en el FOR");}
-    | ID ASIGNACION CONSTANTE ';' condicion up_down CONSTANTE {yyerror("Falta ';' en el FOR");}
-    | ID ASIGNACION CONSTANTE ';' condicion ';' up_down {yyerror("Falta constante después de UP/DOWN en el FOR");}
+    asignacion_for ';' condicion ';' up_down CONSTANTE {
+                                                        NodoHoja constanteUpDown = new NodoHoja($6.sval,TablaSimbolos.getToken($6.sval));
+                                                        Nodo incremento = new NodoComun("Incremento", (Nodo)$5.obj, constanteUpDown); //Idem
+                                                        Nodo condicion = (Nodo)$3.obj;
+                                                        Nodo asgnacionIncremento = new NodoComun("Asignacion e Incremento",(Nodo)$1.obj , incremento);
+                                                        $$.obj = new NodoComun ("Encabezado For", asgnacionIncremento, condicion);
+                                                        AnalizadorLexico.agregarEstructura("Se reconoció un FOR de 3");
+                                                        }
+    | asignacion_for ';' condicion ';' CONSTANTE {yyerror("Falta UP/DOWN en el FOR");}
+    | asignacion_for condicion ';' up_down CONSTANTE {yyerror("Falta ';' en el FOR");}
+    | asignacion_for ';' condicion up_down CONSTANTE {yyerror("Falta ';' en el FOR");}
+    | asignacion_for ';' condicion ';' up_down {yyerror("Falta constante después de UP/DOWN en el FOR");}
     ;
 
 encabezado_for2:
-    ID ASIGNACION CONSTANTE ';' condicion ';' up_down CONSTANTE ';' '(' condicion ')' {String ambitoVar = buscarAmbito(ambito,$1.sval);
-                                                                                       NodoHoja idAsignacion = null;
-                                                                                       if (!ambitoVar.equals("")) {
-                                                                                            agregarErrorSemantico("La variable '" + $1.sval + "' ya fue declarada");
-                                                                                            idAsignacion = new NodoHoja("error");
-                                                                                       }
-                                                                                       else {
-                                                                                             Token t = new Token();
-                                                                                             t.setTipo(ENTERO);
-                                                                                             t.getLexema().setLength(0);
-                                                                                             t.getLexema().append($1.sval).append(":").append(ambito);
-                                                                                             t.setAmbito(ambito);
-                                                                                             t.setUso("variable");
-                                                                                             TablaSimbolos.addSimbolo(t.getLexema().toString(),t);
-                                                                                             idAsignacion = new NodoHoja($1.sval + ":" + ambitoVar, t);
-                                                                                       }
-
-                                                                                       Nodo asignacion = new NodoComun(":=", idAsignacion, new NodoHoja($3.sval,TablaSimbolos.getToken($3.sval)));
-                                                                                       Nodo incremento = new NodoComun("Incremento", (Nodo)$7.obj, (Nodo)$8.obj); //Idem
-                                                                                       Nodo condicion = (Nodo)$5.obj;
-                                                                                       Nodo iteradorCondicion = (Nodo)$11.obj;
+    asignacion_for ';' condicion ';' up_down CONSTANTE ';' '(' condicion ')' {
+                                                                                       Nodo asignacion = (Nodo)$1.obj;
+                                                                                       Nodo incremento = new NodoComun("Incremento", (Nodo)$5.obj, (Nodo)$6.obj); //Idem
+                                                                                       Nodo condicion = (Nodo)$3.obj;
+                                                                                       Nodo iteradorCondicion = (Nodo)$9.obj;
 
                                                                                        Nodo asgnacionIncremento = new NodoComun("Asignacion e Incremento", asignacion, incremento);
                                                                                        Nodo condiciones = new NodoComun("Condiciones", condicion, iteradorCondicion);
@@ -160,11 +121,34 @@ encabezado_for2:
                                                                                        TablaSimbolos.removeToken($1.sval);
                                                                                        }
 
-    | ID ASIGNACION CONSTANTE ';' condicion ';' CONSTANTE ';' '(' condicion ')' {yyerror("Falta UP/DOWN en el FOR");}
-    | ID ASIGNACION CONSTANTE condicion ';' up_down CONSTANTE ';' '(' condicion ')' {yyerror("Falta ';' en el FOR");}
-    | ID ASIGNACION CONSTANTE ';' condicion up_down CONSTANTE ';' '(' condicion ')' {yyerror("Falta ';' en el FOR");}
-    | ID ASIGNACION CONSTANTE ';' condicion ';' up_down '(' condicion ')' {yyerror("Falta constante después de UP/DOWN en el FOR");}
+    | asignacion_for ';' condicion ';' CONSTANTE ';' '(' condicion ')' {yyerror("Falta UP/DOWN en el FOR");}
+    | asignacion_for condicion ';' up_down CONSTANTE ';' '(' condicion ')' {yyerror("Falta ';' en el FOR");}
+    | asignacion_for ';' condicion up_down CONSTANTE ';' '(' condicion ')' {yyerror("Falta ';' en el FOR");}
+    | asignacion_for ';' condicion ';' up_down '(' condicion ')' {yyerror("Falta constante después de UP/DOWN en el FOR");}
     ;
+
+asignacion_for: ID ASIGNACION CONSTANTE
+                                        {String ambitoVar = buscarAmbito(ambito,$1.sval);
+                                        NodoHoja idAsignacion = null;
+                                        if (!ambitoVar.equals("")) {
+                                            Token t = TablaSimbolos.getToken($1.sval + ":" + ambitoVar);
+                                            idAsignacion = new NodoHoja($1.sval + ":" + ambitoVar, t);
+                                        }
+                                        else {
+                                            Token t = new Token();
+                                            t.setTipo(ENTERO);
+                                            t.getLexema().setLength(0);
+                                            t.getLexema().append($1.sval).append(":").append(ambito);
+                                            t.setAmbito(ambito);
+                                            t.setUso("variable");
+                                            TablaSimbolos.addSimbolo(t.getLexema().toString(),t);
+                                            idAsignacion = new NodoHoja($1.sval + ":" + ambito, t);
+                                        }
+                                        NodoHoja constante = new NodoHoja($3.sval, TablaSimbolos.getToken($3.sval));
+                                        $$.obj = new NodoComun($2.sval, idAsignacion, constante);
+                                        TablaSimbolos.removeToken($1.sval);
+                                        }
+                                        ;
 
 up_down:
     UP {$$.obj = new NodoHoja("Up");}

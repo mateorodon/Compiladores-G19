@@ -457,10 +457,13 @@ public class NodoComun extends Nodo {
                     codigoIncremento += "SUB EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
                     codigoIncremento += "JO errorRestaEnteros\n";
                     codigoIncremento += "MOV " + varAuxiliar + ", EAX" + "\n";
+                    codigoIncremento += "MOV " + var + ", " + varAuxiliar;
+
                 } else {
                     codigoIncremento += "MOV EAX, " + var + "\n";
                     codigoIncremento += "ADD EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
                     codigoIncremento += "MOV " + varAuxiliar + ", EAX" + "\n";
+                    codigoIncremento += "MOV " + var + ", " + varAuxiliar + "\n";
                 }
 
                 break;
