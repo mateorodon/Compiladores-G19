@@ -4,4 +4,4 @@ begin
     tint t1;
     t1[1] := 10;
     t1[2] := 15;
-end  
+end

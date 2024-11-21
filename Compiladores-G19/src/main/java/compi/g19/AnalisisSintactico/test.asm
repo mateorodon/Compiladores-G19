@@ -26,9 +26,9 @@ invoke ExitProcess, 0
 invoke MessageBox, NULL, addr OverflowSumaDouble, addr error, MB_OK 
 invoke ExitProcess, 0 
 main:
-FLD 10
-FSTP [t1 + 0]
-FLD 15
-FSTP [t1 + 4]
+MOV EAX, 10
+MOV [t1 + 0], EAX
+MOV EAX, 15
+MOV [t1 + 4], EAX
 invoke ExitProcess, 0 
 end main

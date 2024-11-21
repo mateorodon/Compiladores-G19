@@ -662,7 +662,7 @@ static int cantReturns = 0;
 static List<String> varDeclaradas = new ArrayList<>();
 static String tipoActual;
 static List<String> erroresSemanticos = new ArrayList<>();
-static Map<String,String> tiposDeclarados = new HashMap<>();
+public static Map<String,String> tiposDeclarados = new HashMap<>();
 public static Map<String,NodoComun> funcionesDeclaradas = new HashMap<>();
 static List<Nodo> expresiones1 = new ArrayList<>();
 static List<Nodo> expresiones2 = new ArrayList<>();
