@@ -199,7 +199,8 @@ asignacion:
                                                     if (tiposDeclarados.containsKey(tipo)){
                                                         String tipoTriple = tiposDeclarados.get(tipo);
                                                         NodoHoja nodo = new NodoHoja($1.sval + $2.sval + $3.sval + $4.sval, t);
-                                                        nodo.setTipo(tipoTriple);
+                                                        //nodo.setTipo(tipoTriple);
+                                                        nodo.setUso("arreglo");
                                                         $$.obj = new NodoComun($5.sval,nodo,(Nodo)$6.obj);
                                                     }
                                                     else {

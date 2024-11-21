@@ -94,13 +94,37 @@ public class NodoComun extends Nodo {
             case ":=":
                 if (inFor)
                     varFor.add(getIzq().getNombre());
-                salida += getDer().getAssembler() + getIzq().getAssembler();
-                if (getIzq().getTipo().equals(ENTERO)) {
-                    salida += "MOV EAX ," + getDer().getUltimoNodo().getNombre() + "\n";
-                    salida += "MOV " + getIzq().getUltimoNodo().getNombre() + ", " + "EAX" + "\n";
+                salida += getDer().getAssembler();
+
+                if (getIzq().getUso().equals("arreglo")) {
+                    // Extraer el nombre del arreglo para obtener su indice
+                    String nombreConIndice = getIzq().getNombre(); // Ejemplo: "arreglo[1]"
+                    String arregloNombre = nombreConIndice.substring(0, nombreConIndice.indexOf('['));
+                    int indice = Integer.parseInt(nombreConIndice.substring(nombreConIndice.indexOf('[') + 1, nombreConIndice.indexOf(']')));
+
+
+                    // Calcular desplazamiento basado en el índice (índice - 1) * tamaño_elemento
+                    int desplazamiento = (indice - 1) * (getIzq().getTipo().equals(ENTERO) ? 4 : 4); // Siempre 4 bytes
+
+                    if (getIzq().getTipo().equals(ENTERO)) {
+                        // Generar código para asignación a un entero en el arreglo
+                        salida += "MOV EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
+                        salida += "MOV [" + arregloNombre + " + " + desplazamiento + "], EAX\n";
+                    } else {
+                        // Generar código para asignación a un flotante en el arreglo
+                        salida += "FLD " + getDer().getUltimoNodo().getNombre() + "\n";
+                        salida += "FSTP [" + arregloNombre + " + " + desplazamiento + "]\n";
+                    }
                 } else {
-                    salida += "FLD " + getDer().getUltimoNodo().getNombre() + "\n";
-                    salida += "FST " + getIzq().getUltimoNodo().getNombre() + "\n";
+                    // Asignación estándar (no arreglo)
+                    salida += getIzq().getAssembler();
+                    if (getIzq().getTipo().equals(ENTERO)) {
+                        salida += "MOV EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
+                        salida += "MOV " + getIzq().getUltimoNodo().getNombre() + ", EAX\n";
+                    } else {
+                        salida += "FLD " + getDer().getUltimoNodo().getNombre() + "\n";
+                        salida += "FST " + getIzq().getUltimoNodo().getNombre() + "\n";
+                    }
                 }
                 break;
             case "+":

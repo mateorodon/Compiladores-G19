@@ -15,8 +15,8 @@ OperacionEnteroNegativo db "El resultado de la operacion no puede ser negativo."
 OverflowSumaDouble db "Se produjo un un overflow en la suma de doubles.", 0 
 error db "Error", 0 
 printMensaje db "Print", 0 
-_t1:main db ?
-_2 db 2
+_15 db 15
+_10 db 10
 
 .code
 invoke MessageBox, NULL, addr AutoinvocacionFunciones, addr error, MB_OK 
@@ -26,7 +26,9 @@ invoke ExitProcess, 0
 invoke MessageBox, NULL, addr OverflowSumaDouble, addr error, MB_OK 
 invoke ExitProcess, 0 
 main:
-MOV EAX ,2
-MOV t1[1], EAX
+FLD 10
+FSTP [t1 + 0]
+FLD 15
+FSTP [t1 + 4]
 invoke ExitProcess, 0 
 end main

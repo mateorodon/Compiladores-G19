@@ -2,23 +2,30 @@
 PROGRAMA
     Sentencia
         Sentencia
-            Sentencia Declarativa
-            Sentencia Declarativa
+            Sentencia
+                Sentencia Declarativa
+                Sentencia Declarativa
+            :=
+                t1[1]
+                10
         :=
-            t1[1]
-            2
+            t1[2]
+            15
 ----------ARBOL SINTACTICO FUNCIONES -----------
 ----------ESTRUCTURAS RECONOCIDAS-----------
 Se reconocio declaracion de tipo en la línea 3
 Se reconocio declaracion de variable/s en la línea 4
 Se reconocio una asignacion en la línea 5
-Se reconocio el programa en la línea 6
+Se reconocio una asignacion en la línea 6
+Se reconocio el programa en la línea 7
 ----------TABLA DE SIMBOLOS-----------
 Token{id=257, lexema=prog_base, linea=1, tipo=null, valor = null}
 Token{id=262, lexema=1, linea=5, tipo=ulongint, valor = null}
-Token{id=257, lexema=t1:main, linea=4, tipo=ulongint, valor = null}
-Token{id=262, lexema=2, linea=5, tipo=ulongint, valor = 2}
+Token{id=257, lexema=t1:main, linea=4, tipo=tint, valor = null}
+Token{id=262, lexema=2, linea=6, tipo=ulongint, valor = null}
+Token{id=262, lexema=15, linea=6, tipo=ulongint, valor = 15}
 Token{id=257, lexema=tint:main, linea=3, tipo=ulongint, valor = null}
+Token{id=262, lexema=10, linea=5, tipo=ulongint, valor = 10}
 -----------ERRORES LEXICOS----------
 -----------ERRORES SINTACTICOS----------
 -----------ERRORES SEMANTICOS----------
@@ -27,13 +34,16 @@ Token{id=257, lexema=tint:main, linea=3, tipo=ulongint, valor = null}
 Se reconocio declaracion de tipo en la línea 3
 Se reconocio declaracion de variable/s en la línea 4
 Se reconocio una asignacion en la línea 5
-Se reconocio el programa en la línea 6
+Se reconocio una asignacion en la línea 6
+Se reconocio el programa en la línea 7
 ----------TABLA DE SIMBOLOS-----------
 Token{id=257, lexema=prog_base, linea=1, tipo=null, valor = null}
 Token{id=262, lexema=1, linea=5, tipo=ulongint, valor = null}
-Token{id=257, lexema=t1:main, linea=4, tipo=ulongint, valor = null}
-Token{id=262, lexema=2, linea=5, tipo=ulongint, valor = 2}
+Token{id=257, lexema=t1:main, linea=4, tipo=tint, valor = null}
+Token{id=262, lexema=2, linea=6, tipo=ulongint, valor = null}
+Token{id=262, lexema=15, linea=6, tipo=ulongint, valor = 15}
 Token{id=257, lexema=tint:main, linea=3, tipo=ulongint, valor = null}
+Token{id=262, lexema=10, linea=5, tipo=ulongint, valor = 10}
 -----------ERRORES LEXICOS----------
 -----------ERRORES SINTACTICOS----------
 -----------ERRORES SEMANTICOS----------
