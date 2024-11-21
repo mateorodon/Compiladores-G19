@@ -1,0 +1,20 @@
+PROG_base
+BEGIN
+    ULONGINT rr;
+    rr := 2 - 10;
+    TYPEDEF TRIPLE <ULONGINT> w;
+    w j;
+    j[2] := rr;
+    if ((3,2,1) >= (2,1,0)) then
+        OUTF(rr);
+    else
+        rr := 2;
+    end_if;
+    if (3 < 2) then
+        rr := 4;
+    else
+        rr := 3;
+    end_if;
+    rr := 5;
+    OUTF({fin del programa});
+END         

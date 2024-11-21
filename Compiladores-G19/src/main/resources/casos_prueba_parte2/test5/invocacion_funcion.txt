@@ -1,0 +1,12 @@
+invocacion_funcion
+begin
+    Single fun f1(ulongint p)
+    BEGIN
+        ulongint e;
+        e := p + 4;
+        ret(e);
+    END;
+    x := 2;
+    y := x;
+    outf({bye bye});
+end    

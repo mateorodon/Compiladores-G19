@@ -358,7 +358,7 @@ public abstract class AccionSemantica {
                 c == '>' || c == '<' || c == '=' || c == '(' ||
                 c == ')' || c == ',' || c == '.' || c == ';' ||
                 c == '_' || c == '{' || c == '}' || c == '#' ||
-                c == ':' || c == '[' || c == ']' ||
+                c == ':' || c == '[' || c == ']' || c == '!' ||
                 Character.isLetter(c) || Character.isDigit(c);
     }
 }

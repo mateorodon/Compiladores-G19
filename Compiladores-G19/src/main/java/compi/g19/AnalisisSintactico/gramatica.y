@@ -737,6 +737,7 @@ condicion:
                     }
                 else {
                     aux = new NodoComun($6.sval, exp1, exp2);
+                    aux.setUso("pattern_matching");
                 }
                 if (salida.getIzq() == null)
                     salida.setIzq(aux);
@@ -933,7 +934,7 @@ private Nodo generarLlamadoFuncion(NodoComun funcion, Nodo copia){
         Nodo param = funcion.getIzq();
         if (param.getTipo().equals(copia.getTipo())){
             param.setNombre(copia.getNombre());
-            salida = new NodoComun(funcion.getNombre(),param,funcion.getDer());
+            salida = new NodoComun(funcion,param,null);
             salida.setUso("llamado");
         }
         else {

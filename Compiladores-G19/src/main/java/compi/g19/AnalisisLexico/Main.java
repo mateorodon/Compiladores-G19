@@ -40,6 +40,7 @@ public class Main {
                         funcion.recorrerArbol(0);
                 }
             }
+            imprimirEstructurasYErrores();
             if (Parser.noHayErrores()) {
                 GeneradorAssembler generador = new GeneradorAssembler(parser);
                 File f = new File(args[0].substring(0, args[0].length() - 4) + ".asm");
@@ -52,10 +53,7 @@ public class Main {
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
-
-                imprimirEstructurasYErrores();
             }
-            imprimirEstructurasYErrores();
         } catch (IOException e) {
             e.printStackTrace();
         }

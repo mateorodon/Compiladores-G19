@@ -66,6 +66,13 @@ public class NodoComun extends Nodo {
         der = nodoDer;
     }
 
+    public NodoComun(Nodo nodo, Nodo nodoIzq, Nodo nodoDer) {
+        super(nodo.getNombre(), nodo.getToken());
+        izq = nodoIzq;
+        der = nodoDer;
+    }
+
+
     @Override
     public void recorrerArbol(int nivel) {
         imprimirNodo(nombre, nivel);
@@ -168,7 +175,7 @@ public class NodoComun extends Nodo {
                 if (getIzq().getTipo().equals(ENTERO)) {
                     salida += "MOV EAX, " + getIzq().getUltimoNodo().getNombre() + "\n";
                     salida += "SUB EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
-                    salida += "JO errorRestaEnteros\n";
+                    salida += "JO OperacionEnteroNegativo\n";
                     salida += "MOV " + varAuxiliar + ", EAX" + "\n";
 
                 } else {
@@ -242,7 +249,10 @@ public class NodoComun extends Nodo {
                 }
                 if (!(getIzq().getNombre().contains("=") || getDer().getNombre().contains("="))) {
                     varAuxiliar = Nodo.getVariableAuxiliar();
-                    label = pilaLabels.peek();
+                    if (getUso() != null && getUso().equals("pattern_matching"))
+                        label = pilaLabels.peek();
+                    else
+                        label = pilaLabels.pop();
 
                     this.ultimoNodo = new NodoHoja(varAuxiliar);
                     this.ultimoNodo.setTipo(this.getIzq().getTipo());
@@ -269,7 +279,10 @@ public class NodoComun extends Nodo {
                 }
                 if (!(getIzq().getNombre().contains("!=") || getDer().getNombre().contains("!="))) {
                     varAuxiliar = Nodo.getVariableAuxiliar();
-                    label = pilaLabels.peek();
+                    if (getUso() != null && getUso().equals("pattern_matching"))
+                        label = pilaLabels.peek();
+                    else
+                        label = pilaLabels.pop();
 
                     this.ultimoNodo = new NodoHoja(varAuxiliar);
                     this.ultimoNodo.setTipo(this.getIzq().getTipo());
@@ -290,9 +303,11 @@ public class NodoComun extends Nodo {
             case ">":
                 salida += getIzq().getAssembler() + getDer().getAssembler();
                 if (!(getIzq().getNombre().contains(">") || getDer().getNombre().contains(">"))) {
-
                     varAuxiliar = Nodo.getVariableAuxiliar();
-                    label = pilaLabels.pop();
+                    if (getUso() != null && getUso().equals("pattern_matching"))
+                        label = pilaLabels.peek();
+                    else
+                        label = pilaLabels.pop();
 
                     this.ultimoNodo = new NodoHoja(varAuxiliar);
                     this.ultimoNodo.setTipo(this.getIzq().getTipo());
@@ -319,7 +334,10 @@ public class NodoComun extends Nodo {
                 }
                 if (!(getIzq().getNombre().contains(">=") || getDer().getNombre().contains(">="))) {
                     varAuxiliar = Nodo.getVariableAuxiliar();
-                    label = pilaLabels.peek();
+                    if (getUso() != null && getUso().equals("pattern_matching"))
+                        label = pilaLabels.peek();
+                    else
+                        label = pilaLabels.pop();
 
                     this.ultimoNodo = new NodoHoja(varAuxiliar);
                     this.ultimoNodo.setTipo(this.getIzq().getTipo());
@@ -346,7 +364,10 @@ public class NodoComun extends Nodo {
                 }
                 if (!(getIzq().getNombre().contains("<") || getDer().getNombre().contains("<"))) {
                     varAuxiliar = Nodo.getVariableAuxiliar();
-                    label = pilaLabels.peek();
+                    if (getUso() != null && getUso().equals("pattern_matching"))
+                        label = pilaLabels.peek();
+                    else
+                        label = pilaLabels.pop();
 
                     this.ultimoNodo = new NodoHoja(varAuxiliar);
                     this.ultimoNodo.setTipo(this.getIzq().getTipo());
@@ -373,7 +394,10 @@ public class NodoComun extends Nodo {
                 }
                 if (!(getIzq().getNombre().contains("<=") || getDer().getNombre().contains("<="))) {
                     varAuxiliar = Nodo.getVariableAuxiliar();
-                    label = pilaLabels.peek();
+                    if (getUso() != null && getUso().equals("pattern_matching"))
+                        label = pilaLabels.peek();
+                    else
+                        label = pilaLabels.pop();
 
                     this.ultimoNodo = new NodoHoja(varAuxiliar);
                     this.ultimoNodo.setTipo(this.getIzq().getTipo());
@@ -485,7 +509,7 @@ public class NodoComun extends Nodo {
                 if (getIzq().getNombre().equals("DOWN")) {
                     codigoIncremento += "MOV EAX, " + var + "\n";
                     codigoIncremento += "SUB EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
-                    codigoIncremento += "JO errorRestaEnteros\n";
+                    codigoIncremento += "JO OperacionEnteroNegativo\n";
                     codigoIncremento += "MOV " + varAuxiliar + ", EAX" + "\n";
                     codigoIncremento += "MOV " + var + ", " + varAuxiliar;
 
