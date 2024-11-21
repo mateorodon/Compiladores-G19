@@ -7,6 +7,7 @@ import lombok.Setter;
 import java.util.Stack;
 
 import static compi.g19.AnalisisSintactico.Parser.getFuncionAutoinvocada;
+import static compi.g19.AnalisisSintactico.Parser.tiposDeclarados;
 
 @Getter
 @Setter
@@ -106,7 +107,12 @@ public class NodoComun extends Nodo {
                     // Calcular desplazamiento basado en el índice (índice - 1) * tamaño_elemento
                     int desplazamiento = (indice - 1) * (getIzq().getTipo().equals(ENTERO) ? 4 : 4); // Siempre 4 bytes
 
-                    if (getIzq().getTipo().equals(ENTERO)) {
+                    // Obtiene el tipo original del tipo declarado por el usuario
+                    // e.g TRIPLE <ulongint> tint;
+                    // tint t1; => el tipo de tint es ulongint/ENTERO
+                    String tipoDelTipo = tiposDeclarados.get(getIzq().getTipo());
+
+                    if (tipoDelTipo.equals(ENTERO)){
                         // Generar código para asignación a un entero en el arreglo
                         salida += "MOV EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
                         salida += "MOV [" + arregloNombre + " + " + desplazamiento + "], EAX\n";
