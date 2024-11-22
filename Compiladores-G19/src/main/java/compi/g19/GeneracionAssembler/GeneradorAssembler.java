@@ -69,6 +69,10 @@ public class GeneradorAssembler {
                     data += prefijo +  k + " dd " + "?" + "\n";
 
                 }
+                if (uso.equals("arreglo")){
+                    String prefijo = "_";
+                    data += prefijo +  k + " dd " + "?,?,?" + "\n";
+                }
             }
         }
         data+= NodoComun.data;
