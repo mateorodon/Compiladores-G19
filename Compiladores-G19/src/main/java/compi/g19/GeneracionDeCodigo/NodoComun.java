@@ -127,11 +127,11 @@ public class NodoComun extends Nodo {
                     if (tipoDelTipo.equals(ENTERO)){
                         // Generar código para asignación a un entero en el arreglo
                         salida += "MOV EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
-                        salida += "MOV [" + arregloNombreTS + " + " + desplazamiento + "], EAX\n";
+                        salida += "MOV [_" + arregloNombreTS + " + " + desplazamiento + "], EAX\n";
                     } else {
                         // Generar código para asignación a un flotante en el arreglo
                         salida += "FLD " + getDer().getUltimoNodo().getNombre() + "\n";
-                        salida += "FSTP [" + arregloNombreTS + " + " + desplazamiento + "]\n";
+                        salida += "FSTP [_" + arregloNombreTS + " + " + desplazamiento + "]\n";
                     }
                 } else {
                     // Asignación estándar (no arreglo)
@@ -158,12 +158,10 @@ public class NodoComun extends Nodo {
                 if (getIzq().getTipo().equals(ENTERO)) {
                     salida += "MOV EAX, _" + getIzq().getUltimoNodo().getNombre() + "\n";
                     salida += "ADD EAX, _" + getDer().getUltimoNodo().getNombre() + "\n";
-                    salida += "MOV " + varAuxiliar + ", EAX" + "\n";
                 } else {
                     salida += "FLD _" + getIzq().getUltimoNodo().getNombre() + "\n";
                     salida += "FADD _" + getDer().getUltimoNodo().getNombre() + "\n";
                     salida += "JS errorSumaDouble\n";
-                    salida += "FST " + varAuxiliar + "\n";
                 }
                 break;
             case "-":
@@ -183,13 +181,10 @@ public class NodoComun extends Nodo {
                     salida += "MOV EAX, _" + getIzq().getUltimoNodo().getNombre() + "\n";
                     salida += "SUB EAX, _" + getDer().getUltimoNodo().getNombre() + "\n";
                     salida += "JS OperacionEnteroNegativo\n";
-                    salida += "MOV " + varAuxiliar + ", EAX" + "\n";
 
                 } else {
                     salida += "FLD _" + getIzq().getUltimoNodo().getNombre() + "\n";
                     salida += "FSUB _" + getDer().getUltimoNodo().getNombre() + "\n";
-
-                    salida += "FST " + varAuxiliar + "\n";
                 }
                 break;
             case "*":
@@ -269,7 +264,7 @@ public class NodoComun extends Nodo {
                     TablaSimbolos.addSimbolo(varAuxiliar,t);
 
                     if (getIzq().getTipo().equals(ENTERO)) {
-                        salida += condiciones("JNE","JE");
+                        salida += condiciones("JNE ","JE ");
                     } else {
                         salida += "FLD _" + getIzq().getUltimoNodo().getNombre() + "\n";
                         salida += "FCOM _" + getDer().getUltimoNodo().getNombre() + "\n";
@@ -300,7 +295,7 @@ public class NodoComun extends Nodo {
                     TablaSimbolos.addSimbolo(varAuxiliar,t);
 
                     if (getIzq().getTipo().equals(ENTERO)) {
-                        salida += condiciones("JE","JNE");
+                        salida += condiciones("JE ","JNE ");
                     } else {
                         salida += "FLD _" + getIzq().getUltimoNodo().getNombre() + "\n";
                         salida += "FCOM _" + getDer().getUltimoNodo().getNombre() + "\n";
@@ -326,7 +321,7 @@ public class NodoComun extends Nodo {
                     TablaSimbolos.addSimbolo(varAuxiliar,t);
 
                     if (getIzq().getTipo().equals(ENTERO)) {
-                        salida += condiciones("JLE","JG");
+                        salida += condiciones("JLE ","JG ");
                     } else {
                         salida += "FLD _" + getIzq().getUltimoNodo().getNombre() + "\n";
                         salida += "FCOM _" + getDer().getUltimoNodo().getNombre() + "\n";
@@ -357,7 +352,7 @@ public class NodoComun extends Nodo {
                     TablaSimbolos.addSimbolo(varAuxiliar,t);
 
                     if (getIzq().getTipo().equals(ENTERO)) {
-                        salida += condiciones("JL","JGE");
+                        salida += condiciones("JL ","JGE ");
                     } else {
                         salida += "FLD _" + getIzq().getUltimoNodo().getNombre() + "\n";
                         salida += "FCOM _" + getDer().getUltimoNodo().getNombre() + "\n";
@@ -419,7 +414,7 @@ public class NodoComun extends Nodo {
                     TablaSimbolos.addSimbolo(varAuxiliar,t);
 
                     if (getIzq().getTipo().equals(ENTERO)) {
-                        salida += condiciones("JG","JLE");
+                        salida += condiciones("JG ","JLE ");
                     } else {
                         salida += "FLD _" + getIzq().getUltimoNodo().getNombre() + "\n";
                         salida += "FCOM _" + getDer().getUltimoNodo().getNombre() + "\n";
@@ -449,7 +444,7 @@ public class NodoComun extends Nodo {
                     labelFin = getLabel();
                     salida += "JMP " + labelFin + "\n";
                     salida += pilaLabels.pop() + ":\n";
-                    salida += getDer().getAssembler() + labelFin + ":\n";
+                    salida += getDer().getAssembler() + labelFin + ":";
                 }
 
                 break;
@@ -557,6 +552,10 @@ public class NodoComun extends Nodo {
             default:
                 String uso = this.getUso();
                 if (uso.equals("funcion")) {
+                    varAuxiliar = Nodo.getVariableAuxiliar();
+                    t = new Token(varAuxiliar, this.getTipo(), "variableAuxiliar");
+                    this.ultimoNodo = new NodoHoja(varAuxiliar, t);
+                    TablaSimbolos.addSimbolo(varAuxiliar, t);
                     salida += getNombre() + ":\n";
                     salida += "PUSH EBP" + "\n"; // Guardar EBP actual en la pila
                     salida += "MOV EBP, ESP" + "\n"; // Actualizar EBP al puntero actual de la pila

@@ -17,4 +17,4 @@ BEGIN
     end_if;
     rr := 5;
     OUTF({fin del programa});
-END         
+END      

@@ -15,14 +15,23 @@ OperacionEnteroNegativo db "El resultado de la operacion no puede ser negativo."
 OverflowSumaDouble db "Se produjo un un overflow en la suma de doubles.", 0 
 error db "Error", 0 
 printMensaje db "Print", 0 
-_y:main db ?
-_z:main db ?
-_1 db 1
-_x:main db ?
-_2 db 2
-_3 db 3
-_2.0 dq 2.0
-@print1 db "z:main:f3", 0 
+_y@main@f1 dd ?
+@aux6 dd ?
+@aux5 dd ?
+@aux4 dd ?
+_2 dd 2
+_3 dd 3
+_y@main dd ?
+_4 dd 4
+_f@main dd ?
+_3.0 dd 3.0
+@aux3 dd ?
+@aux2 dd ?
+@aux1 dd ?
+_x@main dd ?
+@print1 db [_x@main], 0 
+@print2 db "bye bye", 0 
+@print3 db [_f@main], 0 
 
 .code
 invoke MessageBox, NULL, addr AutoinvocacionFunciones, addr error, MB_OK 
@@ -31,41 +40,39 @@ invoke MessageBox, NULL, addr OperacionEnteroNegativo, addr error, MB_OK
 invoke ExitProcess, 0 
 invoke MessageBox, NULL, addr OverflowSumaDouble, addr error, MB_OK 
 invoke ExitProcess, 0 
-f3:main:
-MOV EAX, x:main
-CMP EAX, 3
-JLE label1
-invoke MessageBox, NULL, addr @print1, addr printMensaje, MB_OK
-JMP label2
-label1:
-label2:
-
-MOV EAX, 2
-ADD EAX, 2
-MOV @aux3, EAX
-MOV EAX, @aux3
-MOV @aux2, EAX
+f1@main:
+PUSH EBP
+MOV EBP, ESP
+MOV EAX, [EBP + 8]
+MOV EAX, _z@main@f1
+ADD EAX, _4
+MOV _y@main@f1, EAX
+MOV EAX, _3
+MOV _z@main@f1, EAX
+MOV EAX, _z@main@f1
 ret 
 JMP errorFun
-main:
-MOV EAX ,3
-MOV x:main, EAX
-MOV EAX ,2
-MOV y:main, EAX
-MOV EAX, x:main
-ADD EAX, y:main
-MOV @aux4, EAX
-MOV EAX ,@aux4
-MOV z:main, EAX
-MOV EAX, y:main
-MOV EAX, y:main
-call f3:main
-MOV EAX, y:main
-MOV EAX, y:main
-call f3:main
-FLD 2.0
-FST t1[1]
-MOV EAX ,t1[1]
-MOV x:main, EAX
+start:
+MOV EAX, _2
+SUB EAX, _3
+JS OperacionEnteroNegativo
+MOV _x@main, EAX
+MOV EAX, _x@main
+PUSH EAX
+CALL f1@main
+ADD ESP, 4
+MOV EAX, _2
+ADD EAX, _@aux4
+MOV _x@main, EAX
+MOV EAX, _x@main
+PUSH EAX
+CALL f1@main
+ADD ESP, 4
+MOV _y@main, EAX
+invoke MessageBox, NULL, addr @print1, addr @print1, MB_OK
+invoke MessageBox, NULL, addr @print2, addr @print2, MB_OK
+FLD _3.0
+FST _f@main
+invoke MessageBox, NULL, addr @print3, addr @print3, MB_OK
 invoke ExitProcess, 0 
-end main
+end start

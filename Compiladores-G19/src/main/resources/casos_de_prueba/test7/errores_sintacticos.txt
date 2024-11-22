@@ -11,4 +11,4 @@ begin
     TYPEDEF TRIPLE SINGLE> t1;
     /#COMENTARIO DE PRUEBA#/
     FOR (i:=0; i < x UP 1);
-end
+end   

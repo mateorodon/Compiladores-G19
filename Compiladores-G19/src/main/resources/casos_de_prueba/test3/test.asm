@@ -15,14 +15,20 @@ OperacionEnteroNegativo db "El resultado de la operacion no puede ser negativo."
 OverflowSumaDouble db "Se produjo un un overflow en la suma de doubles.", 0 
 error db "Error", 0 
 printMensaje db "Print", 0 
-_c:main db ?
-_total:main db ?
-_b:main db ?
-_1 db 1
-_2 db 2
-_5 db 5
-_a:main db ?
-_10 db 10
+_k@main dd ?,?,?
+@aux4 dd ?
+_1 dd 1
+_2 dd 2
+_y@main dd ?
+_3 dd 3
+_2.0 dd 2.0
+_j@main dd ?,?,?
+_z@main dd ?
+@aux3 dd ?
+@aux2 dd ?
+@aux1 dd ?
+_x@main dd ?
+@print1 db [_z@main@f3], 0 
 
 .code
 invoke MessageBox, NULL, addr AutoinvocacionFunciones, addr error, MB_OK 
@@ -31,24 +37,36 @@ invoke MessageBox, NULL, addr OperacionEnteroNegativo, addr error, MB_OK
 invoke ExitProcess, 0 
 invoke MessageBox, NULL, addr OverflowSumaDouble, addr error, MB_OK 
 invoke ExitProcess, 0 
-devuelveUno:main:
-MOV EAX, 1
-CMP EAX, 2
+f3@main:
+PUSH EBP
+MOV EBP, ESP
+MOV EAX, [EBP + 8]
+MOV EAX, x@main
+CMP EAX, 3
 JLE label1
-MOV EAX, 1
-MOV @aux2, EAX
-ret 
-
-MOV EAX, 1
-MOV @aux3, EAX
+invoke MessageBox, NULL, addr @print1, addr @print1, MB_OK
+JMP label2
+label1:
+label2:
+MOV EAX, _2
 ret 
 JMP errorFun
-main:
-MOV EAX ,1
-MOV a:main, EAX
-MOV EAX ,5
-MOV b:main, EAX
-MOV EAX ,10
-MOV c:main, EAX
+start:
+MOV EAX, _3
+MOV _x@main, EAX
+MOV EAX, _2
+MOV _y@main, EAX
+MOV EAX, _x@main
+ADD EAX, _y@main
+MOV _z@main, EAX
+MOV EAX, _y@main
+PUSH EAX
+CALL f3@main
+ADD ESP, 4
+MOV _x@main, EAX
+FLD 2.0
+FSTP [_j@main + 8]
+MOV EAX, 3
+MOV [_k@main + 4], EAX
 invoke ExitProcess, 0 
-end main
+end start

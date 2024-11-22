@@ -71,7 +71,7 @@ sentencia_declarativa:
 
 sentencia_ejecutable:
     asignacion {AnalizadorLexico.agregarEstructura("Se reconocio una asignacion"); $$=$1;}
-    | invocacion_funcion {$$ = $1; AnalizadorLexico.agregarEstructura("Se reconocio una invocacion a funcion");}
+    | invocacion_funcion {$$ = $1;AnalizadorLexico.agregarWarning("Se ha llamado a una función pero su valor no ha sido utilizado"); AnalizadorLexico.agregarEstructura("Se reconocio una invocacion a funcion");}
     | bloque_if {$$=$1;}
     | salida_mensaje {$$=$1;}
     | sentencia_control {$$=$1;}
@@ -201,7 +201,6 @@ asignacion:
                                                     if (tiposDeclarados.containsKey(tipo)){
                                                         String tipoTriple = tiposDeclarados.get(tipo);
                                                         NodoHoja nodo = new NodoHoja($1.sval + $2.sval + $3.sval + $4.sval, t);
-                                                        //nodo.setTipo(tipoTriple);
                                                         nodo.setUso("arreglo");
                                                         $$.obj = new NodoComun($5.sval,nodo,(Nodo)$6.obj);
                                                     }
@@ -450,7 +449,6 @@ factor:
                                     if (tiposDeclarados.containsKey(tipo)){
                                         String tipoTriple = tiposDeclarados.get(tipo);
                                         NodoHoja nodo = new NodoHoja($1.sval + $2.sval + $3.sval + $4.sval, t);
-                                        nodo.setTipo(tipoTriple);
                                         $$.obj = nodo;
                                     }
                                     else {
@@ -507,7 +505,6 @@ factor:
                                     if (tiposDeclarados.containsKey(tipo)){
                                         String tipoTriple = tiposDeclarados.get(tipo);
                                         NodoHoja nodo = new NodoHoja($1.sval + $2.sval + $3.sval + $4.sval + $5.sval, t);
-                                        nodo.setTipo(tipoTriple);
                                         $$.obj = nodo;
                                     }
                                     else {
@@ -536,7 +533,7 @@ declaracion_tipo:
                                                 t.setTipo($4.sval);
                                                 TablaSimbolos.removeToken(idTipo);
                                                 TablaSimbolos.addSimbolo(t.getLexema().toString(),t);
-                                                tiposDeclarados.put($6.sval, $4.sval);
+                                                tiposDeclarados.put($6.sval, $4.sval.toLowerCase());
                                              }
                                              else {
                                                 TablaSimbolos.removeToken(idTipo);
@@ -846,7 +843,8 @@ public static boolean getFuncionAutoinvocada(){
 }
 
 public static void yyerror(String error){
-    AnalizadorLexico.agregarErrorSintactico(error);
+    if (!error.contains("syntax error"))
+        AnalizadorLexico.agregarErrorSintactico(error);
 }
 
 public static void addAmbito(String ambitoActual){
@@ -854,7 +852,7 @@ public static void addAmbito(String ambitoActual){
 }
 
 public void removeAmbito(){
-        int index = ambito.lastIndexOf(':');
+        int index = ambito.lastIndexOf('@');
 
         if (index != -1) {
             ambito = ambito.substring(0, index);
@@ -951,7 +949,7 @@ private Nodo generarLlamadoFuncion(NodoComun funcion, Nodo copia, String tipoCas
             // Con casteo: validar que sea permitido
             if (tipoCasteo.equals(tipoReal)) {
                 // Intento de forzar un casteo al mismo tipo
-                agregarErrorSemantico("El tipo del parámetro real ya es del tipo solicitado en el casteo");
+                AnalizadorLexico.agregarWarning("El tipo del parámetro real ya es del tipo solicitado en el casteo");
                 return new NodoHoja("error");
             } else if (tipoFormal.equals(tipoCasteo) && esCasteoValido(tipoReal, tipoCasteo)) {
                 // Casteo válido

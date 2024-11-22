@@ -1,0 +1,88 @@
+SE RECONOCIO UN COMENTARIO EN LA LINEA 3
+----------ARBOL SINTACTICO -----------
+PROGRAMA
+    Sentencia
+        Sentencia
+            Sentencia
+                Sentencia
+                    Sentencia
+                        Sentencia
+                            Sentencia
+                                Sentencia
+                                    Sentencia Declarativa
+                                    :=
+                                        x@main
+                                        3
+                                :=
+                                    y@main
+                                    2
+                            :=
+                                z@main
+                                +
+                                    x@main
+                                    y@main
+                        Sentencia Declarativa
+                    :=
+                        a@main
+                        6
+                For
+                    Encabezado For
+                        Asignacion e Incremento
+                            :=
+                                i@main
+                                1
+                            Incremento
+                                Up
+                                1
+                        Condiciones
+                            <
+                                i@main
+                                10
+                            >
+                                a@main
+                                10
+                    Outf
+                        en el for
+            :=
+                z@main
+                +
+                    4
+                    *
+                        2
+                        8
+        Outf
+            z@main
+----------ARBOL SINTACTICO FUNCIONES -----------
+----------ESTRUCTURAS RECONOCIDAS-----------
+Se reconocio declaracion de variable/s en la línea 4
+Se reconocio una asignacion en la línea 5
+Se reconocio una asignacion en la línea 6
+Se reconocio una asignacion en la línea 7
+Se reconocio declaracion de variable/s en la línea 8
+Se reconocio una asignacion en la línea 9
+Se reconoció un FOR con condición en la línea 10
+Se reconocio salida de mensaje por pantalla en la línea 12
+Se reconocio una asignacion en la línea 14
+Se reconocio salida de mensaje por pantalla en la línea 15
+Se reconocio el programa en la línea 17
+----------TABLA DE SIMBOLOS-----------
+Token{id=263, lexema=en el for, linea=12, tipo=cadena, uso = mensaje}
+Token{id=257, lexema=a@main, linea=8, tipo=ulongint, uso = variable}
+Token{id=262, lexema=1, linea=10, tipo=ulongint, uso = null}
+Token{id=257, lexema=PROG_COMPLETO, linea=1, tipo=null, uso = null}
+Token{id=262, lexema=2, linea=6, tipo=ulongint, uso = constante}
+Token{id=257, lexema=y@main, linea=4, tipo=ulongint, uso = variable}
+Token{id=262, lexema=3, linea=5, tipo=ulongint, uso = constante}
+Token{id=262, lexema=4, linea=14, tipo=ulongint, uso = constante}
+Token{id=0, lexema=i@main, linea=10, tipo=ulongint, uso = variable}
+Token{id=262, lexema=6, linea=9, tipo=ulongint, uso = constante}
+Token{id=257, lexema=z@main, linea=4, tipo=ulongint, uso = variable}
+Token{id=262, lexema=8, linea=14, tipo=ulongint, uso = constante}
+Token{id=257, lexema=x@main, linea=5, tipo=ulongint, uso = variable}
+Token{id=262, lexema=10, linea=10, tipo=ulongint, uso = constante}
+-----------ERRORES LEXICOS----------
+-----------ERRORES SINTACTICOS----------
+-----------ERRORES SEMANTICOS----------
+----------WARNINGS-----------
+WARNING: La variable 'y' ya esta declarada en la línea 4
+WARNING: La variable 'z' ya esta declarada en la línea 4

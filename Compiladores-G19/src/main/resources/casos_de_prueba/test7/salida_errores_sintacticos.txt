@@ -1,0 +1,55 @@
+SE RECONOCIO UN COMENTARIO EN LA LINEA 3
+SE RECONOCIO UN COMENTARIO EN LA LINEA 12
+----------ARBOL SINTACTICO -----------
+PROGRAMA
+    Sentencia
+        Sentencia
+            Sentencia
+                Sentencia
+                    Sentencia
+                        Sentencia Declarativa
+                        Sentencia Declarativa
+                    :=
+                        x@main
+                        x@main
+                error
+            Sentencia Declarativa
+----------ARBOL SINTACTICO FUNCIONES -----------
+f3@main
+    z@main@f3main@f3
+    Outf
+        z@main@f3
+----------ESTRUCTURAS RECONOCIDAS-----------
+Se reconocio declaracion de variable/s en la línea 4
+Se reconocio salida de mensaje por pantalla en la línea 7
+Se reconocio declaracion de funcion en la línea 8
+Se reconocio una asignacion en la línea 9
+Se reconocio invocacion a funcion en la línea 10
+Se reconocio una invocacion a funcion en la línea 10
+Se reconocio declaracion de tipo en la línea 11
+Se reconocio el programa en la línea 14
+----------TABLA DE SIMBOLOS-----------
+Token{id=262, lexema=0, linea=13, tipo=ulongint, uso = null}
+Token{id=262, lexema=1, linea=13, tipo=ulongint, uso = null}
+Token{id=257, lexema=PROG_COMPLETO, linea=1, tipo=null, uso = null}
+Token{id=257, lexema=y@main, linea=4, tipo=ulongint, uso = variable}
+Token{id=0, lexema=i@main, linea=13, tipo=ulongint, uso = variable}
+Token{id=257, lexema=f3@main, linea=5, tipo=single, uso = funcion}
+Token{id=257, lexema=t1, linea=11, tipo=null, uso = null}
+Token{id=257, lexema=z@main@f3, linea=5, tipo=ulongint, uso = parametro}
+Token{id=257, lexema=x@main, linea=4, tipo=ulongint, uso = variable}
+-----------ERRORES LEXICOS----------
+-----------ERRORES SINTACTICOS----------
+ERROR SINTACTICO: Falta sentencia RET en la función en la línea 8
+ERROR SINTACTICO: Se esperaba un termino en la línea 9
+ERROR SINTACTICO: Se esperaba un factor en la línea 10
+ERROR SINTACTICO: Falta diamante (<) en la declaracion de tipo en la línea 11
+ERROR SINTACTICO: Falta ';' en el FOR en la línea 13
+ERROR SINTACTICO: Falta cuerpo del FOR en la línea 13
+-----------ERRORES SEMANTICOS----------
+El tipo del parámetro real no coincide con el del parámetro formal en la linea 10
+----------WARNINGS-----------
+WARNING: La variable 'x' ya esta declarada en la línea 4
+WARNING: La variable 'y' ya esta declarada en la línea 4
+WARNING: La variable 'z' ya esta declarada en la línea 5
+WARNING: Se ha llamado a una función pero su valor no ha sido utilizado en la línea 10
