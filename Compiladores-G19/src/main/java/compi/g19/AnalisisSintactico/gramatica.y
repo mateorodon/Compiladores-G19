@@ -107,8 +107,10 @@ encabezado_for1:
 
 encabezado_for2:
     asignacion_for ';' condicion ';' up_down CONSTANTE ';' '(' condicion ')' {
+
+                                                                                       NodoHoja constanteUpDown = new NodoHoja($6.sval,TablaSimbolos.getToken($6.sval));
                                                                                        Nodo asignacion = (Nodo)$1.obj;
-                                                                                       Nodo incremento = new NodoComun("Incremento", (Nodo)$5.obj, (Nodo)$6.obj); //Idem
+                                                                                       Nodo incremento = new NodoComun("Incremento", (Nodo)$5.obj, constanteUpDown); //Idem
                                                                                        Nodo condicion = (Nodo)$3.obj;
                                                                                        Nodo iteradorCondicion = (Nodo)$9.obj;
 

@@ -33,10 +33,15 @@ public class NodoComun extends Nodo {
     private String varAuxiliar;
     private static final String ENTERO = "ulongint";
     private static final String FLOTANTE = "single";
+
     private static Stack<String> varFor = new Stack<>();
     private static boolean inFor;
     private static String codigoIncremento = "";
-    private static String auxParam;
+    private static String startFor;
+    private static boolean segundaCondicion;
+    private static String codCondicionFor = "";
+    private static String labelSegundaCondicionFor;
+
 
     public static String getLabel() {
         return Nodo.getLabel();
@@ -249,6 +254,9 @@ public class NodoComun extends Nodo {
                 }
                 if (!(getIzq().getNombre().contains("=") || getDer().getNombre().contains("="))) {
                     varAuxiliar = Nodo.getVariableAuxiliar();
+                    if  (!segundaCondicion && inFor)
+                        startFor = pilaLabels.pop();
+
                     if (getUso() != null && getUso().equals("pattern_matching"))
                         label = pilaLabels.peek();
                     else
@@ -259,9 +267,7 @@ public class NodoComun extends Nodo {
                     this.ultimoNodo.setUso("variableAuxiliar");
 
                     if (getIzq().getTipo().equals(ENTERO)) {
-                        salida += "MOV EAX, " + getIzq().getUltimoNodo().getNombre() + "\n";
-                        salida += "CMP EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
-                        salida += "JNE " + label + "\n";
+                        salida += condiciones("JNE","JE");
                     } else {
                         salida += "FLD " + getIzq().getUltimoNodo().getNombre() + "\n";
                         salida += "FCOM " + getDer().getUltimoNodo().getNombre() + "\n";
@@ -279,6 +285,9 @@ public class NodoComun extends Nodo {
                 }
                 if (!(getIzq().getNombre().contains("!=") || getDer().getNombre().contains("!="))) {
                     varAuxiliar = Nodo.getVariableAuxiliar();
+                    if  (!segundaCondicion && inFor)
+                        startFor = pilaLabels.pop();
+
                     if (getUso() != null && getUso().equals("pattern_matching"))
                         label = pilaLabels.peek();
                     else
@@ -289,9 +298,7 @@ public class NodoComun extends Nodo {
                     this.ultimoNodo.setUso("variableAuxiliar");
 
                     if (getIzq().getTipo().equals(ENTERO)) {
-                        salida += "MOV EAX, " + getIzq().getUltimoNodo().getNombre() + "\n";
-                        salida += "CMP EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
-                        salida += "JE " + label + "\n";
+                        salida += condiciones("JE","JNE");
                     } else {
                         salida += "FLD " + getIzq().getUltimoNodo().getNombre() + "\n";
                         salida += "FCOM " + getDer().getUltimoNodo().getNombre() + "\n";
@@ -304,6 +311,9 @@ public class NodoComun extends Nodo {
                 salida += getIzq().getAssembler() + getDer().getAssembler();
                 if (!(getIzq().getNombre().contains(">") || getDer().getNombre().contains(">"))) {
                     varAuxiliar = Nodo.getVariableAuxiliar();
+                    if  (!segundaCondicion && inFor)
+                        startFor = pilaLabels.pop();
+
                     if (getUso() != null && getUso().equals("pattern_matching"))
                         label = pilaLabels.peek();
                     else
@@ -314,9 +324,7 @@ public class NodoComun extends Nodo {
                     this.ultimoNodo.setUso("variableAuxiliar");
 
                     if (getIzq().getTipo().equals(ENTERO)) {
-                        salida += "MOV EAX, " + getIzq().getUltimoNodo().getNombre() + "\n";
-                        salida += "CMP EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
-                        salida += "JLE " + label + "\n";
+                        salida += condiciones("JLE","JG");
                     } else {
                         salida += "FLD " + getIzq().getUltimoNodo().getNombre() + "\n";
                         salida += "FCOM " + getDer().getUltimoNodo().getNombre() + "\n";
@@ -334,6 +342,9 @@ public class NodoComun extends Nodo {
                 }
                 if (!(getIzq().getNombre().contains(">=") || getDer().getNombre().contains(">="))) {
                     varAuxiliar = Nodo.getVariableAuxiliar();
+                    if  (!segundaCondicion && inFor)
+                        startFor = pilaLabels.pop();
+
                     if (getUso() != null && getUso().equals("pattern_matching"))
                         label = pilaLabels.peek();
                     else
@@ -344,9 +355,7 @@ public class NodoComun extends Nodo {
                     this.ultimoNodo.setUso("variableAuxiliar");
 
                     if (getIzq().getTipo().equals(ENTERO)) {
-                        salida += "MOV EAX, " + getIzq().getUltimoNodo().getNombre() + "\n";
-                        salida += "CMP EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
-                        salida += "JL " + label + "\n";
+                        salida += condiciones("JL","JGE");
                     } else {
                         salida += "FLD " + getIzq().getUltimoNodo().getNombre() + "\n";
                         salida += "FCOM " + getDer().getUltimoNodo().getNombre() + "\n";
@@ -364,6 +373,9 @@ public class NodoComun extends Nodo {
                 }
                 if (!(getIzq().getNombre().contains("<") || getDer().getNombre().contains("<"))) {
                     varAuxiliar = Nodo.getVariableAuxiliar();
+                    if  (!segundaCondicion && inFor)
+                        startFor = pilaLabels.pop();
+
                     if (getUso() != null && getUso().equals("pattern_matching"))
                         label = pilaLabels.peek();
                     else
@@ -374,9 +386,7 @@ public class NodoComun extends Nodo {
                     this.ultimoNodo.setUso("variableAuxiliar");
 
                     if (getIzq().getTipo().equals(ENTERO)) {
-                        salida += "MOV EAX, " + getIzq().getUltimoNodo().getNombre() + "\n";
-                        salida += "CMP EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
-                        salida += "JGE " + label + "\n";
+                        salida += condiciones("JGE ","JL ");
                     } else {
                         salida += "FLD " + getIzq().getUltimoNodo().getNombre() + "\n";
                         salida += "FCOM " + getDer().getUltimoNodo().getNombre() + "\n";
@@ -394,6 +404,9 @@ public class NodoComun extends Nodo {
                 }
                 if (!(getIzq().getNombre().contains("<=") || getDer().getNombre().contains("<="))) {
                     varAuxiliar = Nodo.getVariableAuxiliar();
+                    if  (!segundaCondicion && inFor)
+                        startFor = pilaLabels.pop();
+
                     if (getUso() != null && getUso().equals("pattern_matching"))
                         label = pilaLabels.peek();
                     else
@@ -404,9 +417,7 @@ public class NodoComun extends Nodo {
                     this.ultimoNodo.setUso("variableAuxiliar");
 
                     if (getIzq().getTipo().equals(ENTERO)) {
-                        salida += "MOV EAX, " + getIzq().getUltimoNodo().getNombre() + "\n";
-                        salida += "CMP EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
-                        salida += "JG " + label + "\n";
+                        salida += condiciones("JG","JLE");
                     } else {
                         salida += "FLD " + getIzq().getUltimoNodo().getNombre() + "\n";
                         salida += "FCOM " + getDer().getUltimoNodo().getNombre() + "\n";
@@ -458,31 +469,49 @@ public class NodoComun extends Nodo {
                 salida += salida + "invoke MessageBox, NULL, addr " + variablePrint + ", addr printMensaje, MB_OK\n";
                 break;
             case "Asignacion e Incremento":
+                if (getIzq() != null) {
+                    salida += getIzq().getAssembler();
+                }
+                //Segunda condicion
+                if (getDer() != null) {
+                    salida += getDer().getAssembler();
+                }
+                break;
             case "Condiciones":
                 if (getIzq() != null) {
                     salida += getIzq().getAssembler();
                 }
+                //Segunda condicion
                 if (getDer() != null) {
-                    salida += getDer().getAssembler();
+                    segundaCondicion = true;
+                    codCondicionFor += getDer().getAssembler();
                 }
                 break;
             case "For":
                 label = getLabel();
                 pilaLabels.push(label); //Condicion
                 pilaLabels.push(label);
+                label = getLabel();
+                pilaLabels.push(label);
                 if (getIzq() != null) {
                     salida += getIzq().getAssembler();
                 }
+                label = pilaLabels.pop();
                 String end_loop = getLabel();
                 salida += "JMP " + end_loop + ":" + "\n";
                 salida += label + ":" + "\n";
+                label = pilaLabels.pop();
+                if (segundaCondicion){
+                    salida += codCondicionFor;
+                    salida += "JMP " + end_loop + ":" + "\n";
+                    salida += labelSegundaCondicionFor + ":" + "\n";
+                }
+                segundaCondicion = false;
                 if (getDer() != null) {
                     salida += getDer().getAssembler();
                 }
-                labelFin = getLabel();
-                pilaLabels.push(labelFin);
                 salida += codigoIncremento;
-                salida += "JMP " + label + "\n";
+                salida += "JMP " + startFor + "\n";
                 salida += end_loop + ":" + "\n";
 
                 break;
@@ -490,12 +519,11 @@ public class NodoComun extends Nodo {
                 if (getIzq() != null) {
                     inFor = true;
                     salida += getIzq().getAssembler();
-                    inFor = false;
                 }
                 if (getDer() != null) {
                     salida += getDer().getAssembler();
                 }
-
+                inFor = false;
                 break;
 
             case "Incremento":
@@ -540,7 +568,6 @@ public class NodoComun extends Nodo {
                 } else if (getUso().equals("llamado")) {
 
                     //String varAux = getVariableAuxiliar();
-                    auxParam = getIzq().getNombre();
                     salida += "MOV " + "EAX" + ", " + getIzq().getNombre() + "\n";
                     //this.ultimoNodo = new NodoHoja(varAux);
                     //this.ultimoNodo.setUso("variableAuxiliar");
@@ -548,6 +575,28 @@ public class NodoComun extends Nodo {
                 }
                 break;
         }
+        return salida;
+    }
+
+
+    private String condiciones(String real, String contrario){
+        String salida = "";
+        salida += "MOV EAX, " + getIzq().getUltimoNodo().getNombre() + "\n";
+        if (inFor) {
+            if (!segundaCondicion) {
+                salida += startFor + ":" + "\n";
+                salida += "CMP EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
+                salida += contrario + label + "\n";
+            } else {
+                labelSegundaCondicionFor = getLabel();
+                salida += "CMP EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
+                salida += contrario + labelSegundaCondicionFor + "\n";
+            }
+        }else{
+            salida += "CMP EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
+            salida += real + label + "\n";
+        }
+
         return salida;
     }
 }

@@ -1,7 +1,18 @@
+
+
+
+
+
+
+
+
+
+
+
 prog_base
 begin
-    typedef triple <ulongint> tint;
-    tint t1;
-    t1[1] := 10;
-    t1[2] := 15;
-end
+    for (i:=1 ; i<3 ; UP 1 ; (i<2) )
+    begin
+        OUTF({HOLA});
+    end;
+end                          
