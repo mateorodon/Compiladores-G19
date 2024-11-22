@@ -565,11 +565,6 @@ public class NodoComun extends Nodo {
 
                     // No se aplica conversión en la definición de la función
                     salida += getDer().getAssembler();
-                    if (getFuncionAutoinvocada()) {
-                        salida += "JMP AutoinvocacionFunciones\n";
-                    } else {
-                        salida += "JMP errorFun";
-                    }
                 }
                 else if (uso.equals("llamado") || uso.equals("llamadoConCasteo")) {
                     varAuxiliar = Nodo.getVariableAuxiliar();
@@ -598,6 +593,9 @@ public class NodoComun extends Nodo {
 
                     salida += "CALL " + getNombre() + "\n"; // Llamar a la función
                     salida += "ADD ESP, 4" + "\n"; // Restaurar el puntero de la pila
+                    if (getFuncionAutoinvocada()) {
+                        salida += "JMP AutoinvocacionFunciones\n";
+                    }
                 }
                 break;
 
