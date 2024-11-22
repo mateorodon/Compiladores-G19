@@ -1,0 +1,63 @@
+----------ARBOL SINTACTICO -----------
+PROGRAMA
+    Sentencia
+        Sentencia Declarativa
+        If
+            >=
+                >=
+                    i@main
+                    6
+                >=
+                    j@main
+                    2
+            Cuerpo
+                Then
+                    :=
+                        i@main
+                        2
+                Else
+                    Sentencia
+                        :=
+                            i@main
+                            1
+                        For
+                            Encabezado For
+                                Asignacion e Incremento
+                                    :=
+                                        m@main
+                                        1
+                                    Incremento
+                                        Up
+                                        1
+                                Condiciones
+                                    <
+                                        m@main
+                                        2
+                                    >
+                                        m@main
+                                        1
+                            :=
+                                i@main
+                                2
+----------ARBOL SINTACTICO FUNCIONES -----------
+----------ESTRUCTURAS RECONOCIDAS-----------
+Se reconocio declaracion de variable/s en la línea 3
+Se reconocio pattern matching en la línea 4
+Se reconocio una asignacion en la línea 5
+Se reconocio una asignacion en la línea 8
+Se reconoció un FOR con condición en la línea 9
+Se reconocio una asignacion en la línea 11
+Se reconocio un IF/ELSE en la línea 14
+Se reconocio el programa en la línea 15
+----------TABLA DE SIMBOLOS-----------
+Token{id=262, lexema=1, linea=8, tipo=ulongint, uso = constante}
+Token{id=262, lexema=2, linea=4, tipo=ulongint, uso = constante}
+Token{id=257, lexema=i@main, linea=3, tipo=ulongint, uso = variable}
+Token{id=257, lexema=j@main, linea=3, tipo=ulongint, uso = variable}
+Token{id=0, lexema=m@main, linea=9, tipo=ulongint, uso = variable}
+Token{id=262, lexema=6, linea=4, tipo=ulongint, uso = constante}
+Token{id=257, lexema=prog, linea=1, tipo=null, uso = null}
+-----------ERRORES LEXICOS----------
+-----------ERRORES SINTACTICOS----------
+-----------ERRORES SEMANTICOS----------
+----------WARNINGS-----------

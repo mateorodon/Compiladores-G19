@@ -1,0 +1,15 @@
+prog
+begin
+    ULONGINT i,j;
+    IF ((i,j) >= (6,2)) THEN
+        i:=2;
+    ELSE
+    begin
+            i:=1;
+            FOR (m:=1 ; m < 2 ; UP 1 ; (m > 1))
+            begin
+                  i:=2;
+            end;
+    end
+    END_IF;
+end 
