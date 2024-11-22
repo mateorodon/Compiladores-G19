@@ -560,35 +560,51 @@ public class NodoComun extends Nodo {
                 String uso = this.getUso();
                 if (uso.equals("funcion")) {
                     salida += getNombre() + ":\n";
-                    salida += "PUSH EBP" + "\n"; //pongo en la pila el puntero EBP (tiene un valor random)
-                    salida += "MOV EBP, ESP" + "\n"; //piso el valor qu tiene EBP y le seteo el valor del puntero actual de la pila
-                    salida+= "MOV EAX, [EBP + 8]" + "\n"; //EBP + 4 es la direccion de retorno. EBP + 8 es el valor del param real (que se carga antes de llamar)
-                    NodoHoja n = (new NodoHoja("@aux@" + getIzq().getNombre()));
-                    n.setTipo(getIzq().getTipo());
-                    n.setUso("variableAuxiliar");
-                    pilaVariablesAuxiliares.push("@aux@" + getIzq().getNombre());
+                    salida += "PUSH EBP" + "\n"; // Guardar EBP actual en la pila
+                    salida += "MOV EBP, ESP" + "\n"; // Actualizar EBP al puntero actual de la pila
+                    salida += "MOV EAX, [EBP + 8]" + "\n"; // Cargar el valor del parámetro real
+
+                    // No se aplica conversión en la definición de la función
                     salida += getDer().getAssembler();
-                    pilaVariablesAuxiliares.pop();
-                    if (getFuncionAutoinvocada())
-                        salida += " JMP AutoinvocacionFunciones\n";
-                    else
+                    if (getFuncionAutoinvocada()) {
+                        salida += "JMP AutoinvocacionFunciones\n";
+                    } else {
                         salida += "JMP errorFun";
+                    }
                 }
-                if (getUso().equals("llamado")) {
+                else if (uso.equals("llamado") || uso.equals("llamadoConCasteo")) {
                     varAuxiliar = Nodo.getVariableAuxiliar();
-                    t = new Token(varAuxiliar,this.getTipo(),"variableAuxiliar");
-                    this.ultimoNodo = new NodoHoja(varAuxiliar,t);
-                    TablaSimbolos.addSimbolo(varAuxiliar,t);
-                    salida += "MOV " + "EAX" + ", _" + getIzq().getNombre() + "\n"; //carga en EAX el valor del parametro real
-                    salida += "PUSH EAX" + "\n"; //pushea el valor del param real
-                    salida += "call " + getNombre() + "\n"; //llama a la funcion
-                    salida += "ADD ESP, 4" + "\n"; //en ESP estaba el valor del param real que habia pusheado, avanzo porque no me interesa
+                    t = new Token(varAuxiliar, this.getTipo(), "variableAuxiliar");
+                    this.ultimoNodo = new NodoHoja(varAuxiliar, t);
+                    TablaSimbolos.addSimbolo(varAuxiliar, t);
+
+                    salida += "MOV EAX, _" + getIzq().getNombre() + "\n"; // Cargar el valor del parámetro real
+                    salida += "PUSH EAX" + "\n"; // Colocar en la pila el valor del parámetro
+
+                    if (uso.equals("llamadoConCasteo")) {
+                        // Obtener el tipo del parámetro real desde getDer()
+                        String tipoReal = getDer().getNombre(); // Nombre del nodo tipo (tipoReal)
+                        String tipoFormal = getIzq().getTipo();         // Tipo esperado por la función
+
+                        if (tipoReal.equals(ENTERO) && tipoFormal.equals(FLOTANTE)) {
+                            // Casteo de entero a flotante
+                            salida += "FILD [ESP]\n";  // Cargar el entero como flotante en la FPU
+                            salida += "FSTP [ESP]\n";  // Guardar el resultado en la pila
+                        } else if (tipoReal.equals(FLOTANTE) && tipoFormal.equals(ENTERO)) {
+                            // Casteo de flotante a entero
+                            salida += "FLD [ESP]\n";   // Cargar el flotante en la FPU
+                            salida += "FISTP [ESP]\n"; // Convertir a entero y guardar en la pila
+                        }
+                    }
+
+                    salida += "CALL " + getNombre() + "\n"; // Llamar a la función
+                    salida += "ADD ESP, 4" + "\n"; // Restaurar el puntero de la pila
                 }
                 break;
+
         }
         return salida;
     }
-
 
     private String condiciones(String real, String contrario){
         String salida = "";

@@ -1,18 +1,11 @@
-
-
-
-
-
-
-
-
-
-
-
-prog_base
+prog
 begin
-    for (i:=1 ; i<3 ; UP 1 ; (i<2) )
-    begin
-        OUTF({HOLA});
-    end;
-end                          
+    ulongint x;
+    x := 1;
+    ULONGINT FUN f1 (ulongint a)
+    BEGIN
+        a := 1;
+        ret(a);
+    END;
+    f1(ulongint(x));
+end  

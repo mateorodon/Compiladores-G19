@@ -572,7 +572,7 @@ invocacion_funcion:
                 if (funcionesDeclaradas.containsKey($1.sval + "@" + ambitoVar)){
                     Nodo exp = (Nodo)$3.obj;
                     NodoComun funcion = funcionesDeclaradas.get($1.sval + "@" + ambitoVar);
-                    $$.obj = generarLlamadoFuncion(funcion,exp);
+                    $$.obj = generarLlamadoFuncion(funcion,exp,null);
                 }
                 else {
                     agregarErrorSemantico("La funcion '" + $1.sval + "' no fue declarada");
@@ -599,9 +599,9 @@ invocacion_funcion:
                 else {
                     if (funcionesDeclaradas.containsKey($1.sval + "@" + ambitoVar)){
                         Nodo exp = (Nodo)$5.obj;
-                        exp.setTipo($3.sval);
+                        //exp.setTipo($3.sval);
                         NodoComun funcion = funcionesDeclaradas.get($1.sval + "@" + ambitoVar);
-                        $$.obj = generarLlamadoFuncion(funcion,exp);
+                        $$.obj = generarLlamadoFuncion(funcion,exp, $3.sval);
                     }
                     else {
                         agregarErrorSemantico("La funcion '" + $1.sval + "' no fue declarada");
@@ -930,21 +930,50 @@ private NodoComun controlarTipos(Nodo nodo1, String op, Nodo nodo3){
     return ret;
 }
 
-private Nodo generarLlamadoFuncion(NodoComun funcion, Nodo copia){
+private Nodo generarLlamadoFuncion(NodoComun funcion, Nodo copia, String tipoCasteo) {
     NodoComun salida = null;
-    if (funcion != null){
-        Nodo param = funcion.getIzq();
-        if (param.getTipo().equals(copia.getTipo())){
-            param.setNombre(copia.getNombre());
-            salida = new NodoComun(funcion,param,null);
-            salida.setUso("llamado");
-        }
-        else {
-            agregarErrorSemantico("El tipo del parametro real no coincide con el del parametro formal");
-            return new NodoHoja("error");
+    if (funcion != null) {
+        Nodo param = funcion.getIzq(); // Parámetro formal de la función
+        String tipoFormal = param.getTipo(); // Tipo esperado por la función
+        String tipoReal = copia.getTipo();   // Tipo de la expresión original
+
+        if (tipoCasteo == null) {
+            // Sin casteo: los tipos deben coincidir
+            if (tipoFormal.equals(tipoReal)) {
+                param.setNombre(copia.getNombre());
+                salida = new NodoComun(funcion, param, null);
+                salida.setUso("llamado");
+            } else {
+                agregarErrorSemantico("El tipo del parámetro real no coincide con el del parámetro formal");
+                return new NodoHoja("error");
+            }
+        } else {
+            // Con casteo: validar que sea permitido
+            if (tipoCasteo.equals(tipoReal)) {
+                // Intento de forzar un casteo al mismo tipo
+                agregarErrorSemantico("El tipo del parámetro real ya es del tipo solicitado en el casteo");
+                return new NodoHoja("error");
+            } else if (tipoFormal.equals(tipoCasteo) && esCasteoValido(tipoReal, tipoCasteo)) {
+                // Casteo válido
+                param.setNombre(copia.getNombre());
+                NodoHoja nodoTipoReal = new NodoHoja(tipoReal, null);
+                salida = new NodoComun(funcion, param, nodoTipoReal);
+                salida.setUso("llamadoConCasteo");
+            } else {
+                // Casteo inválido
+                agregarErrorSemantico("El casteo de " + tipoReal + " a " + tipoCasteo + " no es válido");
+                return new NodoHoja("error");
+            }
         }
     }
     return salida;
+}
+
+// Método auxiliar para validar si un casteo es válido
+private boolean esCasteoValido(String tipoOrigen, String tipoDestino) {
+    // Regla: permitir solo ULONGINT ↔ SINGLE
+    return (tipoOrigen.equals("ulongint") && tipoDestino.equals("single")) ||
+           (tipoOrigen.equals("single") && tipoDestino.equals("ulongint"));
 }
 
 public NodoComun getRaiz(){

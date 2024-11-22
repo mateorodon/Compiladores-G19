@@ -768,21 +768,50 @@ private NodoComun controlarTipos(Nodo nodo1, String op, Nodo nodo3){
     return ret;
 }
 
-private Nodo generarLlamadoFuncion(NodoComun funcion, Nodo copia){
+private Nodo generarLlamadoFuncion(NodoComun funcion, Nodo copia, String tipoCasteo) {
     NodoComun salida = null;
-    if (funcion != null){
-        Nodo param = funcion.getIzq();
-        if (param.getTipo().equals(copia.getTipo())){
-            param.setNombre(copia.getNombre());
-            salida = new NodoComun(funcion,param,null);
-            salida.setUso("llamado");
-        }
-        else {
-            agregarErrorSemantico("El tipo del parametro real no coincide con el del parametro formal");
-            return new NodoHoja("error");
+    if (funcion != null) {
+        Nodo param = funcion.getIzq(); // Parámetro formal de la función
+        String tipoFormal = param.getTipo(); // Tipo esperado por la función
+        String tipoReal = copia.getTipo();   // Tipo de la expresión original
+
+        if (tipoCasteo == null) {
+            // Sin casteo: los tipos deben coincidir
+            if (tipoFormal.equals(tipoReal)) {
+                param.setNombre(copia.getNombre());
+                salida = new NodoComun(funcion, param, null);
+                salida.setUso("llamado");
+            } else {
+                agregarErrorSemantico("El tipo del parámetro real no coincide con el del parámetro formal");
+                return new NodoHoja("error");
+            }
+        } else {
+            // Con casteo: validar que sea permitido
+            if (tipoCasteo.equals(tipoReal)) {
+                // Intento de forzar un casteo al mismo tipo
+                agregarErrorSemantico("El tipo del parámetro real ya es del tipo solicitado en el casteo");
+                return new NodoHoja("error");
+            } else if (tipoFormal.equals(tipoCasteo) && esCasteoValido(tipoReal, tipoCasteo)) {
+                // Casteo válido
+                param.setNombre(copia.getNombre());
+                NodoHoja nodoTipoReal = new NodoHoja(tipoReal, null);
+                salida = new NodoComun(funcion, param, nodoTipoReal);
+                salida.setUso("llamadoConCasteo");
+            } else {
+                // Casteo inválido
+                agregarErrorSemantico("El casteo de " + tipoReal + " a " + tipoCasteo + " no es válido");
+                return new NodoHoja("error");
+            }
         }
     }
     return salida;
+}
+
+// Método auxiliar para validar si un casteo es válido
+private boolean esCasteoValido(String tipoOrigen, String tipoDestino) {
+    // Regla: permitir solo ULONGINT ↔ SINGLE
+    return (tipoOrigen.equals("ulongint") && tipoDestino.equals("single")) ||
+           (tipoOrigen.equals("single") && tipoDestino.equals("ulongint"));
 }
 
 public NodoComun getRaiz(){
@@ -796,7 +825,7 @@ public static List<Nodo> getFuncionesDeclaradas(){
 public static boolean esOperacion(String nombre){
     return nombre.equals("*") || nombre.equals("/") || nombre.equals("+") || nombre.equals("-");
 }
-//#line 728 "Parser.java"
+//#line 757 "Parser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -1668,7 +1697,7 @@ case 90:
                 if (funcionesDeclaradas.containsKey(val_peek(3).sval + "@" + ambitoVar)){
                     Nodo exp = (Nodo)val_peek(1).obj;
                     NodoComun funcion = funcionesDeclaradas.get(val_peek(3).sval + "@" + ambitoVar);
-                    yyval.obj = generarLlamadoFuncion(funcion,exp);
+                    yyval.obj = generarLlamadoFuncion(funcion,exp,null);
                 }
                 else {
                     agregarErrorSemantico("La funcion '" + val_peek(3).sval + "' no fue declarada");
@@ -1704,9 +1733,9 @@ case 93:
                 else {
                     if (funcionesDeclaradas.containsKey(val_peek(6).sval + "@" + ambitoVar)){
                         Nodo exp = (Nodo)val_peek(2).obj;
-                        exp.setTipo(val_peek(4).sval);
+                        /*exp.setTipo($3.sval);*/
                         NodoComun funcion = funcionesDeclaradas.get(val_peek(6).sval + "@" + ambitoVar);
-                        yyval.obj = generarLlamadoFuncion(funcion,exp);
+                        yyval.obj = generarLlamadoFuncion(funcion,exp, val_peek(4).sval);
                     }
                     else {
                         agregarErrorSemantico("La funcion '" + val_peek(6).sval + "' no fue declarada");
@@ -1999,7 +2028,7 @@ case 137:
 //#line 808 "gramatica.y"
 {yyerror("Falta de parametro en funcion OUTF");}
 break;
-//#line 1927 "Parser.java"
+//#line 1956 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####
