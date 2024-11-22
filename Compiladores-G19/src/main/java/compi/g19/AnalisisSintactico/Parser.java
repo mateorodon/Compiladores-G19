@@ -1866,7 +1866,7 @@ case 115:
 break;
 case 116:
 //#line 696 "gramatica.y"
-{yyval = new NodoComun("Sentencia", (Nodo) val_peek(2).obj, (Nodo) val_peek(1).obj);}
+{yyval.obj = new NodoComun("Sentencia", (Nodo) val_peek(2).obj, (Nodo) val_peek(1).obj);}
 break;
 case 117:
 //#line 697 "gramatica.y"

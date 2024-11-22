@@ -693,7 +693,7 @@ cuerpo_if_bloque:
     ;
 
 list_sentencias_ejecutables:
-    list_sentencias_ejecutables sentencia_ejecutable ';' {$$ = new NodoComun("Sentencia", (Nodo) $1.obj, (Nodo) $2.obj);}
+    list_sentencias_ejecutables sentencia_ejecutable ';' {$$.obj = new NodoComun("Sentencia", (Nodo) $1.obj, (Nodo) $2.obj);}
     | sentencia_ejecutable ';' {$$ = $1;}
     ;
 

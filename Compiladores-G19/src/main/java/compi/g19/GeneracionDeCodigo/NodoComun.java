@@ -42,6 +42,7 @@ public class NodoComun extends Nodo {
     private static boolean segundaCondicion;
     private static String codCondicionFor = "";
     private static String labelSegundaCondicionFor;
+    private static String labelFor;
 
 
     public static String getLabel() {
@@ -433,6 +434,9 @@ public class NodoComun extends Nodo {
                 if (getIzq() != null) {
                     salida += getIzq().getAssembler();
                 }
+                if (getDer() != null) {
+                    salida += getDer().getAssembler();
+                }
                 break;
 
             case "Cuerpo":
@@ -493,11 +497,9 @@ public class NodoComun extends Nodo {
                 if (getIzq() != null) {
                     salida += getIzq().getAssembler();
                 }
-                label = pilaLabels.pop();
                 String end_loop = getLabel();
                 salida += "JMP " + end_loop + ":" + "\n";
-                salida += label + ":" + "\n";
-                label = pilaLabels.pop();
+                salida += labelFor + ":" + "\n";
                 if (segundaCondicion){
                     salida += codCondicionFor;
                     salida += "JMP " + end_loop + ":" + "\n";
@@ -510,7 +512,7 @@ public class NodoComun extends Nodo {
                 salida += codigoIncremento;
                 salida += "JMP " + startFor + "\n";
                 salida += end_loop + ":" + "\n";
-
+                pilaLabels.clear();
                 break;
             case "Encabezado For":
                 if (getIzq() != null) {
@@ -532,7 +534,7 @@ public class NodoComun extends Nodo {
 
                 String var = varFor.pop();
 
-                if (getIzq().getNombre().equals("DOWN")) {
+                if (getIzq().getNombre().equals("Down")) {
                     codigoIncremento += "MOV EAX, _" + var + "\n";
                     codigoIncremento += "SUB EAX, _" + getDer().getUltimoNodo().getNombre() + "\n";
                     codigoIncremento += "JS OperacionEnteroNegativo\n";
@@ -606,19 +608,20 @@ public class NodoComun extends Nodo {
     private String condiciones(String real, String contrario){
         String salida = "";
         salida += "MOV EAX, " + getIzq().getUltimoNodo().getNombre() + "\n";
+        labelFor = label;
         if (inFor) {
             if (!segundaCondicion) {
                 salida += startFor + ":" + "\n";
                 salida += "CMP EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
-                salida += contrario + label + "\n";
+                salida += contrario+ " " + labelFor + "\n";
             } else {
                 labelSegundaCondicionFor = getLabel();
                 salida += "CMP EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
-                salida += contrario + labelSegundaCondicionFor + "\n";
+                salida += contrario+ " " + labelSegundaCondicionFor + "\n";
             }
         }else{
             salida += "CMP EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
-            salida += real + label + "\n";
+            salida += real+ " " + labelFor + "\n";
         }
 
         return salida;
