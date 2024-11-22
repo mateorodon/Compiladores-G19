@@ -54,23 +54,10 @@ public class GeneradorAssembler {
         for (String k :  TablaSimbolos.getSimbolos().keySet()){
             Token t = TablaSimbolos.getToken(k);
             String uso = t.getUso();
-            String tipo = t.getTipo();
             if(uso != null){
                 if(uso.equals("constante")){
                     String prefijo = "_";
-                    if(tipo.equals(ENTERO))
-                    {
-                        data += prefijo + k + " db " + k + "\n";
-                    }
-                    else if(tipo.equals(FLOTANTE))
-                    {
-                        data += prefijo + k + " dq " + k + "\n";
-                    }
-                    else
-                    {
-                        data += prefijo +  k + " dd " + k + "\n";
-                    }
-
+                    data += prefijo + k + " dd " + k + "\n";
                 }
                 if( uso.equals("variable")  ||  uso.equals("variableAuxiliar"))
                 {
@@ -79,19 +66,8 @@ public class GeneradorAssembler {
                     {
                         prefijo = "_";
                     }
-                    if(tipo.equals(ENTERO))
-                    {
+                    data += prefijo +  k + " dd " + "?" + "\n";
 
-                        data += prefijo +  k + " db " + "?" + "\n";
-                    }
-                    else if(tipo.equals(FLOTANTE))
-                    {
-                        data += prefijo + k + " dq " + "?" + "\n";
-                    }
-                    else
-                    {
-                        data += prefijo +  k + " dd " + "?" + "\n";
-                    }
                 }
             }
         }
@@ -102,11 +78,11 @@ public class GeneradorAssembler {
         code = "\n.code\n";
 
         code+= codigoFunciones;
-        code+= "main:\n";
+        code+= "start:\n";
 
         code+= this.codigoArbol;
         code+= "invoke ExitProcess, 0 \n";
-        code+= "end main";
+        code+= "end start";
     }
 
     public String getAssembler(){

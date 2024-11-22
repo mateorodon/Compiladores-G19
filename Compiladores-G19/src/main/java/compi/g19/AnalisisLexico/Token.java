@@ -36,6 +36,12 @@ public class Token {
         this.linea = linea;
     }
 
+    public Token(String lexema, String tipo, String uso){
+        this.lexema = new StringBuilder(lexema);
+        this.tipo = tipo;
+        this.uso = uso;
+    }
+
     public void setTipo(String tipo){
         this.tipo = tipo.toLowerCase();
     }

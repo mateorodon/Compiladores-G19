@@ -41,7 +41,7 @@ sentencia_declarativa:
     tipo list_variables {AnalizadorLexico.agregarEstructura("Se reconocio declaracion de variable/s");
                          for (String var: varDeclaradas){
                             Token t = TablaSimbolos.getToken(var);
-                            if (!TablaSimbolos.existeSimbolo(var + ":" + ambito)){
+                            if (!TablaSimbolos.existeSimbolo(var + "@" + ambito)){
                                 String tipo = t.getTipo();
                                 if (tipo != null){
                                     if (tipo.toLowerCase().equals(tipoActual.toLowerCase()))
@@ -50,7 +50,7 @@ sentencia_declarativa:
                                         AnalizadorLexico.agregarWarning("La variable '" + var + "' ya estaba declarada. Se cambio su tipo a " + tipoActual);
                                 }
                                 t.getLexema().setLength(0);
-                                t.getLexema().append(var).append(":").append(ambito);
+                                t.getLexema().append(var).append("@").append(ambito);
                                 t.setAmbito(ambito);
                                 t.setUso("variable");
                                 t.setTipo(tipoActual);
@@ -133,18 +133,18 @@ asignacion_for: ID ASIGNACION CONSTANTE
                                         {String ambitoVar = buscarAmbito(ambito,$1.sval);
                                         NodoHoja idAsignacion = null;
                                         if (!ambitoVar.equals("")) {
-                                            Token t = TablaSimbolos.getToken($1.sval + ":" + ambitoVar);
-                                            idAsignacion = new NodoHoja($1.sval + ":" + ambitoVar, t);
+                                            Token t = TablaSimbolos.getToken($1.sval + "@" + ambitoVar);
+                                            idAsignacion = new NodoHoja($1.sval + "@" + ambitoVar, t);
                                         }
                                         else {
                                             Token t = new Token();
                                             t.setTipo(ENTERO);
                                             t.getLexema().setLength(0);
-                                            t.getLexema().append($1.sval).append(":").append(ambito);
+                                            t.getLexema().append($1.sval).append("@").append(ambito);
                                             t.setAmbito(ambito);
                                             t.setUso("variable");
                                             TablaSimbolos.addSimbolo(t.getLexema().toString(),t);
-                                            idAsignacion = new NodoHoja($1.sval + ":" + ambito, t);
+                                            idAsignacion = new NodoHoja($1.sval + "@" + ambito, t);
                                         }
                                         NodoHoja constante = new NodoHoja($3.sval, TablaSimbolos.getToken($3.sval));
                                         $$.obj = new NodoComun($2.sval, idAsignacion, constante);
@@ -169,7 +169,7 @@ asignacion:
                                   }
                                   else {
                                         t.getLexema().setLength(0);
-                                        t.getLexema().append($1.sval).append(":").append(ambito);
+                                        t.getLexema().append($1.sval).append("@").append(ambito);
                                         t.setAmbito(ambito);
                                         t.setUso("variable");
                                         TablaSimbolos.removeToken($1.sval);
@@ -177,7 +177,7 @@ asignacion:
                                   }
                               }
                               else {
-                                  t = TablaSimbolos.getToken($1.sval + ":" + ambitoVar);
+                                  t = TablaSimbolos.getToken($1.sval + "@" + ambitoVar);
                               }
                               if (!(t.getUso().equals("variable") || t.getUso().equals("parametro"))){
                                     agregarErrorSemantico("La expresion en la parte izquierda de la asignación debe ser una variable. Se encontró un elemento no asignable (" + t.getUso() + ")" );
@@ -196,7 +196,7 @@ asignacion:
                                                     $$.obj = new NodoHoja("error");
                                                 }
                                                 else {
-                                                    Token t = TablaSimbolos.getToken($1.sval + ":" + ambitoVar);
+                                                    Token t = TablaSimbolos.getToken($1.sval + "@" + ambitoVar);
                                                     String tipo = t.getTipo();
                                                     if (tiposDeclarados.containsKey(tipo)){
                                                         String tipoTriple = tiposDeclarados.get(tipo);
@@ -227,7 +227,7 @@ tipo:
            if (ambitoVar.equals(""))
                 agregarErrorSemantico("El tipo '" + $1.sval + "' no fue declarado");
            else {
-            Token t = TablaSimbolos.getToken($1.sval + ":" + ambitoVar);
+            Token t = TablaSimbolos.getToken($1.sval + "@" + ambitoVar);
             if (t.getUso() == null || !t.getUso().equals("tipo"))
                 yyerror("El identificador '" + $1.sval + "' no es un tipo definido");
             else {
@@ -256,9 +256,9 @@ encabezado_funcion:
                 String idFuncion = $3.sval;
                  Token t = TablaSimbolos.getToken(idFuncion);
                  if (t.getTipo() == null){
-                     if (!TablaSimbolos.existeSimbolo(idFuncion + ":" + ambito)){
+                     if (!TablaSimbolos.existeSimbolo(idFuncion + "@" + ambito)){
                         t.getLexema().setLength(0);
-                        t.getLexema().append(idFuncion).append(":").append(ambito); //aca agrega una vez el ambito
+                        t.getLexema().append(idFuncion).append("@").append(ambito); //aca agrega una vez el ambito
                         t.setAmbito(ambito);
                         t.setUso("funcion");
                         t.setTipo(tipoActual);
@@ -269,7 +269,7 @@ encabezado_funcion:
                         TablaSimbolos.removeToken(idFuncion);
                         variableYaDeclarada(idFuncion);
                      }
-                     NodoComun encabezado = new NodoComun(idFuncion + ":" + ambito);
+                     NodoComun encabezado = new NodoComun(idFuncion + "@" + ambito);
                      encabezado.setToken(t);
                      $$.obj = encabezado;
                  }
@@ -309,7 +309,7 @@ parametro:
                    if (t.getTipo() != null)
                         AnalizadorLexico.agregarWarning("La variable '" + $2.sval + "' ya esta declarada");
                    t.getLexema().setLength(0);
-                   t.getLexema().append($2.sval).append(":").append(ambito);
+                   t.getLexema().append($2.sval).append("@").append(ambito);
                    t.setAmbito(ambito);
                    t.setUso("parametro");
                    t.setTipo(tipoActual);
@@ -423,11 +423,11 @@ factor:
             $$.obj = aux;
         }
         else {
-            Token t = TablaSimbolos.getToken($1.sval + ":" + ambitoVar);
+            Token t = TablaSimbolos.getToken($1.sval + "@" + ambitoVar);
             if (!(t.getUso().equals("variable") || t.getUso().equals("parametro")))
                 agregarErrorSemantico("'" + $1.sval + "' no es una variable. Es un/a " + t.getUso());
             else {
-                Nodo aux = new NodoHoja($1.sval+":"+ambitoVar, t);
+                Nodo aux = new NodoHoja($1.sval+"@"+ambitoVar, t);
                 $$.obj = aux;
             }
         }
@@ -445,7 +445,7 @@ factor:
                                     $$.obj = new NodoHoja("error");
                                 }
                                 else {
-                                    Token t = TablaSimbolos.getToken($1.sval + ":" + ambitoVar);
+                                    Token t = TablaSimbolos.getToken($1.sval + "@" + ambitoVar);
                                     String tipo = $1.sval;
                                     if (tiposDeclarados.containsKey(tipo)){
                                         String tipoTriple = tiposDeclarados.get(tipo);
@@ -471,13 +471,13 @@ factor:
                          $$.obj = new NodoHoja("error");
                      }
                      else {
-                         Token t = TablaSimbolos.getToken($2.sval + ":" + ambitoVar);
+                         Token t = TablaSimbolos.getToken($2.sval + "@" + ambitoVar);
                          if (!(t.getUso().equals("variable") || t.getUso().equals("parametro"))){
                              agregarErrorSemantico("'" + $2.sval + "' no es una variable. Es un/a " + t.getUso());
                              $$.obj = new NodoHoja("error");
                          }
                          else {
-                             $$.obj = new NodoHoja($1.sval + $2.sval + ":" + ambitoVar,t);
+                             $$.obj = new NodoHoja($1.sval + $2.sval + "@" + ambitoVar,t);
                          }
                      }
                      TablaSimbolos.removeToken($2.sval);
@@ -502,7 +502,7 @@ factor:
                                     $$.obj = new NodoHoja("error");
                                 }
                                 else {
-                                    Token t = TablaSimbolos.getToken($2.sval + ":" + ambitoVar);
+                                    Token t = TablaSimbolos.getToken($2.sval + "@" + ambitoVar);
                                     String tipo = $1.sval;
                                     if (tiposDeclarados.containsKey(tipo)){
                                         String tipoTriple = tiposDeclarados.get(tipo);
@@ -528,9 +528,9 @@ declaracion_tipo:
     TYPEDEF TRIPLE '<' tipo_base '>' ID {String idTipo = $6.sval;
                                          Token t = TablaSimbolos.getToken(idTipo);
                                          if (t.getTipo() == null){
-                                             if (!TablaSimbolos.existeSimbolo(idTipo + ":" + ambito)){
+                                             if (!TablaSimbolos.existeSimbolo(idTipo + "@" + ambito)){
                                                 t.getLexema().setLength(0);
-                                                t.getLexema().append(idTipo).append(":").append(ambito);
+                                                t.getLexema().append(idTipo).append("@").append(ambito);
                                                 t.setAmbito(ambito);
                                                 t.setUso("tipo");
                                                 t.setTipo($4.sval);
@@ -569,9 +569,9 @@ invocacion_funcion:
                 $$.obj = new NodoHoja("error");
             }
             else {
-                if (funcionesDeclaradas.containsKey($1.sval + ":" + ambitoVar)){
+                if (funcionesDeclaradas.containsKey($1.sval + "@" + ambitoVar)){
                     Nodo exp = (Nodo)$3.obj;
-                    NodoComun funcion = funcionesDeclaradas.get($1.sval + ":" + ambitoVar);
+                    NodoComun funcion = funcionesDeclaradas.get($1.sval + "@" + ambitoVar);
                     $$.obj = generarLlamadoFuncion(funcion,exp);
                 }
                 else {
@@ -597,10 +597,10 @@ invocacion_funcion:
                     $$.obj = new NodoHoja("error");
                 }
                 else {
-                    if (funcionesDeclaradas.containsKey($1.sval + ":" + ambitoVar)){
+                    if (funcionesDeclaradas.containsKey($1.sval + "@" + ambitoVar)){
                         Nodo exp = (Nodo)$5.obj;
                         exp.setTipo($3.sval);
-                        NodoComun funcion = funcionesDeclaradas.get($1.sval + ":" + ambitoVar);
+                        NodoComun funcion = funcionesDeclaradas.get($1.sval + "@" + ambitoVar);
                         $$.obj = generarLlamadoFuncion(funcion,exp);
                     }
                     else {
@@ -801,7 +801,7 @@ salida_mensaje:
     | OUTF '(' expresion ')' {   Nodo exp = (Nodo)$3.obj;
                                  Token t = new Token(exp.getToken());
                                  t.setUso("mensaje");
-                                 t.setTipo("cadena");
+                                 t.setTipo("expresion");
                                  $$.obj = new NodoComun("Outf", new NodoHoja(exp.getNombre(),t));
                                  AnalizadorLexico.agregarEstructura("Se reconocio salida de mensaje por pantalla");
                               }
@@ -824,7 +824,7 @@ static int cantReturns = 0;
 static List<String> varDeclaradas = new ArrayList<>();
 static String tipoActual;
 static List<String> erroresSemanticos = new ArrayList<>();
-static Map<String,String> tiposDeclarados = new HashMap<>();
+public static Map<String,String> tiposDeclarados = new HashMap<>();
 public static Map<String,NodoComun> funcionesDeclaradas = new HashMap<>();
 static List<Nodo> expresiones1 = new ArrayList<>();
 static List<Nodo> expresiones2 = new ArrayList<>();
@@ -850,7 +850,7 @@ public static void yyerror(String error){
 }
 
 public static void addAmbito(String ambitoActual){
-    ambito = ambito.concat(":" + ambitoActual);
+    ambito = ambito.concat("@" + ambitoActual);
 }
 
 public void removeAmbito(){
@@ -875,11 +875,11 @@ public static boolean noHayErrores(){
 public String buscarAmbito(String ambitoActual, String lexema) {
     String ambito = ambitoActual;
 
-    while (!TablaSimbolos.existeSimbolo(lexema + ":" + ambito)) {
+    while (!TablaSimbolos.existeSimbolo(lexema + "@" + ambito)) {
         if (ambito.equals("main")) {
             return "";
         }
-        int index = ambito.lastIndexOf(':');
+        int index = ambito.lastIndexOf('@');
         if (index == -1) {
             return "";
         }
@@ -900,7 +900,7 @@ public static void imprimirErroresSemanticos(){
 }
 
 private void variableYaDeclarada(String var){
-    Token t1 = TablaSimbolos.getToken(var + ":" + ambito);
+    Token t1 = TablaSimbolos.getToken(var + "@" + ambito);
     switch (t1.getUso()) {
         case "variable":
             agregarErrorSemantico("Ya existe una variable con el nombre '" + var + "' definida en este ámbito");

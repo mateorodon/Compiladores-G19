@@ -1,12 +1,16 @@
 invocacion_funcion
 begin
-    Single fun f1(ulongint p)
+    Single fun f1(ulongint z)
     BEGIN
-        ulongint e;
-        e := p + 4;
-        ret(e);
+        ulongint y;
+        y := z + 4;
+        ret(y);
     END;
-    x := 2;
-    y := x;
+    x := 2 - 3;
+    x := f1(x);
+    outf(x);
     outf({bye bye});
-end    
+    single f;
+    f := 3.0;
+    outf(f);
+end                                                     

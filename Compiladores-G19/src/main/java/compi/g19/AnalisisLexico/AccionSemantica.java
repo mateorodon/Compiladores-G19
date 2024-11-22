@@ -342,6 +342,7 @@ public abstract class AccionSemantica {
         @Override
         public void ejecutar(StringBuilder lexema, Character c, Reader entrada) {
             token.setId(CADENA);
+            token.setUso("cadena");
             token.setLexema(lexema);
 
             if (!TablaSimbolos.existeSimbolo(token.getLexema().toString())) {
