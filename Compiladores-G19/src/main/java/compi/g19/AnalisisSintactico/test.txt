@@ -1,11 +1,6 @@
 prog
 begin
-    ulongint x;
-    x := 1;
-    ULONGINT FUN f1 (ulongint a)
-    BEGIN
-        a := 1;
-        ret(a);
-    END;
-    f1(ulongint(x));
-end  
+    typedef triple <ulongint> tint;
+    tint t1;
+    t1[1] := 2;
+end      
