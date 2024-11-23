@@ -1,0 +1,11 @@
+error_alcance
+begin
+    ulongint x;
+    ulongint fun f1(ulongint j)
+    begin
+        ulongint r;
+        j := 2;
+        RET(j);
+    end;
+    r := 2;
+end                 

@@ -15,10 +15,13 @@ OperacionEnteroNegativo db "El resultado de la operacion no puede ser negativo."
 OverflowSumaDouble db "Se produjo un un overflow en la suma de doubles.", 0 
 error db "Error", 0 
 printMensaje db "Print", 0 
-_1 dd 1
-_2 dd 2
+@aux6 dd ?
 @aux5 dd ?
 @aux4 dd ?
+_1 dd 1
+_2 dd 2
+_3 dd 3
+_4 dd 4
 _i@main dd ?
 _j@main dd ?
 _m@main dd ?
@@ -35,6 +38,12 @@ invoke ExitProcess, 0
 invoke MessageBox, NULL, addr OverflowSumaDouble, addr error, MB_OK 
 invoke ExitProcess, 0 
 start:
+MOV EAX, _3
+SUB EAX, _4
+JS OperacionEnteroNegativo
+MOV _i@main, EAX
+MOV EAX, _1
+MOV _j@main, EAX
 MOV EAX, i@main
 CMP EAX, 6
 JL  label1
@@ -64,8 +73,8 @@ MOV EAX, _2
 MOV _i@main, EAX
 MOV EAX, _m@main
 ADD EAX, _1
-MOV @aux3, EAX
-MOV _m@main, @aux3
+MOV @aux4, EAX
+MOV _m@main, @aux4
 JMP label4
 label6:
 label2:

@@ -1,6 +1,8 @@
 prog
 begin
     ULONGINT i,j;
+    i := 3 - 4;
+    j := 1;
     IF ((i,j) >= (6,2)) THEN
         i:=2;
     ELSE

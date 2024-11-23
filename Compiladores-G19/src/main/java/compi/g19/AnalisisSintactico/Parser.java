@@ -1220,14 +1220,14 @@ case 39:
                               }
                               else {
                                   t = TablaSimbolos.getToken(val_peek(2).sval + "@" + ambitoVar);
-                              }
-                              if (!(t.getUso().equals("variable") || t.getUso().equals("parametro"))){
-                                    agregarErrorSemantico("La expresion en la parte izquierda de la asignación debe ser una variable. Se encontró un elemento no asignable (" + t.getUso() + ")" );
-                                    yyval.obj = new NodoHoja("error");
-                              }
-                              else {
-                                    NodoHoja id = new NodoHoja(t.getLexema().toString(),t);
-                                    yyval.obj = new NodoComun(val_peek(1).sval ,id, (Nodo)val_peek(0).obj);
+                                  if (!(t.getUso().equals("variable") || t.getUso().equals("parametro"))){
+                                        agregarErrorSemantico("La expresion en la parte izquierda de la asignación debe ser una variable. Se encontró un elemento no asignable (" + t.getUso() + ")" );
+                                        yyval.obj = new NodoHoja("error");
+                                  }
+                                  else {
+                                        NodoHoja id = new NodoHoja(t.getLexema().toString(),t);
+                                        yyval.obj = new NodoComun(val_peek(1).sval ,id, (Nodo)val_peek(0).obj);
+                                  }
                               }
                               TablaSimbolos.removeToken(val_peek(2).sval);
                             }

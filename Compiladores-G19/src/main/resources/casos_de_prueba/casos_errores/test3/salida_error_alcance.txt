@@ -1,0 +1,39 @@
+----------ARBOL SINTACTICO -----------
+PROGRAMA
+    Sentencia
+        Sentencia
+            Sentencia Declarativa
+            Sentencia Declarativa
+        error
+----------ARBOL SINTACTICO FUNCIONES -----------
+f1@main
+    j@main@f1main@f1
+    Sentencia
+        Sentencia
+            Sentencia Declarativa
+            :=
+                j@main@f1
+                2
+        Return
+            j@main@f1
+----------ESTRUCTURAS RECONOCIDAS-----------
+Se reconocio declaracion de variable/s en la línea 3
+Se reconocio declaracion de variable/s en la línea 6
+Se reconocio una asignacion en la línea 7
+Se reconocio sentencia de retorno en la línea 8
+Se reconocio declaracion de funcion en la línea 9
+Se reconocio una asignacion en la línea 10
+Se reconocio el programa en la línea 11
+----------TABLA DE SIMBOLOS-----------
+Token{id=262, lexema=2, linea=7, tipo=ulongint, uso = constante}
+Token{id=257, lexema=j@main@f1, linea=4, tipo=ulongint, uso = parametro}
+Token{id=257, lexema=r@main@f1, linea=6, tipo=ulongint, uso = variable}
+Token{id=257, lexema=error_alcance, linea=1, tipo=null, uso = null}
+Token{id=257, lexema=x@main, linea=3, tipo=ulongint, uso = variable}
+Token{id=257, lexema=f1@main, linea=4, tipo=ulongint, uso = funcion}
+-----------ERRORES LEXICOS----------
+-----------ERRORES SINTACTICOS----------
+-----------ERRORES SEMANTICOS----------
+La variable 'r' no fue declarada en la linea 10
+----------WARNINGS-----------
+WARNING: La variable 'x' ya esta declarada en la línea 3

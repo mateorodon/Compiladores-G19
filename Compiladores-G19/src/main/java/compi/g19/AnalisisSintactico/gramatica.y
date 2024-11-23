@@ -178,14 +178,14 @@ asignacion:
                               }
                               else {
                                   t = TablaSimbolos.getToken($1.sval + "@" + ambitoVar);
-                              }
-                              if (!(t.getUso().equals("variable") || t.getUso().equals("parametro"))){
-                                    agregarErrorSemantico("La expresion en la parte izquierda de la asignación debe ser una variable. Se encontró un elemento no asignable (" + t.getUso() + ")" );
-                                    $$.obj = new NodoHoja("error");
-                              }
-                              else {
-                                    NodoHoja id = new NodoHoja(t.getLexema().toString(),t);
-                                    $$.obj = new NodoComun($2.sval ,id, (Nodo)$3.obj);
+                                  if (!(t.getUso().equals("variable") || t.getUso().equals("parametro"))){
+                                        agregarErrorSemantico("La expresion en la parte izquierda de la asignación debe ser una variable. Se encontró un elemento no asignable (" + t.getUso() + ")" );
+                                        $$.obj = new NodoHoja("error");
+                                  }
+                                  else {
+                                        NodoHoja id = new NodoHoja(t.getLexema().toString(),t);
+                                        $$.obj = new NodoComun($2.sval ,id, (Nodo)$3.obj);
+                                  }
                               }
                               TablaSimbolos.removeToken($1.sval);
                             }
