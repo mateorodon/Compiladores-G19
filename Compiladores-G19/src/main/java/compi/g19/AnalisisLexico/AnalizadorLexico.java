@@ -82,6 +82,8 @@ public class AnalizadorLexico {
 
             accion.ejecutar(lexemaBuilder, caracter, entrada);
 
+            //if (estadoAct==1 && )
+
             estadoAct = matrizEstados[estadoAct][valorCaracter];
 
             entrada.mark(1);

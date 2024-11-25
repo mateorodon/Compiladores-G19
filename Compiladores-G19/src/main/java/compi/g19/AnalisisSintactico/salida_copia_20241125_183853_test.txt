@@ -1,0 +1,57 @@
+----------ARBOL SINTACTICO -----------
+PROGRAMA
+    For
+        Encabezado For
+            Asignacion e Incremento
+                :=
+                    m@main
+                    1
+                Incremento
+                    Up
+                    1
+            Condiciones
+                <
+                    m@main
+                    2
+                >
+                    m@main
+                    1
+        Sentencia
+            For
+                Encabezado For
+                    Asignacion e Incremento
+                        :=
+                            m@main
+                            1
+                        Incremento
+                            Up
+                            1
+                    Condiciones
+                        <
+                            m@main
+                            2
+                        >
+                            m@main
+                            1
+                error
+            error
+----------ARBOL SINTACTICO FUNCIONES -----------
+----------ESTRUCTURAS RECONOCIDAS-----------
+Se reconoció un FOR con condición en la línea 3
+Se reconoció un FOR con condición en la línea 5
+Se reconocio una asignacion en la línea 7
+Se reconocio una asignacion en la línea 9
+Se reconocio el programa en la línea 11
+----------TABLA DE SIMBOLOS-----------
+Token{id=262, lexema=1, linea=3, tipo=ulongint, uso = constante}
+Token{id=262, lexema=2, linea=3, tipo=ulongint, uso = constante}
+Token{id=262, lexema=4, linea=9, tipo=ulongint, uso = constante}
+Token{id=0, lexema=m@main, linea=3, tipo=ulongint, uso = variable}
+Token{id=257, lexema=program, linea=1, tipo=null, uso = null}
+-----------ERRORES LEXICOS----------
+-----------ERRORES SINTACTICOS----------
+-----------ERRORES SEMANTICOS----------
+La variable 'i' no fue declarada en la linea 7
+La variable 'i' no fue declarada en la linea 9
+----------WARNINGS-----------
+Archivo copia eliminado: C:\Users\Axel\Documents\Facultad\Compiladores-G19\Compiladores-G19\src\main\java\compi\g19\AnalisisSintactico\copia_20241125_183853_test.txt

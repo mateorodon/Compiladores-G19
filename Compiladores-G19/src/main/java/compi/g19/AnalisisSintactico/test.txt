@@ -1,0 +1,12 @@
+program
+begin
+ulongint i;
+    FOR (m:=1 ; m < 2 ; UP 1 ; (m > 1))
+                begin
+                FOR (m:=1 ; m < 2 ; UP 1 ; (m > 1))
+                                begin
+                                      i:=2;
+                                end;
+                      i:=4;
+                end;
+end

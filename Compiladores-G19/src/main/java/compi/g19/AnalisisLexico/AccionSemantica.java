@@ -38,21 +38,6 @@ public abstract class AccionSemantica {
         }
     }
 
-    @AllArgsConstructor
-    static class compuestaTriple extends AccionSemantica {
-
-        private AccionSemantica a1;
-        private AccionSemantica a2;
-        private AccionSemantica a3;
-
-        @Override
-        public void ejecutar(StringBuilder lexema, Character c, Reader entrada) throws IOException {
-            a1.ejecutar(lexema, c, entrada);
-            a2.ejecutar(lexema, c, entrada);
-            a3.ejecutar(lexema, c, entrada);
-        }
-    }
-
     static class generarASCII extends AccionSemantica {
         @Override
         public void ejecutar(StringBuilder lexema, Character c, Reader entrada) {
