@@ -726,6 +726,10 @@ condicion:
             for (int i = 0; i < expresiones1.size(); i++) {
                 Nodo exp1 = expresiones1.get(i);
                 Nodo exp2 = expresiones2.get(i);
+                if (exp1.getNombre().contains("error") || exp2.getNombre().contains("error")){
+                    salida = new NodoComun("error");
+                    break;
+                }
                 if (!(exp1.getTipo().equals(exp2.getTipo()))){
                     agregarErrorSemantico("Las expresiones en la posicion " + i + " no tienen el mismo tipo");
                     aux = new NodoHoja("error");

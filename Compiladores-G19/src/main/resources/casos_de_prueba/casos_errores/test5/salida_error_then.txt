@@ -1,0 +1,22 @@
+----------ARBOL SINTACTICO -----------
+PROGRAMA
+----------ARBOL SINTACTICO FUNCIONES -----------
+----------ESTRUCTURAS RECONOCIDAS-----------
+Se reconocio pattern matching en la línea 3
+Se reconocio salida de mensaje por pantalla en la línea 4
+Se reconocio una asignacion en la línea 7
+Se reconocio el programa en la línea 10
+----------TABLA DE SIMBOLOS-----------
+Token{id=262, lexema=1, linea=7, tipo=ulongint, uso = constante}
+Token{id=262, lexema=4, linea=3, tipo=ulongint, uso = constante}
+Token{id=257, lexema=z@main, linea=7, tipo=ulongint, uso = variable}
+Token{id=257, lexema=prog, linea=1, tipo=null, uso = null}
+-----------ERRORES LEXICOS----------
+-----------ERRORES SINTACTICOS----------
+ERROR SINTACTICO: Falta THEN en IF en la línea 9
+-----------ERRORES SEMANTICOS----------
+La variable 'x' no fue declarada en la linea 3
+La variable 'a' no fue declarada en la linea 3
+La variable 'v' no fue declarada en la linea 3
+La variable 'z' no fue declarada en la linea 4
+----------WARNINGS-----------

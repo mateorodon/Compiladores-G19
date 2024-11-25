@@ -35,3 +35,9 @@ c
 3src/main/java/compi/g19/a/AnalisisLexico/Error.java,0\8\0852530662bf5585659ec07bf92cfe769e649c28
 k
 ;src/main/java/compi/g19/a/AnalisisLexico/TablaSimbolos.java,e\7\e77ce62dc7a074b6690bf43d1dc50180b8426884
+f
+6src/main/java/compi/g19/AnalisisSintactico/gramatica.y,c\0\c027712e7abb861bae4e128a11525ea1a9582349
+`
+0src/main/java/compi/g19/AnalisisLexico/Main.java,f\4\f4a77072d9bb1976174e99e648f21ec8423737f8
+f
+6src/main/java/compi/g19/AnalisisSintactico/Parser.java,5\b\5bebb446a5c3e80781304f825d1cb9f447802bef
