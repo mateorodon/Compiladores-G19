@@ -15,16 +15,43 @@ OperacionEnteroNegativo db "El resultado de la operacion no puede ser negativo."
 OverflowSumaDouble db "Se produjo un un overflow en la suma de doubles.", 0 
 error db "Error", 0 
 printMensaje db "Print", 0 
-_1 dd 1
+@aux7 dd ?
+@aux11 dd ?
 @aux6 dd ?
-_2 dd 2
+@aux12 dd ?
 @aux5 dd ?
+@aux13 dd ?
 @aux4 dd ?
-_i@main dd ?
-_m@main dd ?
+@aux14 dd ?
+_b@main dd ?
+_a@main dd ?
+@aux9 dd ?
+@aux8 dd ?
+@aux10 dd ?
+@aux15 dd ?
+@aux16 dd ?
+_3.0 dd 3.0
+_10.0 dd 10.0
 @aux3 dd ?
 @aux2 dd ?
+_c@main dd ?
 @aux1 dd ?
+@print1 db [_c@main], 0 
+@print2 db [_c@main], 0 
+@print3 db [_c@main], 0 
+@print4 db [_c@main], 0 
+@print5 db [_c@main], 0 
+@print6 db [_c@main], 0 
+@print7 db [_c@main], 0 
+@print8 db [_c@main], 0 
+@print9 db [_c@main], 0 
+@print10 db [_c@main], 0 
+@print11 db [_c@main], 0 
+@print12 db [_c@main], 0 
+@print13 db [_c@main], 0 
+@print14 db [_c@main], 0 
+@print15 db [_c@main], 0 
+@print16 db [_c@main], 0 
 
 .code
 invoke MessageBox, NULL, addr AutoinvocacionFunciones, addr error, MB_OK 
@@ -34,58 +61,93 @@ invoke ExitProcess, 0
 invoke MessageBox, NULL, addr OverflowSumaDouble, addr error, MB_OK 
 invoke ExitProcess, 0 
 start:
-MOV EAX, _1
-MOV _m@main, EAX
-MOV EAX, m@main
-label2:
-CMP EAX, 2
-JL  label1
-JMP label4:
-label1:
-MOV EAX, m@main
-CMP EAX, 1
-JG  label3
-JMP label4:
-label3:
-MOV EAX, _1
-MOV _m@main, EAX
-MOV EAX, m@main
-label6:
-CMP EAX, 2
-JL  label5
-JMP label8:
-label5:
-MOV EAX, m@main
-CMP EAX, 1
-JG  label3
-MOV EAX, m@main
-CMP EAX, 1
-JG  label7
-JMP label8:
-label7:
-MOV EAX, _2
-MOV _i@main, EAX
-MOV EAX, _m@main
-ADD EAX, _1
-MOV @aux1, EAX
-MOV _m@main, @aux1
-MOV EAX, _m@main
-ADD EAX, _1
-MOV @aux4, EAX
-MOV _m@main, @aux4
-JMP label6
-label8:
-MOV EAX, _2
-MOV _i@main, EAX
-MOV EAX, _m@main
-ADD EAX, _1
-MOV @aux1, EAX
-MOV _m@main, @aux1
-MOV EAX, _m@main
-ADD EAX, _1
-MOV @aux4, EAX
-MOV _m@main, @aux4
-JMP label6
-label4:
+FLD _10.0
+FST _a@main
+FLD _3.0
+FST _b@main
+FLD _a@main
+FADD _b@main
+JS errorSumaDouble
+FST _c@main
+invoke MessageBox, NULL, addr @print1, addr @print1, MB_OK
+FLD _a@main
+FSUB _b@main
+FST _c@main
+invoke MessageBox, NULL, addr @print2, addr @print2, MB_OK
+FLD _a@main
+FMUL _b@main
+FST @aux3
+FST _c@main
+invoke MessageBox, NULL, addr @print3, addr @print3, MB_OK
+FLD _b@main
+FSUB _b@main
+FTST FLD _a@main
+FDIV _b@main
+FST @aux4
+FST _c@main
+invoke MessageBox, NULL, addr @print4, addr @print4, MB_OK
+FLD _a@main
+FADD _3.0
+JS errorSumaDouble
+FST _c@main
+invoke MessageBox, NULL, addr @print5, addr @print5, MB_OK
+FLD _a@main
+FSUB _3.0
+FST _c@main
+invoke MessageBox, NULL, addr @print6, addr @print6, MB_OK
+FLD _a@main
+FMUL _3.0
+FST @aux7
+FST _c@main
+invoke MessageBox, NULL, addr @print7, addr @print7, MB_OK
+FLD _3.0
+FSUB _3.0
+FTST FLD _a@main
+FDIV _3.0
+FST @aux8
+FST _c@main
+invoke MessageBox, NULL, addr @print8, addr @print8, MB_OK
+FLD _10.0
+FADD _b@main
+JS errorSumaDouble
+FST _c@main
+invoke MessageBox, NULL, addr @print9, addr @print9, MB_OK
+FLD _10.0
+FSUB _b@main
+FST _c@main
+invoke MessageBox, NULL, addr @print10, addr @print10, MB_OK
+FLD _10.0
+FMUL _b@main
+FST @aux11
+FST _c@main
+invoke MessageBox, NULL, addr @print11, addr @print11, MB_OK
+FLD _b@main
+FSUB _b@main
+FTST FLD _10.0
+FDIV _b@main
+FST @aux12
+FST _c@main
+invoke MessageBox, NULL, addr @print12, addr @print12, MB_OK
+FLD _10.0
+FADD _3.0
+JS errorSumaDouble
+FST _c@main
+invoke MessageBox, NULL, addr @print13, addr @print13, MB_OK
+FLD _10.0
+FSUB _3.0
+FST _c@main
+invoke MessageBox, NULL, addr @print14, addr @print14, MB_OK
+FLD _10.0
+FMUL _3.0
+FST @aux15
+FST _c@main
+invoke MessageBox, NULL, addr @print15, addr @print15, MB_OK
+FLD _3.0
+FSUB _3.0
+FTST FLD _10.0
+FDIV _3.0
+FST @aux16
+FST _c@main
+invoke MessageBox, NULL, addr @print16, addr @print16, MB_OK
 invoke ExitProcess, 0 
 end start

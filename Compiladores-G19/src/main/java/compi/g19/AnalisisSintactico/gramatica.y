@@ -285,17 +285,19 @@ declaracion_funcion:
     encabezado_funcion '(' parametro ')' BEGIN cuerpo_funcion { if (!hasReturn) {
                                                             yyerror("Falta sentencia RET en la función");
                                                          }
-                                                         Nodo parametro = (Nodo)$3.obj;
-                                                         NodoComun funcion = (NodoComun)$1.obj; //Encabezado con nombre funcion, este tiene el tipo
-                                                         NodoComun cuerpo = (NodoComun)$6.obj;
+                                                         if (!((NodoComun)$6.obj).getNombre().equals("Cuerpo vacio")){
+                                                             Nodo parametro = (Nodo)$3.obj;
+                                                             NodoComun funcion = (NodoComun)$1.obj; //Encabezado con nombre funcion, este tiene el tipo
+                                                             NodoComun cuerpo = (NodoComun)$6.obj;
 
-                                                         funcion.setUso("funcion");
-                                                         funcion.setIzq(parametro);
-                                                         funcion.setDer(cuerpo);
+                                                             funcion.setUso("funcion");
+                                                             funcion.setIzq(parametro);
+                                                             funcion.setDer(cuerpo);
 
-                                                         funcionesDeclaradas.put(funcion.getNombre(),funcion);
-                                                         removeAmbito();
-                                                         enFuncion = false;
+                                                             funcionesDeclaradas.put(funcion.getNombre(),funcion);
+                                                             removeAmbito();
+                                                             enFuncion = false;
+                                                             }
                                                          } END
     | encabezado_funcion '(' bloque_list_parametro ')' BEGIN cuerpo_funcion END {yyerror("La funciones no puede tener más de un parámetro");removeAmbito();}
     | encabezado_funcion '(' ')' BEGIN cuerpo_funcion END {yyerror("La función debe tener parámetro");removeAmbito();}
@@ -336,7 +338,7 @@ cuerpo_funcion:
                                                     hasReturn = true;}
     | list_sentencias_funcion {$$=$1;}
     | sentencia_return ';' {$$=$1; hasReturn = true;}
-    |  {yyerror("El cuerpo de la funcion no puede ser vacio");}
+    |  {yyerror("El cuerpo de la funcion no puede ser vacio"); $$.obj = new NodoHoja("Cuerpo vacio");}
     ;
 
 
@@ -589,21 +591,15 @@ invocacion_funcion:
                 $$.obj = new NodoHoja("error");
             }
             else {
-                if (enFuncion && funcionActual.equals($1.sval)){
-                    agregarErrorSemantico("La funcion '" + $1.sval + "' no puede autoinvocarse");
-                    $$.obj = new NodoHoja("error");
-                }
-                else {
-                    if (funcionesDeclaradas.containsKey($1.sval + "@" + ambitoVar)){
+                if (funcionesDeclaradas.containsKey($1.sval + "@" + ambitoVar)){
                         Nodo exp = (Nodo)$5.obj;
                         //exp.setTipo($3.sval);
                         NodoComun funcion = funcionesDeclaradas.get($1.sval + "@" + ambitoVar);
                         $$.obj = generarLlamadoFuncion(funcion,exp, $3.sval);
-                    }
-                    else {
+                }
+                else {
                         agregarErrorSemantico("La funcion '" + $1.sval + "' no fue declarada");
                         $$.obj = new NodoHoja("error");
-                    }
                 }
             }
             TablaSimbolos.removeToken($1.sval);
@@ -689,7 +685,7 @@ cuerpo_if_bloque:
     | BEGIN list_sentencias_ejecutables sentencia_return END {$$ = $2; cantReturns++;}
     | BEGIN error {yyerror("Se esperaba 'END' después del bloque BEGIN en el cuerpo IF/ELSE");}
     | list_sentencias_ejecutables END  {yyerror("Se encontró 'END' sin un bloque BEGIN correspondiente en el cuerpo IF/ELSE");}
-    | error {yyerror("Se esperaba BEGIN y END por sentencias multiples");}
+    //| error {yyerror("Se esperaba BEGIN y END por sentencias multiples");}
     ;
 
 list_sentencias_ejecutables:
