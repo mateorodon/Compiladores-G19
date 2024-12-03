@@ -131,7 +131,7 @@ public class NodoComun extends Nodo {
                         salida += "MOV [_" + arregloNombreTS + " + " + desplazamiento + "], EAX\n";
                     } else {
                         // Generar código para asignación a un flotante en el arreglo
-                        salida += "FLD " + getDer().getUltimoNodo().getNombre() + "\n";
+                        salida += "FLD " + getDer().getUltimoNodo().getNombre().replace('.','_') + "\n";
                         salida += "FSTP [_" + arregloNombreTS + " + " + desplazamiento + "]\n";
                     }
                 } else {
@@ -143,7 +143,7 @@ public class NodoComun extends Nodo {
                         salida += "MOV _" + getIzq().getUltimoNodo().getNombre() + ", EAX\n";
                     } else {
                         if (getDer().getUso() != null && !getDer().getUso().equals("llamado"))
-                            salida += "FLD _" + getDer().getUltimoNodo().getNombre() + "\n";
+                            salida += "FLD _" + getDer().getUltimoNodo().getNombre().replace('.','_') + "\n";
                         salida += "FST _" + getIzq().getUltimoNodo().getNombre() + "\n";
                     }
                 }
@@ -160,9 +160,9 @@ public class NodoComun extends Nodo {
                     salida += "MOV EAX, _" + getIzq().getUltimoNodo().getNombre() + "\n";
                     salida += "ADD EAX, _" + getDer().getUltimoNodo().getNombre() + "\n";
                 } else {
-                    salida += "FLD _" + getIzq().getUltimoNodo().getNombre() + "\n";
+                    salida += "FLD _" + getIzq().getUltimoNodo().getNombre().replace('.', '_') + "\n";
                     salida += "FADD _" + getDer().getUltimoNodo().getNombre() + "\n";
-                    salida += "JS errorSumaDouble\n";
+                    salida += "JS handle_overflow\n";
                 }
                 break;
             case "-":
@@ -181,10 +181,10 @@ public class NodoComun extends Nodo {
                 if (getIzq().getTipo().equals(ENTERO)) {
                     salida += "MOV EAX, _" + getIzq().getUltimoNodo().getNombre() + "\n";
                     salida += "SUB EAX, _" + getDer().getUltimoNodo().getNombre() + "\n";
-                    salida += "JS OperacionEnteroNegativo\n";
+                    salida += "JS handle_negativos\n";
 
                 } else {
-                    salida += "FLD _" + getIzq().getUltimoNodo().getNombre() + "\n";
+                    salida += "FLD _" + getIzq().getUltimoNodo().getNombre().replace('.', '_') + "\n";
                     salida += "FSUB _" + getDer().getUltimoNodo().getNombre() + "\n";
                 }
                 break;
@@ -208,7 +208,7 @@ public class NodoComun extends Nodo {
                     salida += "MOV " + varAuxiliar + ", EAX" + "\n";
 
                 } else {
-                    salida += "FLD _" + getIzq().getUltimoNodo().getNombre() + "\n";
+                    salida += "FLD _" + getIzq().getUltimoNodo().getNombre().replace('.', '_') + "\n";
                     salida += "FMUL _" + getDer().getUltimoNodo().getNombre() + "\n";
                     salida += "FST " + varAuxiliar + "\n";
                 }
@@ -238,7 +238,7 @@ public class NodoComun extends Nodo {
                     salida += "FSUB _" + getDer().getUltimoNodo().getNombre() + "\n";
                     salida += "FTST ";
 
-                    salida += "FLD _" + getIzq().getUltimoNodo().getNombre() + "\n";
+                    salida += "FLD _" + getIzq().getUltimoNodo().getNombre().replace('.', '_') + "\n";
                     salida += "FDIV _" + getDer().getUltimoNodo().getNombre() + "\n";
                     salida += "FST " + varAuxiliar + "\n";
                 }
@@ -267,7 +267,7 @@ public class NodoComun extends Nodo {
                     if (getIzq().getTipo().equals(ENTERO)) {
                         salida += condiciones("JNE ","JE ");
                     } else {
-                        salida += "FLD _" + getIzq().getUltimoNodo().getNombre() + "\n";
+                        salida += "FLD _" + getIzq().getUltimoNodo().getNombre().replace('.', '_') + "\n";
                         salida += "FCOM _" + getDer().getUltimoNodo().getNombre() + "\n";
                         salida += "JNE " + label + "\n";
                     }
@@ -298,7 +298,7 @@ public class NodoComun extends Nodo {
                     if (getIzq().getTipo().equals(ENTERO)) {
                         salida += condiciones("JE ","JNE ");
                     } else {
-                        salida += "FLD _" + getIzq().getUltimoNodo().getNombre() + "\n";
+                        salida += "FLD _" + getIzq().getUltimoNodo().getNombre().replace('.', '_') + "\n";
                         salida += "FCOM _" + getDer().getUltimoNodo().getNombre() + "\n";
                         salida += "JE " + label + "\n";
                     }
@@ -324,7 +324,7 @@ public class NodoComun extends Nodo {
                     if (getIzq().getTipo().equals(ENTERO)) {
                         salida += condiciones("JLE ","JG ");
                     } else {
-                        salida += "FLD _" + getIzq().getUltimoNodo().getNombre() + "\n";
+                        salida += "FLD _" + getIzq().getUltimoNodo().getNombre().replace('.', '_') + "\n";
                         salida += "FCOM _" + getDer().getUltimoNodo().getNombre() + "\n";
                         salida += "JLE " + label + "\n";
                     }
@@ -355,7 +355,7 @@ public class NodoComun extends Nodo {
                     if (getIzq().getTipo().equals(ENTERO)) {
                         salida += condiciones("JL ","JGE ");
                     } else {
-                        salida += "FLD _" + getIzq().getUltimoNodo().getNombre() + "\n";
+                        salida += "FLD _" + getIzq().getUltimoNodo().getNombre().replace('.', '_') + "\n";
                         salida += "FCOM _" + getDer().getUltimoNodo().getNombre() + "\n";
                         salida += "JL " + label + "\n";
                     }
@@ -386,7 +386,7 @@ public class NodoComun extends Nodo {
                     if (getIzq().getTipo().equals(ENTERO)) {
                         salida += condiciones("JGE ","JL ");
                     } else {
-                        salida += "FLD _" + getIzq().getUltimoNodo().getNombre() + "\n";
+                        salida += "FLD _" + getIzq().getUltimoNodo().getNombre().replace('.', '_') + "\n";
                         salida += "FCOM _" + getDer().getUltimoNodo().getNombre() + "\n";
                         salida += "JGE " + label + "\n";
                     }
@@ -417,7 +417,7 @@ public class NodoComun extends Nodo {
                     if (getIzq().getTipo().equals(ENTERO)) {
                         salida += condiciones("JG ","JLE ");
                     } else {
-                        salida += "FLD _" + getIzq().getUltimoNodo().getNombre() + "\n";
+                        salida += "FLD _" + getIzq().getUltimoNodo().getNombre().replace('.', '_') + "\n";
                         salida += "FCOM _" + getDer().getUltimoNodo().getNombre() + "\n";
                         salida += "JG " + label + "\n";
                     }
@@ -457,17 +457,22 @@ public class NodoComun extends Nodo {
                 if (getIzq().getTipo().equals(ENTERO)) {
                     salida += "MOV EAX, _" + getIzq().getUltimoNodo().getNombre() + "\n";
                 } else {
-                    salida += "FLD _" + getIzq().getUltimoNodo().getNombre() + "\n";
+                    salida += "FLD _" + getIzq().getUltimoNodo().getNombre().replace('.', '_') + "\n";
                 }
                 salida += "ret " + "\n";
                 break;
             case "Outf":
                 String variablePrint = getVariablePrint();
-                if (this.getIzq().getUltimoNodo().getTipo().equals("cadena"))
-                    data += variablePrint + " db \"" + this.getIzq().getUltimoNodo().getNombre() + "\", 0 \n";
-                else
-                    data += variablePrint + " db [_" + this.getIzq().getUltimoNodo().getNombre() + "], 0 \n";
-                salida += salida + "invoke MessageBox, NULL, addr " + variablePrint + ", addr " + variablePrint + ", MB_OK\n";
+                if (this.getIzq().getUltimoNodo().getTipo().equals("cadena")) {
+                    data += variablePrint + " db \"" + this.getIzq().getUltimoNodo().getNombre() + "\", 10, 0 \n";
+                    salida += salida + "invoke printf, addr " + variablePrint + "\n" ;
+                }
+                else {
+                    if (this.getIzq().getUltimoNodo().getTipo().equals(ENTERO))
+                        salida += salida + "invoke printf, cfm$(\"%d\\n\"), " + "[_" + this.getIzq().getUltimoNodo().getNombre() + "]" + "\n" ;
+                    if (this.getIzq().getUltimoNodo().getTipo().equals(FLOTANTE))
+                        salida += salida + "invoke printf, cfm$(\"%.20Lf\\n\"), " + "[_" + this.getIzq().getUltimoNodo().getNombre() + "]" + "\n" ;
+                }
                 break;
             case "Asignacion e Incremento":
                 if (getIzq() != null) {
@@ -537,7 +542,7 @@ public class NodoComun extends Nodo {
                 if (getIzq().getNombre().equals("Down")) {
                     codigoIncremento += "MOV EAX, _" + var + "\n";
                     codigoIncremento += "SUB EAX, _" + getDer().getUltimoNodo().getNombre() + "\n";
-                    codigoIncremento += "JS OperacionEnteroNegativo\n";
+                    codigoIncremento += "JS handle_negativos\n";
                     codigoIncremento += "MOV " + varAuxiliar + ", EAX" + "\n";
                     codigoIncremento += "MOV _" + var + ", " + varAuxiliar;
 
@@ -594,7 +599,7 @@ public class NodoComun extends Nodo {
                     salida += "CALL " + getNombre() + "\n"; // Llamar a la función
                     salida += "ADD ESP, 4" + "\n"; // Restaurar el puntero de la pila
                     if (getFuncionAutoinvocada()) {
-                        salida += "JMP AutoinvocacionFunciones\n";
+                        salida += "JMP handle_autoinvocacion\n";
                     }
                 }
                 break;

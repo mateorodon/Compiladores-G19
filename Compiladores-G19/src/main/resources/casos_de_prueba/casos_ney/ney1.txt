@@ -1,0 +1,10 @@
+prog
+begin
+    ulongint x;
+    single y;
+    x := 10 - 4 * 2;
+    y := 2.0;
+    outf({hola});
+    outf(x);
+    outf(y);
+end

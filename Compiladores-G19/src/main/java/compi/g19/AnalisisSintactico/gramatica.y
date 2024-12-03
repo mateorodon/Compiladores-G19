@@ -796,10 +796,15 @@ salida_mensaje:
                             AnalizadorLexico.agregarEstructura("Se reconocio salida de mensaje por pantalla");
                         }
     | OUTF '(' expresion ')' {   Nodo exp = (Nodo)$3.obj;
-                                 Token t = new Token(exp.getToken());
-                                 t.setUso("mensaje");
-                                 t.setTipo("expresion");
-                                 $$.obj = new NodoComun("Outf", new NodoHoja(exp.getNombre(),t));
+                                 if (!exp.getNombre().contains("error")){
+                                     Token t = new Token(exp.getToken());
+                                     t.setUso("mensaje");
+                                     t.setTipo(exp.getTipo());
+                                     $$.obj = new NodoComun("Outf", new NodoHoja(exp.getNombre(),t));
+                                 }
+                                 else {
+                                    $$.obj = new NodoComun("error");
+                                 }
                                  AnalizadorLexico.agregarEstructura("Se reconocio salida de mensaje por pantalla");
                               }
     | OUTF '('')' {yyerror("Falta de parametro en funcion OUTF");}

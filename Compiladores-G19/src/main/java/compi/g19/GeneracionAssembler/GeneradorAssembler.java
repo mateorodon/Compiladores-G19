@@ -22,7 +22,10 @@ public class GeneradorAssembler {
                 +"includelib \\masm32\\lib\\kernel32.lib \n"
                 +"includelib \\masm32\\lib\\masm32.lib\n"
                 +"include \\masm32\\include\\user32.inc \n"
-                +"includelib \\masm32\\lib\\user32.lib \n";
+                +"includelib \\masm32\\lib\\user32.lib \n"
+                + "include \\masm32\\include\\masm32rt.inc \n"
+                + "dll_dllcrt0 PROTO C \n"
+                + "printf PROTO C : VARARG \n";
         this.data= "\n.data\n"
                 + "AutoinvocacionFunciones db \"Una funcion no puede llamarse a si misma.\", 0 \n"
                 + "OperacionEnteroNegativo db \"El resultado de la operacion no puede ser negativo.\", 0 \n"
@@ -31,10 +34,14 @@ public class GeneradorAssembler {
                 + "printMensaje db \"Print\", 0 \n";
 
         this.code="";
-        this.codigoFunciones= "invoke MessageBox, NULL, addr AutoinvocacionFunciones, addr error, MB_OK \n"
+        this.codigoFunciones=
+                "handle_autoinvocacion: \n"
+                + "invoke MessageBox, NULL, addr AutoinvocacionFunciones, addr error, MB_OK \n"
                 + "invoke ExitProcess, 0 \n"
+                + "handle_negativos: \n"
                 + "invoke MessageBox, NULL, addr OperacionEnteroNegativo, addr error, MB_OK \n"
                 + "invoke ExitProcess, 0 \n"
+                + "handle_overflow: \n"
                 + "invoke MessageBox, NULL, addr OverflowSumaDouble, addr error, MB_OK \n"
                 + "invoke ExitProcess, 0 \n";
         this.codigoArbol="";
@@ -57,7 +64,12 @@ public class GeneradorAssembler {
             if(uso != null){
                 if(uso.equals("constante")){
                     String prefijo = "_";
-                    data += prefijo + k + " dd " + k + "\n";
+                    if (t.getTipo().equals("ulongint"))
+                        data += prefijo + k + " dd " + k + "\n";
+                    if (t.getTipo().equals("single")) {
+                        String kNew = k.replace('.', '_');
+                        data += prefijo + kNew + " dq " + k + "\n";
+                    }
                 }
                 if( uso.equals("variable")  ||  uso.equals("variableAuxiliar"))
                 {
@@ -66,7 +78,10 @@ public class GeneradorAssembler {
                     {
                         prefijo = "_";
                     }
-                    data += prefijo +  k + " dd " + "?" + "\n";
+                    if (t.getTipo() != null && t.getTipo().equals("ulongint"))
+                        data += prefijo + k + " dd " + "?" + "\n";
+                    if (t.getTipo() != null && t.getTipo().equals("single"))
+                        data += prefijo + k + " dq " + "?" + "\n";
 
                 }
                 if (uso.equals("arreglo")){
