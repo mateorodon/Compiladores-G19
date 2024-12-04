@@ -227,7 +227,7 @@ public class NodoComun extends Nodo {
                 TablaSimbolos.addSimbolo(varAuxiliar,t);
 
                 if (getIzq().getTipo().equals(ENTERO)) {
-                    salida += "CMP " + getDer().getUltimoNodo().getNombre() + ", 0\n";
+                    salida += "CMP _" + getDer().getUltimoNodo().getNombre() + ", 0\n";
 
                     salida += "MOV EAX, _" + getIzq().getUltimoNodo().getNombre() + "\n";
                     salida += "IDIV _" + getDer().getUltimoNodo().getNombre() + "\n";
@@ -616,15 +616,15 @@ public class NodoComun extends Nodo {
         if (inFor) {
             if (!segundaCondicion) {
                 salida += startFor + ":" + "\n";
-                salida += "CMP EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
+                salida += "CMP EAX, _" + getDer().getUltimoNodo().getNombre() + "\n";
                 salida += contrario+ " " + labelFor + "\n";
             } else {
                 labelSegundaCondicionFor = getLabel();
-                salida += "CMP EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
+                salida += "CMP EAX, _" + getDer().getUltimoNodo().getNombre() + "\n";
                 salida += contrario+ " " + labelSegundaCondicionFor + "\n";
             }
         }else{
-            salida += "CMP EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
+            salida += "CMP EAX, _" + getDer().getUltimoNodo().getNombre() + "\n";
             salida += real+ " " + labelFor + "\n";
         }
 
