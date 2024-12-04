@@ -1,0 +1,160 @@
+----------ARBOL SINTACTICO -----------
+PROGRAMA
+    Sentencia
+        Sentencia
+            Sentencia
+                Sentencia
+                    Sentencia
+                        Sentencia
+                            Sentencia
+                                Sentencia
+                                    Sentencia
+                                        Sentencia
+                                            Sentencia
+                                                Sentencia
+                                                    Sentencia
+                                                        Sentencia
+                                                            Sentencia
+                                                                Sentencia
+                                                                    Sentencia
+                                                                        Sentencia
+                                                                            Sentencia
+                                                                                Sentencia
+                                                                                    Sentencia
+                                                                                        Sentencia
+                                                                                            Sentencia
+                                                                                                Sentencia
+                                                                                                    Sentencia
+                                                                                                        Sentencia
+                                                                                                            Sentencia Declarativa
+                                                                                                            :=
+                                                                                                                a@main
+                                                                                                                10
+                                                                                                        :=
+                                                                                                            b@main
+                                                                                                            3
+                                                                                                    :=
+                                                                                                        c@main
+                                                                                                        +
+                                                                                                            a@main
+                                                                                                            b@main
+                                                                                                Outf
+                                                                                                    c@main
+                                                                                            :=
+                                                                                                c@main
+                                                                                                -
+                                                                                                    a@main
+                                                                                                    b@main
+                                                                                        Outf
+                                                                                            c@main
+                                                                                    :=
+                                                                                        c@main
+                                                                                        *
+                                                                                            a@main
+                                                                                            b@main
+                                                                                Outf
+                                                                                    c@main
+                                                                            :=
+                                                                                c@main
+                                                                                /
+                                                                                    a@main
+                                                                                    b@main
+                                                                        Outf
+                                                                            c@main
+                                                                    :=
+                                                                        c@main
+                                                                        +
+                                                                            a@main
+                                                                            3
+                                                                Outf
+                                                                    c@main
+                                                            :=
+                                                                c@main
+                                                                -
+                                                                    a@main
+                                                                    3
+                                                        Outf
+                                                            c@main
+                                                    :=
+                                                        c@main
+                                                        *
+                                                            a@main
+                                                            3
+                                                Outf
+                                                    c@main
+                                            :=
+                                                c@main
+                                                /
+                                                    a@main
+                                                    3
+                                        Outf
+                                            c@main
+                                    :=
+                                        c@main
+                                        +
+                                            10
+                                            b@main
+                                Outf
+                                    c@main
+                            :=
+                                c@main
+                                -
+                                    10
+                                    b@main
+                        Outf
+                            c@main
+                    :=
+                        c@main
+                        *
+                            10
+                            b@main
+                Outf
+                    c@main
+            :=
+                c@main
+                /
+                    10
+                    b@main
+        Outf
+            c@main
+----------ARBOL SINTACTICO FUNCIONES -----------
+----------ESTRUCTURAS RECONOCIDAS-----------
+Se reconocio declaracion de variable/s en la línea 3
+Se reconocio una asignacion en la línea 4
+Se reconocio una asignacion en la línea 5
+Se reconocio una asignacion en la línea 7
+Se reconocio salida de mensaje por pantalla en la línea 8
+Se reconocio una asignacion en la línea 10
+Se reconocio salida de mensaje por pantalla en la línea 11
+Se reconocio una asignacion en la línea 13
+Se reconocio salida de mensaje por pantalla en la línea 14
+Se reconocio una asignacion en la línea 16
+Se reconocio salida de mensaje por pantalla en la línea 17
+Se reconocio una asignacion en la línea 19
+Se reconocio salida de mensaje por pantalla en la línea 20
+Se reconocio una asignacion en la línea 22
+Se reconocio salida de mensaje por pantalla en la línea 23
+Se reconocio una asignacion en la línea 25
+Se reconocio salida de mensaje por pantalla en la línea 26
+Se reconocio una asignacion en la línea 28
+Se reconocio salida de mensaje por pantalla en la línea 29
+Se reconocio una asignacion en la línea 31
+Se reconocio salida de mensaje por pantalla en la línea 32
+Se reconocio una asignacion en la línea 34
+Se reconocio salida de mensaje por pantalla en la línea 35
+Se reconocio una asignacion en la línea 37
+Se reconocio salida de mensaje por pantalla en la línea 38
+Se reconocio una asignacion en la línea 40
+Se reconocio salida de mensaje por pantalla en la línea 41
+Se reconocio el programa en la línea 42
+----------TABLA DE SIMBOLOS-----------
+Token{id=262, lexema=3, linea=5, tipo=ulongint, uso = constante}
+Token{id=257, lexema=b@main, linea=3, tipo=ulongint, uso = variable}
+Token{id=257, lexema=a@main, linea=3, tipo=ulongint, uso = variable}
+Token{id=257, lexema=prog, linea=1, tipo=null, uso = null}
+Token{id=257, lexema=c@main, linea=3, tipo=ulongint, uso = variable}
+Token{id=262, lexema=10, linea=4, tipo=ulongint, uso = constante}
+-----------ERRORES LEXICOS----------
+-----------ERRORES SINTACTICOS----------
+-----------ERRORES SEMANTICOS----------
+----------WARNINGS-----------
