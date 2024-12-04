@@ -5,6 +5,8 @@ import compi.g19.GeneracionAssembler.GeneradorAssembler;
 import compi.g19.GeneracionDeCodigo.Nodo;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class Main {
     public static void main(String[] args) {
@@ -19,12 +21,21 @@ public class Main {
                 System.out.println("El archivo proporcionado está vacío.");
                 return;
             }
-            try (FileWriter fileWriter = new FileWriter(args[0], true)) {
-                fileWriter.write(" ");
-            } catch (IOException e) {
-                System.out.println("Ocurrió un error al intentar escribir en el archivo: " + e.getMessage());
-            }
-            BufferedReader reader = new BufferedReader(new FileReader(args[0]));
+
+            String inputFilePath = args[0];
+            Path tempFile = Files.createTempFile("tempFile", ".txt");
+            try (BufferedReader reader = new BufferedReader(new FileReader(inputFilePath));
+                 BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile.toFile()))) {
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    writer.write(line);
+                    writer.newLine();
+                }
+                writer.write(" ");
+
+            } catch (IOException ignored) {}
+            BufferedReader reader = new BufferedReader(new FileReader(tempFile.toFile()));
             AnalizadorLexico.setEntrada(reader);
 
             armarArchivoSalida(args[0]);
@@ -54,9 +65,13 @@ public class Main {
                     e.printStackTrace();
                 }
             }
+
+            tempFile.toFile().deleteOnExit();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
     public static void armarArchivoSalida(String archivo_entrada) throws FileNotFoundException {
