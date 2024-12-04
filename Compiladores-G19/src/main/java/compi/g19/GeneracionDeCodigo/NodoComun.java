@@ -205,12 +205,12 @@ public class NodoComun extends Nodo {
                     salida += "MOV EAX, _" + getIzq().getUltimoNodo().getNombre() + "\n";
                     salida += "IMUL EAX, _" + getDer().getUltimoNodo().getNombre() + "\n";
 
-                    salida += "MOV " + varAuxiliar + ", EAX" + "\n";
+                    salida += "MOV _" + varAuxiliar + ", EAX" + "\n";
 
                 } else {
                     salida += "FLD _" + getIzq().getUltimoNodo().getNombre().replace('.', '_') + "\n";
                     salida += "FMUL _" + getDer().getUltimoNodo().getNombre() + "\n";
-                    salida += "FST " + varAuxiliar + "\n";
+                    salida += "FST _" + varAuxiliar + "\n";
                 }
                 break;
             case "/":
@@ -231,7 +231,7 @@ public class NodoComun extends Nodo {
 
                     salida += "MOV EAX, _" + getIzq().getUltimoNodo().getNombre() + "\n";
                     salida += "IDIV _" + getDer().getUltimoNodo().getNombre() + "\n";
-                    salida += "MOV " + varAuxiliar + ", EAX" + "\n";
+                    salida += "MOV _" + varAuxiliar + ", EAX" + "\n";
 
                 } else {
                     salida += "FLD _" + getDer().getUltimoNodo().getNombre() + "\n";
@@ -240,7 +240,7 @@ public class NodoComun extends Nodo {
 
                     salida += "FLD _" + getIzq().getUltimoNodo().getNombre().replace('.', '_') + "\n";
                     salida += "FDIV _" + getDer().getUltimoNodo().getNombre() + "\n";
-                    salida += "FST " + varAuxiliar + "\n";
+                    salida += "FST _" + varAuxiliar + "\n";
                 }
                 break;
             case "=":
@@ -543,14 +543,14 @@ public class NodoComun extends Nodo {
                     codigoIncremento += "MOV EAX, _" + var + "\n";
                     codigoIncremento += "SUB EAX, _" + getDer().getUltimoNodo().getNombre() + "\n";
                     codigoIncremento += "JS handle_negativos\n";
-                    codigoIncremento += "MOV " + varAuxiliar + ", EAX" + "\n";
-                    codigoIncremento += "MOV _" + var + ", " + varAuxiliar;
+                    codigoIncremento += "MOV _" + varAuxiliar + ", EAX" + "\n";
+                    codigoIncremento += "MOV _" + var + ", _" + varAuxiliar;
 
                 } else {
                     codigoIncremento += "MOV EAX, _" + var + "\n";
                     codigoIncremento += "ADD EAX, _" + getDer().getUltimoNodo().getNombre() + "\n";
-                    codigoIncremento += "MOV " + varAuxiliar + ", EAX" + "\n";
-                    codigoIncremento += "MOV _" + var + ", " + varAuxiliar + "\n";
+                    codigoIncremento += "MOV _" + varAuxiliar + ", EAX" + "\n";
+                    codigoIncremento += "MOV _" + var + ", _" + varAuxiliar + "\n";
                 }
 
                 break;

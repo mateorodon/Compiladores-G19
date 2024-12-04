@@ -22,8 +22,8 @@ _2 dd 2
 _y@main dq ?
 _4 dd 4
 _2_0 dq 2.0
-@aux2 dd ?
-@aux1 dd ?
+_@aux2 dd ?
+_@aux1 dd ?
 _x@main dd ?
 _10 dd 10
 @print1 db "hola", 10, 0 
@@ -41,7 +41,7 @@ invoke ExitProcess, 0
 start:
 MOV EAX, _4
 IMUL EAX, _2
-MOV @aux1, EAX
+MOV _@aux1, EAX
 MOV EAX, _10
 SUB EAX, _@aux1
 JS handle_negativos
