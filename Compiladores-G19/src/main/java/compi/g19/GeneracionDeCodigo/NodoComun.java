@@ -610,7 +610,8 @@ public class NodoComun extends Nodo {
 
     private String condiciones(String real, String contrario){
         String salida = "";
-        salida += "MOV EAX, " + getIzq().getUltimoNodo().getNombre() + "\n";
+        String prefijo = "_";
+        salida += "MOV EAX, " + prefijo + getIzq().getUltimoNodo().getNombre() + "\n";
         labelFor = label;
         if (inFor) {
             if (!segundaCondicion) {

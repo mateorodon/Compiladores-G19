@@ -73,11 +73,10 @@ public class GeneradorAssembler {
                 }
                 if( uso.equals("variable")  ||  uso.equals("variableAuxiliar"))
                 {
-                    String prefijo = "";
-                    if(uso.equals("variable"))
-                    {
-                        prefijo = "_";
-                    }
+                    //String prefijo = "";
+
+                    String prefijo = "_";
+
                     if (t.getTipo() != null && t.getTipo().equals("ulongint"))
                         data += prefijo + k + " dd " + "?" + "\n";
                     if (t.getTipo() != null && t.getTipo().equals("single"))
