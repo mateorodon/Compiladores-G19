@@ -29,7 +29,7 @@ public class GeneradorAssembler {
         this.data= "\n.data\n"
                 + "AutoinvocacionFunciones db \"Una funcion no puede llamarse a si misma.\", 0 \n"
                 + "OperacionEnteroNegativo db \"El resultado de la operacion no puede ser negativo.\", 0 \n"
-                + "OverflowSumaDouble db \"Se produjo un un overflow en la suma de doubles.\", 0 \n"
+                + "OverflowSumaFlotantes db \"Se produjo un un overflow en la suma de flotantes.\", 0 \n"
                 + "error db \"Error\", 0 \n"
                 + "printMensaje db \"Print\", 0 \n";
 
@@ -42,7 +42,7 @@ public class GeneradorAssembler {
                 + "invoke MessageBox, NULL, addr OperacionEnteroNegativo, addr error, MB_OK \n"
                 + "invoke ExitProcess, 0 \n"
                 + "handle_overflow: \n"
-                + "invoke MessageBox, NULL, addr OverflowSumaDouble, addr error, MB_OK \n"
+                + "invoke MessageBox, NULL, addr OverflowSumaFlotantes, addr error, MB_OK \n"
                 + "invoke ExitProcess, 0 \n";
         this.codigoArbol="";
         this.arbol=parser.getRaiz();

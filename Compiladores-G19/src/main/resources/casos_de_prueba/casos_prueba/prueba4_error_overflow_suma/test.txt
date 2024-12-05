@@ -1,0 +1,18 @@
+prog
+begin
+    single  a,b,c;
+    a := 10.0;
+    b := 3.0;
+    c := a + b;
+    outf(c);
+
+    c := a + b;
+    outf(c);
+
+    c := 3.0 + 2.0;
+    outf(c);
+
+    c := 3.4s38 + 3.4s38;
+    outf(c);
+
+end

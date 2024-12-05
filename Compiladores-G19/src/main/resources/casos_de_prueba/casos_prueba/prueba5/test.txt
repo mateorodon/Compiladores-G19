@@ -1,0 +1,53 @@
+prog
+begin
+    single  a,b,c;
+    a := 10.0;
+    b := 3.0;
+    c := a + b;
+    outf(c);
+
+    c := a - b;
+    outf(c);
+
+    c := a * b;
+    outf(c);
+
+    c := a / b;
+    outf(c);
+
+    c := a + 3.0;
+    outf(c);
+
+    c := a - 3.0;
+    outf(c);
+
+    c := a * 3.0;
+    outf(c);
+
+    c := a / 3.0;
+    outf(c);
+
+    c := 10.0 + b;
+    outf(c);
+
+    c := 10.0 - b;
+    outf(c);
+
+    c := 10.0 * b;
+    outf(c);
+
+    c := 10.0 / b;
+    outf(c);
+
+    c := 10.0 + 3.0;
+    outf(c);
+
+    c := 10.0 - 3.0;
+    outf(c);
+
+    c := 10.0 * 3.0;
+    outf(c);
+
+    c := 10.0 / 3.0;
+    outf(c);
+end

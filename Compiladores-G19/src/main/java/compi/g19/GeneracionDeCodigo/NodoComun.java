@@ -145,7 +145,7 @@ public class NodoComun extends Nodo {
                         if (getDer().getUso() != null && !getDer().getUso().equals("llamado"))
                             salida += "FLD _" + getDer().getUltimoNodo().getNombre().replace('.','_') + "\n";
                         salida += "FST _" + getIzq().getUltimoNodo().getNombre() + "\n";
-                        //salida += "FNINIT " + "\n";
+                        salida += "FSTP ST(0)" + "\n";
                     }
                 }
                 break;
@@ -162,8 +162,13 @@ public class NodoComun extends Nodo {
                     salida += "ADD EAX, _" + getDer().getUltimoNodo().getNombre() + "\n";
                 } else {
                     salida += "FLD _" + getIzq().getUltimoNodo().getNombre().replace('.', '_') + "\n";
-                    salida += "FADD _" + getDer().getUltimoNodo().getNombre() + "\n";
-                    salida += "JS handle_overflow\n";
+                    salida += "FADD _" + getDer().getUltimoNodo().getNombre().replace('.', '_') + "\n";
+                    salida += "FLD limite_float\n";
+                    salida += "FCOM ST(1)\n";
+                    salida += "FSTSW AX\n";
+                    salida += "SAHF \n";
+                    salida += "JBE handle_overflow\n";
+                    salida += "FSTP ST(0)\n";
                 }
                 break;
             case "-":
