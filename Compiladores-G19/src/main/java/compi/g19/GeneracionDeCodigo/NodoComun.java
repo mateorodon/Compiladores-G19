@@ -145,6 +145,7 @@ public class NodoComun extends Nodo {
                         if (getDer().getUso() != null && !getDer().getUso().equals("llamado"))
                             salida += "FLD _" + getDer().getUltimoNodo().getNombre().replace('.','_') + "\n";
                         salida += "FST _" + getIzq().getUltimoNodo().getNombre() + "\n";
+                        //salida += "FNINIT " + "\n";
                     }
                 }
                 break;
@@ -185,7 +186,7 @@ public class NodoComun extends Nodo {
 
                 } else {
                     salida += "FLD _" + getIzq().getUltimoNodo().getNombre().replace('.', '_') + "\n";
-                    salida += "FSUB _" + getDer().getUltimoNodo().getNombre() + "\n";
+                    salida += "FSUB _" + getDer().getUltimoNodo().getNombre().replace('.', '_') + "\n";
                 }
                 break;
             case "*":
@@ -209,7 +210,7 @@ public class NodoComun extends Nodo {
 
                 } else {
                     salida += "FLD _" + getIzq().getUltimoNodo().getNombre().replace('.', '_') + "\n";
-                    salida += "FMUL _" + getDer().getUltimoNodo().getNombre() + "\n";
+                    salida += "FMUL _" + getDer().getUltimoNodo().getNombre().replace('.', '_') + "\n";
                     salida += "FST _" + varAuxiliar + "\n";
                 }
                 break;
@@ -234,12 +235,12 @@ public class NodoComun extends Nodo {
                     salida += "MOV _" + varAuxiliar + ", EAX" + "\n";
 
                 } else {
-                    salida += "FLD _" + getDer().getUltimoNodo().getNombre() + "\n";
-                    salida += "FSUB _" + getDer().getUltimoNodo().getNombre() + "\n";
-                    salida += "FTST ";
+                    //salida += "FLD _" + getDer().getUltimoNodo().getNombre().replace('.', '_') + "\n";
+                    //salida += "FSUB _" + getDer().getUltimoNodo().getNombre().replace('.', '_') + "\n";
+                    //salida += "FTST " + "\n";;
 
                     salida += "FLD _" + getIzq().getUltimoNodo().getNombre().replace('.', '_') + "\n";
-                    salida += "FDIV _" + getDer().getUltimoNodo().getNombre() + "\n";
+                    salida += "FDIV _" + getDer().getUltimoNodo().getNombre().replace('.', '_') + "\n";
                     salida += "FST _" + varAuxiliar + "\n";
                 }
                 break;
@@ -268,7 +269,7 @@ public class NodoComun extends Nodo {
                         salida += condiciones("JNE ","JE ");
                     } else {
                         salida += "FLD _" + getIzq().getUltimoNodo().getNombre().replace('.', '_') + "\n";
-                        salida += "FCOM _" + getDer().getUltimoNodo().getNombre() + "\n";
+                        salida += "FCOM _" + getDer().getUltimoNodo().getNombre().replace('.', '_') + "\n";
                         salida += "JNE " + label + "\n";
                     }
                 }
@@ -299,7 +300,7 @@ public class NodoComun extends Nodo {
                         salida += condiciones("JE ","JNE ");
                     } else {
                         salida += "FLD _" + getIzq().getUltimoNodo().getNombre().replace('.', '_') + "\n";
-                        salida += "FCOM _" + getDer().getUltimoNodo().getNombre() + "\n";
+                        salida += "FCOM _" + getDer().getUltimoNodo().getNombre().replace('.', '_') + "\n";
                         salida += "JE " + label + "\n";
                     }
                 }
@@ -325,7 +326,7 @@ public class NodoComun extends Nodo {
                         salida += condiciones("JLE ","JG ");
                     } else {
                         salida += "FLD _" + getIzq().getUltimoNodo().getNombre().replace('.', '_') + "\n";
-                        salida += "FCOM _" + getDer().getUltimoNodo().getNombre() + "\n";
+                        salida += "FCOM _" + getDer().getUltimoNodo().getNombre().replace('.', '_') + "\n";
                         salida += "JLE " + label + "\n";
                     }
                 }
@@ -356,7 +357,7 @@ public class NodoComun extends Nodo {
                         salida += condiciones("JL ","JGE ");
                     } else {
                         salida += "FLD _" + getIzq().getUltimoNodo().getNombre().replace('.', '_') + "\n";
-                        salida += "FCOM _" + getDer().getUltimoNodo().getNombre() + "\n";
+                        salida += "FCOM _" + getDer().getUltimoNodo().getNombre().replace('.', '_') + "\n";
                         salida += "JL " + label + "\n";
                     }
                 }
@@ -387,7 +388,7 @@ public class NodoComun extends Nodo {
                         salida += condiciones("JGE ","JL ");
                     } else {
                         salida += "FLD _" + getIzq().getUltimoNodo().getNombre().replace('.', '_') + "\n";
-                        salida += "FCOM _" + getDer().getUltimoNodo().getNombre() + "\n";
+                        salida += "FCOM _" + getDer().getUltimoNodo().getNombre().replace('.', '_')+ "\n";
                         salida += "JGE " + label + "\n";
                     }
                 }
@@ -418,7 +419,7 @@ public class NodoComun extends Nodo {
                         salida += condiciones("JG ","JLE ");
                     } else {
                         salida += "FLD _" + getIzq().getUltimoNodo().getNombre().replace('.', '_') + "\n";
-                        salida += "FCOM _" + getDer().getUltimoNodo().getNombre() + "\n";
+                        salida += "FCOM _" + getDer().getUltimoNodo().getNombre().replace('.', '_') + "\n";
                         salida += "JG " + label + "\n";
                     }
                 }

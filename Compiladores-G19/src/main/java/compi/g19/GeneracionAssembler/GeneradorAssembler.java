@@ -89,6 +89,7 @@ public class GeneradorAssembler {
                 }
             }
         }
+        data+= "limite_float dq 3.4e38" + "\n";
         data+= NodoComun.data;
     }
 
