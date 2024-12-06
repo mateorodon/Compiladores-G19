@@ -565,32 +565,32 @@ public class NodoComun extends Nodo {
             //Declaracion o invocacion a funcion
             default:
                 String uso = this.getUso();
-                if (uso.equals("funcion")) {
-                    varAuxiliar = Nodo.getVariableAuxiliar();
-                    t = new Token(varAuxiliar, this.getTipo(), "variableAuxiliar");
-                    this.ultimoNodo = new NodoHoja(varAuxiliar, t);
-                    TablaSimbolos.addSimbolo(varAuxiliar, t);
-                    salida += getNombre() + ":\n";
-                    salida += "PUSH EBP" + "\n"; // Guardar EBP actual en la pila
-                    salida += "MOV EBP, ESP" + "\n"; // Actualizar EBP al puntero actual de la pila
-                    salida += "MOV EAX, [EBP + 8]" + "\n"; // Cargar el valor del parámetro real
-                    salida+= "MOV _" + getIzq().getNombre() + ",EAX" + "\n";
-                    // No se aplica conversión en la definición de la función
-                    salida += getDer().getAssembler();
-                }
-                else if (uso.equals("llamado") || uso.equals("llamadoConCasteo")) {
-                    varAuxiliar = Nodo.getVariableAuxiliar();
-                    t = new Token(varAuxiliar, this.getTipo(), "variableAuxiliar");
-                    this.ultimoNodo = new NodoHoja(varAuxiliar, t);
-                    TablaSimbolos.addSimbolo(varAuxiliar, t);
+                if (uso != null) {
+                    if (uso.equals("funcion")) {
+                        varAuxiliar = Nodo.getVariableAuxiliar();
+                        t = new Token(varAuxiliar, this.getTipo(), "variableAuxiliar");
+                        this.ultimoNodo = new NodoHoja(varAuxiliar, t);
+                        TablaSimbolos.addSimbolo(varAuxiliar, t);
+                        salida += getNombre() + ":\n";
+                        salida += "PUSH EBP" + "\n"; // Guardar EBP actual en la pila
+                        salida += "MOV EBP, ESP" + "\n"; // Actualizar EBP al puntero actual de la pila
+                        salida += "MOV EAX, [EBP + 8]" + "\n"; // Cargar el valor del parámetro real
+                        salida += "MOV _" + getIzq().getNombre() + ",EAX" + "\n";
+                        // No se aplica conversión en la definición de la función
+                        salida += getDer().getAssembler();
+                    } else if (uso.equals("llamado") || uso.equals("llamadoConCasteo")) {
+                            varAuxiliar = Nodo.getVariableAuxiliar();
+                            t = new Token(varAuxiliar, this.getTipo(), "variableAuxiliar");
+                            this.ultimoNodo = new NodoHoja(varAuxiliar, t);
+                            TablaSimbolos.addSimbolo(varAuxiliar, t);
 
-                    salida += "MOV EAX, _" + getIzq().getNombre() + "\n"; // Cargar el valor del parámetro real
-                    salida += "PUSH EAX" + "\n"; // Colocar en la pila el valor del parámetro
+                            salida += "MOV EAX, _" + getIzq().getNombre() + "\n"; // Cargar el valor del parámetro real
+                            salida += "PUSH EAX" + "\n"; // Colocar en la pila el valor del parámetro
 
-                    if (uso.equals("llamadoConCasteo")) {
-                        // Obtener el tipo del parámetro real desde getDer()
-                        String tipoReal = getDer().getNombre(); // Nombre del nodo tipo (tipoReal)
-                        String tipoFormal = getIzq().getTipo();         // Tipo esperado por la función
+                            if (uso.equals("llamadoConCasteo")) {
+                                // Obtener el tipo del parámetro real desde getDer()
+                                String tipoReal = getDer().getNombre(); // Nombre del nodo tipo (tipoReal)
+                                String tipoFormal = getIzq().getTipo();         // Tipo esperado por la función
 
                         if (tipoReal.equals(ENTERO) && tipoFormal.equals(FLOTANTE)) {
                             // Casteo de entero a flotante
@@ -603,11 +603,12 @@ public class NodoComun extends Nodo {
                         }
                     }
 
-                    salida += "CALL " + getNombre() + "\n"; // Llamar a la función
-                    salida += "ADD ESP, 4" + "\n"; // Restaurar el puntero de la pila
-                    if (getFuncionAutoinvocada()) {
-                        salida += "JMP handle_autoinvocacion\n";
+                            salida += "CALL " + getNombre() + "\n"; // Llamar a la función
+                            salida += "ADD ESP, 4" + "\n"; // Restaurar el puntero de la pila
                     }
+                }
+                if (getNombre().equals("autoinvocacion")){
+                    salida += "JMP handle_autoinvocacion\n";
                 }
                 break;
 

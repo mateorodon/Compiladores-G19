@@ -564,8 +564,7 @@ invocacion_funcion:
         }
         else {
             if (enFuncion && funcionActual.equals($1.sval)){
-                agregarErrorSemantico("La funcion '" + $1.sval + "' no puede autoinvocarse");
-                $$.obj = new NodoHoja("error");
+                $$.obj = new NodoComun("autoinvocacion");
             }
             else {
                 if (funcionesDeclaradas.containsKey($1.sval + "@" + ambitoVar)){
