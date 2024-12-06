@@ -1549,7 +1549,7 @@ case 80:
                                 }
                                 else {
                                     Token t = TablaSimbolos.getToken(val_peek(3).sval + "@" + ambitoVar);
-                                    String tipo = val_peek(3).sval;
+                                    String tipo = t.getTipo();
                                     if (tiposDeclarados.containsKey(tipo)){
                                         String tipoTriple = tiposDeclarados.get(tipo);
                                         NodoHoja nodo = new NodoHoja(val_peek(3).sval + val_peek(2).sval + val_peek(1).sval + val_peek(0).sval, t);

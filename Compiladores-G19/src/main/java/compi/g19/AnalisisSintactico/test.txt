@@ -1,19 +1,17 @@
 PROG_base
 BEGIN
 
-    ULONGINT FUN f1 (ULONGINT param)
-        BEGIN
-            param := 10;
-            RET(param);
-        END;
+    typedef triple <ulongint> tint;
 
-    SINGLE flotante;
-    flotante := 1.0;
+    tint t1;
 
-    ULONGINT res;
-    res := f1(ulongint(flotante));
+    t1[1] := 1;
 
-    OUTF(res);
+    ulongint a;
+
+    a := t1[1];
+
+    OUTF(a);
 
 
 END

@@ -447,7 +447,7 @@ factor:
                                 }
                                 else {
                                     Token t = TablaSimbolos.getToken($1.sval + "@" + ambitoVar);
-                                    String tipo = $1.sval;
+                                    String tipo = t.getTipo();
                                     if (tiposDeclarados.containsKey(tipo)){
                                         String tipoTriple = tiposDeclarados.get(tipo);
                                         NodoHoja nodo = new NodoHoja($1.sval + $2.sval + $3.sval + $4.sval, t);

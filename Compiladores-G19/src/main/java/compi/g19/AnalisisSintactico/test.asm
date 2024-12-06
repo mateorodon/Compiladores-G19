@@ -18,13 +18,9 @@ OperacionEnteroNegativo db "El resultado de la operacion no puede ser negativo."
 OverflowSumaFlotantes db "Se produjo un un overflow en la suma de flotantes.", 0 
 error db "Error", 0 
 printMensaje db "Print", 0 
-_1_0 dq 1.0
-_res@main dd ?
-_param@main@f1 dd ?
-_flotante@main dq ?
-_@aux2 dd ?
-_@aux1 dd ?
-_10 dd 10
+_1 dd 1
+_t1@main dd ?,?,?
+_a@main dd ?
 limite_float dq 3.4e38
 
 .code
@@ -37,29 +33,11 @@ invoke ExitProcess, 0
 handle_overflow: 
 invoke MessageBox, NULL, addr OverflowSumaFlotantes, addr error, MB_OK 
 invoke ExitProcess, 0 
-f1@main:
-PUSH EBP
-MOV EBP, ESP
-MOV EAX, [EBP + 8]
-MOV _flotante@main, EAX
-MOV EAX, _10
-MOV _param@main@f1, EAX
-MOV EAX, _param@main@f1
-POP EBP 
-ret 
-
 start:
-FLD _1_0
-FST _flotante@main
-FSTP ST(0)
-MOV EAX, _flotante@main
-PUSH EAX
-FLD QWORD PTR [ESP]
-FISTP DWORD PTR [ESP]
-CALL f1@main
-ADD ESP, 4
-MOV EAX, _@aux2
-MOV _res@main, EAX
-invoke printf, cfm$("%d\n"), [_res@main]
+MOV EAX, _1
+MOV [_t1@main + 0], EAX
+MOV EAX, _t1[1]
+MOV _a@main, EAX
+invoke printf, cfm$("%d\n"), [_a@main]
 invoke ExitProcess, 0 
 end start
