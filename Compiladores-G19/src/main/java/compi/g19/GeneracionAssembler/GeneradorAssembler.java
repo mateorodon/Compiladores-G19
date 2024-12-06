@@ -8,11 +8,11 @@ import compi.g19.GeneracionDeCodigo.Nodo;
 import compi.g19.GeneracionDeCodigo.NodoComun;
 
 public class GeneradorAssembler {
+
     private String data, code, codigoArbol, bibliotecas, codigoFunciones;
     private Nodo arbol;
     private static final String ENTERO = "ulongint";
     private static final String FLOTANTE = "single";
-
 
     public GeneradorAssembler(Parser parser){
         this.bibliotecas = ".386 \n.model flat, stdcall \noption casemap :none  \n"
@@ -55,7 +55,6 @@ public class GeneradorAssembler {
         generarData();
     }
 
-
     private void generarData(){
 
         for (String k :  TablaSimbolos.getSimbolos().keySet()){
@@ -71,10 +70,8 @@ public class GeneradorAssembler {
                         data += prefijo + kNew + " dq " + k + "\n";
                     }
                 }
-                if( uso.equals("variable")  ||  uso.equals("variableAuxiliar"))
+                if( uso.equals("variable")  ||  uso.equals("variableAuxiliar") || uso.equals("parametro"))
                 {
-                    //String prefijo = "";
-
                     String prefijo = "_";
 
                     if (t.getTipo() != null && t.getTipo().equals("ulongint"))

@@ -1,26 +1,15 @@
 lala
 begin
-    if (2 < 3) then
-        OUTF({2 < 3});
-    else
-        OUTF({2 >= 3});
-    end_if;
-
-    if (2 = 3) then
-        OUTF({2 = 3});
-    else
-        OUTF({2 != 3});
-    end_if;
-
-    if (2 != 3) then
-        OUTF({2 != 3});
-    else
-        OUTF({2 = 3});
-    end_if;
-
-    if (2 >= 3) then
-        OUTF({2 >= 3});
-    else
-        OUTF({2 < 3});
-    end_if;
-endf 
+    ULONGINT asd;
+    asd := 10;
+    ULONGINT FUN devuelvoDiez (ULONGINT param)
+    BEGIN
+        ULONGINT soyNueve;
+        soyNueve := 9;
+        param := 1;
+        RET (param);
+    END;
+    ULONGINT res;
+    res := devuelvoDiez(asd);
+    OUTF(res);
+end
