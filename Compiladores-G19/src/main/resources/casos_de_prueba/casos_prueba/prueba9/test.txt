@@ -1,0 +1,26 @@
+lala
+begin
+    if (4.0 < 3.0) then
+        OUTF({4.0 < 3.0});
+    else
+        OUTF({4.0 >= 3.0});
+    end_if;
+
+    if (4.0 = 3.0) then
+        OUTF({4.0 = 3.0});
+    else
+        OUTF({4.0 != 3.0});
+    end_if;
+
+    if (4.0 != 3.0) then
+        OUTF({4.0 != 3.0});
+    else
+        OUTF({4.0 = 3.0});
+    end_if;
+
+    if (4.0 >= 3.0) then
+        OUTF({4 >= 3});
+    else
+        OUTF({4 < 3});
+    end_if;
+end

@@ -1,0 +1,60 @@
+prog
+begin
+    ulongint a,b;
+    single c,d;
+    a := 1;
+    b := 2;
+    c := 1.0;
+    d := 2.0;
+    OUTF({a =});
+    OUTF(a);
+    OUTF({b =});
+    OUTF(b);
+    OUTF({c =});
+    OUTF(c);
+    OUTF({d =});
+    OUTF(d);
+
+    if ((2,3,4) < (3,4,5)) then
+        OUTF({(2,3,4) < (3,4,5)});
+    else
+        OUTF({(2,3,4) >= (3,4,5)});
+    end_if;
+
+    if ((2,3,4) < (3,3,5)) then
+        OUTF({(2,3,4) < (3,3,5)});
+    else
+        OUTF({(2,3,4) >= (3,3,5)});
+    end_if;
+
+    if ((a,b) = (1,2)) then
+        OUTF({(a,b) = (1,2)});
+    else
+        OUTF({(a,b) != (1,2)});
+    end_if;
+
+    if ((a,b) <= (a,b)) then
+        OUTF({(a,b) <= (a,b)});
+    else
+        OUTF({(a,b) > (a,b)});
+    end_if;
+
+    if ((c,d) >= (c,2.0)) then
+        OUTF({(c, d) >= (c, 2.0)});
+    else
+        OUTF({(c, d) < (c, 2.0)});
+    end_if;
+
+    if ((3.5,d) < (3.5,2.0)) then
+        OUTF({(3.5, d) < (3.5, 2.0)});
+    else
+        OUTF({(3.5, d) >= (3.5, 2.0)});
+    end_if;
+
+    if (3.5 <= 3.5) then
+        OUTF({3.5 <= 3.5});
+    else
+        OUTF({3.5 > 3.5});
+    end_if;
+
+end

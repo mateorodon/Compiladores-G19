@@ -1,0 +1,21 @@
+prog
+begin
+    ulongint x,y,z;
+    x := 3;
+    outf(x);
+    y:= 2;
+    outf(y);
+    z := x + y;
+    outf(z);
+    ulongint a;
+    a := 6;
+    FOR (i := 1; i < 10 ; up 1 ; (a <= 10))
+    begin
+        Outf ({en el for});
+        a := a + 1;
+        outf(a);
+    end;
+    outf({afuera del for});
+    z := 4 + 2 * 8;
+    outf(z);
+end

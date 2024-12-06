@@ -28,6 +28,7 @@ public class Token {
         this.lexema = new StringBuilder(t.getLexema());
         this.linea = t.getLinea();
         this.tipo = t.getTipo();
+        this.uso = t.getUso();
     }
 
     public Token(int id, StringBuilder lexema, Integer linea) {

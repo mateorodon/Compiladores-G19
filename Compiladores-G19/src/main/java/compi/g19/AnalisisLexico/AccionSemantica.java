@@ -199,6 +199,7 @@ public abstract class AccionSemantica {
 
             token.setId(CONSTANTE);
             token.setTipo(ENTERO);
+            token.setUso("constante");
             if (!TablaSimbolos.existeSimbolo(token.getLexema().toString())) {
                 TablaSimbolos.addSimbolo(token.getLexema().toString(), new Token(token));
             } else {
@@ -225,6 +226,7 @@ public abstract class AccionSemantica {
             token.setLexema(lexema);
             token.setId(CONSTANTE);
             token.setTipo(FLOTANTE);
+            token.setUso("constante");
 
             if (!TablaSimbolos.existeSimbolo(token.getLexema().toString())) {
                 TablaSimbolos.addSimbolo(token.getLexema().toString(), new Token(token));

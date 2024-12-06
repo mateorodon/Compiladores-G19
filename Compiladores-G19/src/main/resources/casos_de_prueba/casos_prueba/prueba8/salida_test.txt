@@ -1,0 +1,241 @@
+----------ARBOL SINTACTICO -----------
+PROGRAMA
+    Sentencia
+        Sentencia
+            Sentencia
+                Sentencia
+                    Sentencia
+                        Sentencia
+                            Sentencia
+                                Sentencia
+                                    Sentencia
+                                        Sentencia
+                                            Sentencia
+                                                Sentencia
+                                                    Sentencia
+                                                        Sentencia
+                                                            Sentencia
+                                                                Sentencia
+                                                                    Sentencia
+                                                                        Sentencia
+                                                                            Sentencia
+                                                                                Sentencia
+                                                                                    Sentencia Declarativa
+                                                                                    Sentencia Declarativa
+                                                                                :=
+                                                                                    a@main
+                                                                                    1
+                                                                            :=
+                                                                                b@main
+                                                                                2
+                                                                        :=
+                                                                            c@main
+                                                                            1.0
+                                                                    :=
+                                                                        d@main
+                                                                        2.0
+                                                                Outf
+                                                                    a =
+                                                            Outf
+                                                                a@main
+                                                        Outf
+                                                            b =
+                                                    Outf
+                                                        b@main
+                                                Outf
+                                                    c =
+                                            Outf
+                                                c@main
+                                        Outf
+                                            d =
+                                    Outf
+                                        d@main
+                                If
+                                    <
+                                        <
+                                            <
+                                                2
+                                                3
+                                            <
+                                                3
+                                                4
+                                        <
+                                            4
+                                            5
+                                    Cuerpo
+                                        Then
+                                            Outf
+                                                (2,3,4) < (3,4,5)
+                                        Else
+                                            Outf
+                                                (2,3,4) >= (3,4,5)
+                            If
+                                <
+                                    <
+                                        <
+                                            2
+                                            3
+                                        <
+                                            3
+                                            3
+                                    <
+                                        4
+                                        5
+                                Cuerpo
+                                    Then
+                                        Outf
+                                            (2,3,4) < (3,3,5)
+                                    Else
+                                        Outf
+                                            (2,3,4) >= (3,3,5)
+                        If
+                            =
+                                =
+                                    a@main
+                                    1
+                                =
+                                    b@main
+                                    2
+                            Cuerpo
+                                Then
+                                    Outf
+                                        (a,b) = (1,2)
+                                Else
+                                    Outf
+                                        (a,b) != (1,2)
+                    If
+                        <=
+                            <=
+                                a@main
+                                a@main
+                            <=
+                                b@main
+                                b@main
+                        Cuerpo
+                            Then
+                                Outf
+                                    (a,b) <= (a,b)
+                            Else
+                                Outf
+                                    (a,b) > (a,b)
+                If
+                    >=
+                        >=
+                            c@main
+                            c@main
+                        >=
+                            d@main
+                            2.0
+                    Cuerpo
+                        Then
+                            Outf
+                                (c, d) >= (c, 2.0)
+                        Else
+                            Outf
+                                (c, d) < (c, 2.0)
+            If
+                <
+                    <
+                        3.5
+                        3.5
+                    <
+                        d@main
+                        2.0
+                Cuerpo
+                    Then
+                        Outf
+                            (3.5, d) < (3.5, 2.0)
+                    Else
+                        Outf
+                            (3.5, d) >= (3.5, 2.0)
+        If
+            <=
+                3.5
+                3.5
+            Cuerpo
+                Then
+                    Outf
+                        3.5 <= 3.5
+                Else
+                    Outf
+                        3.5 > 3.5
+----------ARBOL SINTACTICO FUNCIONES -----------
+----------ESTRUCTURAS RECONOCIDAS-----------
+Se reconocio declaracion de variable/s en la línea 3
+Se reconocio declaracion de variable/s en la línea 4
+Se reconocio una asignacion en la línea 5
+Se reconocio una asignacion en la línea 6
+Se reconocio una asignacion en la línea 7
+Se reconocio una asignacion en la línea 8
+Se reconocio salida de mensaje por pantalla en la línea 9
+Se reconocio salida de mensaje por pantalla en la línea 10
+Se reconocio salida de mensaje por pantalla en la línea 11
+Se reconocio salida de mensaje por pantalla en la línea 12
+Se reconocio salida de mensaje por pantalla en la línea 13
+Se reconocio salida de mensaje por pantalla en la línea 14
+Se reconocio salida de mensaje por pantalla en la línea 15
+Se reconocio salida de mensaje por pantalla en la línea 16
+Se reconocio pattern matching en la línea 18
+Se reconocio salida de mensaje por pantalla en la línea 19
+Se reconocio salida de mensaje por pantalla en la línea 21
+Se reconocio un IF/ELSE en la línea 22
+Se reconocio pattern matching en la línea 24
+Se reconocio salida de mensaje por pantalla en la línea 25
+Se reconocio salida de mensaje por pantalla en la línea 27
+Se reconocio un IF/ELSE en la línea 28
+Se reconocio pattern matching en la línea 30
+Se reconocio salida de mensaje por pantalla en la línea 31
+Se reconocio salida de mensaje por pantalla en la línea 33
+Se reconocio un IF/ELSE en la línea 34
+Se reconocio pattern matching en la línea 36
+Se reconocio salida de mensaje por pantalla en la línea 37
+Se reconocio salida de mensaje por pantalla en la línea 39
+Se reconocio un IF/ELSE en la línea 40
+Se reconocio pattern matching en la línea 42
+Se reconocio salida de mensaje por pantalla en la línea 43
+Se reconocio salida de mensaje por pantalla en la línea 45
+Se reconocio un IF/ELSE en la línea 46
+Se reconocio pattern matching en la línea 48
+Se reconocio salida de mensaje por pantalla en la línea 49
+Se reconocio salida de mensaje por pantalla en la línea 51
+Se reconocio un IF/ELSE en la línea 52
+Se reconocio salida de mensaje por pantalla en la línea 55
+Se reconocio salida de mensaje por pantalla en la línea 57
+Se reconocio un IF/ELSE en la línea 58
+Se reconocio el programa en la línea 60
+----------TABLA DE SIMBOLOS-----------
+Token{id=263, lexema=d =, linea=15, tipo=cadena, uso = mensaje}
+Token{id=263, lexema=(a,b) = (1,2), linea=31, tipo=cadena, uso = mensaje}
+Token{id=263, lexema=c =, linea=13, tipo=cadena, uso = mensaje}
+Token{id=257, lexema=a@main, linea=3, tipo=ulongint, uso = variable}
+Token{id=257, lexema=d@main, linea=4, tipo=single, uso = variable}
+Token{id=263, lexema=(2,3,4) < (3,3,5), linea=25, tipo=cadena, uso = mensaje}
+Token{id=263, lexema=(a,b) <= (a,b), linea=37, tipo=cadena, uso = mensaje}
+Token{id=263, lexema=(2,3,4) >= (3,4,5), linea=21, tipo=cadena, uso = mensaje}
+Token{id=263, lexema=(3.5, d) >= (3.5, 2.0), linea=51, tipo=cadena, uso = mensaje}
+Token{id=257, lexema=c@main, linea=4, tipo=single, uso = variable}
+Token{id=263, lexema=(c, d) >= (c, 2.0), linea=43, tipo=cadena, uso = mensaje}
+Token{id=263, lexema=3.5 <= 3.5, linea=55, tipo=cadena, uso = mensaje}
+Token{id=257, lexema=b@main, linea=3, tipo=ulongint, uso = variable}
+Token{id=263, lexema=3.5 > 3.5, linea=57, tipo=cadena, uso = mensaje}
+Token{id=263, lexema=(a,b) != (1,2), linea=33, tipo=cadena, uso = mensaje}
+Token{id=257, lexema=prog, linea=1, tipo=null, uso = null}
+Token{id=262, lexema=1, linea=5, tipo=ulongint, uso = constante}
+Token{id=262, lexema=2, linea=6, tipo=ulongint, uso = constante}
+Token{id=263, lexema=(2,3,4) < (3,4,5), linea=19, tipo=cadena, uso = mensaje}
+Token{id=262, lexema=1.0, linea=7, tipo=single, uso = constante}
+Token{id=262, lexema=3, linea=18, tipo=ulongint, uso = constante}
+Token{id=263, lexema=(c, d) < (c, 2.0), linea=45, tipo=cadena, uso = mensaje}
+Token{id=262, lexema=2.0, linea=8, tipo=single, uso = constante}
+Token{id=262, lexema=4, linea=18, tipo=ulongint, uso = constante}
+Token{id=262, lexema=5, linea=18, tipo=ulongint, uso = constante}
+Token{id=263, lexema=(2,3,4) >= (3,3,5), linea=27, tipo=cadena, uso = mensaje}
+Token{id=263, lexema=(3.5, d) < (3.5, 2.0), linea=49, tipo=cadena, uso = mensaje}
+Token{id=262, lexema=3.5, linea=48, tipo=single, uso = constante}
+Token{id=263, lexema=b =, linea=11, tipo=cadena, uso = mensaje}
+Token{id=263, lexema=a =, linea=9, tipo=cadena, uso = mensaje}
+Token{id=263, lexema=(a,b) > (a,b), linea=39, tipo=cadena, uso = mensaje}
+-----------ERRORES LEXICOS----------
+-----------ERRORES SINTACTICOS----------
+-----------ERRORES SEMANTICOS----------
+----------WARNINGS-----------
