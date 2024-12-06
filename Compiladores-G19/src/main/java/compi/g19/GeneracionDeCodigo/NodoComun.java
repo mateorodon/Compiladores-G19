@@ -597,16 +597,16 @@ public class NodoComun extends Nodo {
                                 String tipoReal = getDer().getNombre(); // Nombre del nodo tipo (tipoReal)
                                 String tipoFormal = getIzq().getTipo();         // Tipo esperado por la función
 
-                        if (tipoReal.equals(ENTERO) && tipoFormal.equals(FLOTANTE)) {
-                            // Casteo de entero a flotante
-                            salida += "FILD [ESP]\n";  // Cargar el entero como flotante en la FPU
-                            salida += "FSTP [ESP]\n";  // Guardar el resultado en la pila
-                        } else if (tipoReal.equals(FLOTANTE) && tipoFormal.equals(ENTERO)) {
-                            // Casteo de flotante a entero
-                            salida += "FLD [ESP]\n";   // Cargar el flotante en la FPU
-                            salida += "FISTP [ESP]\n"; // Convertir a entero y guardar en la pila
-                        }
-                    }
+                                if (tipoReal.equals(ENTERO) && tipoFormal.equals(FLOTANTE)) {
+                                    // Casteo de entero a flotante
+                                    salida += "FILD DWORD PTR [ESP]\n";  // Cargar el entero como flotante en la FPU
+                                    salida += "FSTP QWORD PTR [ESP]\n";  // Guardar el resultado como flotante en la pila
+                                } else if (tipoReal.equals(FLOTANTE) && tipoFormal.equals(ENTERO)) {
+                                    // Casteo de flotante a entero
+                                    salida += "FLD QWORD PTR [ESP]\n";   // Cargar el flotante en la FPU
+                                    salida += "FISTP DWORD PTR [ESP]\n"; // Convertir a entero y guardar en la pila
+                                }
+                            }
 
                             salida += "CALL " + getNombre() + "\n"; // Llamar a la función
                             salida += "ADD ESP, 4" + "\n"; // Restaurar el puntero de la pila

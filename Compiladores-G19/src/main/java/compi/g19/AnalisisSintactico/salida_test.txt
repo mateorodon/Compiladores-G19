@@ -5,88 +5,48 @@ PROGRAMA
             Sentencia
                 Sentencia
                     Sentencia
-                        Sentencia
-                            Sentencia
-                                Sentencia
-                                    Sentencia Declarativa
-                                    :=
-                                        rr@main
-                                        -
-                                            2
-                                            10
-                                Sentencia Declarativa
-                            Sentencia Declarativa
-                        :=
-                            j[2]
-                            rr@main
-                    If
-                        >=
-                            >=
-                                >=
-                                    3
-                                    2
-                                >=
-                                    2
-                                    1
-                            >=
-                                1
-                                0
-                        Cuerpo
-                            Then
-                                Outf
-                                    rr@main
-                            Else
-                                :=
-                                    rr@main
-                                    2
-                If
-                    <
-                        3
-                        2
-                    Cuerpo
-                        Then
-                            :=
-                                rr@main
-                                4
-                        Else
-                            :=
-                                rr@main
-                                3
+                        Sentencia Declarativa
+                        Sentencia Declarativa
+                    :=
+                        flotante@main
+                        1.0
+                Sentencia Declarativa
             :=
-                rr@main
-                5
+                res@main
+                f1@main
+                    flotante@main
+                    single
         Outf
-            fin del programa
+            res@main
 ----------ARBOL SINTACTICO FUNCIONES -----------
+f1@main
+    flotante@main
+    Sentencia
+        :=
+            param@main@f1
+            10
+        Return
+            param@main@f1
 ----------ESTRUCTURAS RECONOCIDAS-----------
-Se reconocio declaracion de variable/s en la línea 3
-Se reconocio una asignacion en la línea 4
-Se reconocio declaracion de tipo en la línea 5
-Se reconocio declaracion de variable/s en la línea 6
-Se reconocio una asignacion en la línea 7
-Se reconocio pattern matching en la línea 8
-Se reconocio salida de mensaje por pantalla en la línea 9
+Se reconocio una asignacion en la línea 6
+Se reconocio sentencia de retorno en la línea 7
+Se reconocio declaracion de funcion en la línea 8
+Se reconocio declaracion de variable/s en la línea 10
 Se reconocio una asignacion en la línea 11
-Se reconocio un IF/ELSE en la línea 12
+Se reconocio declaracion de variable/s en la línea 13
+Se reconocio conversion en la línea 14
+Se reconocio una invocacion a funcion en la línea 14
 Se reconocio una asignacion en la línea 14
-Se reconocio una asignacion en la línea 16
-Se reconocio un IF/ELSE en la línea 17
-Se reconocio una asignacion en la línea 18
-Se reconocio salida de mensaje por pantalla en la línea 19
-Se reconocio el programa en la línea 20
+Se reconocio salida de mensaje por pantalla en la línea 16
+Se reconocio el programa en la línea 19
 ----------TABLA DE SIMBOLOS-----------
-Token{id=262, lexema=0, linea=8, tipo=ulongint, uso = constante}
-Token{id=263, lexema=fin del programa, linea=19, tipo=cadena, uso = mensaje}
-Token{id=262, lexema=1, linea=8, tipo=ulongint, uso = constante}
-Token{id=262, lexema=2, linea=4, tipo=ulongint, uso = constante}
-Token{id=262, lexema=3, linea=8, tipo=ulongint, uso = constante}
-Token{id=262, lexema=4, linea=14, tipo=ulongint, uso = constante}
-Token{id=257, lexema=j@main, linea=6, tipo=w, uso = arreglo}
-Token{id=262, lexema=5, linea=18, tipo=ulongint, uso = constante}
+Token{id=262, lexema=1.0, linea=11, tipo=single, uso = constante}
 Token{id=257, lexema=PROG_base, linea=1, tipo=null, uso = null}
-Token{id=257, lexema=w@main, linea=5, tipo=ulongint, uso = tipo}
-Token{id=257, lexema=rr@main, linea=3, tipo=ulongint, uso = variable}
-Token{id=262, lexema=10, linea=4, tipo=ulongint, uso = constante}
+Token{id=257, lexema=res@main, linea=13, tipo=ulongint, uso = variable}
+Token{id=257, lexema=param@main@f1, linea=4, tipo=ulongint, uso = parametro}
+Token{id=257, lexema=flotante@main, linea=10, tipo=single, uso = variable}
+Token{id=257, lexema=f1@main, linea=4, tipo=ulongint, uso = funcion}
+Token{id=262, lexema=10, linea=6, tipo=ulongint, uso = constante}
 -----------ERRORES LEXICOS----------
 -----------ERRORES SINTACTICOS----------
 -----------ERRORES SEMANTICOS----------
