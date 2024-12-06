@@ -465,6 +465,7 @@ public class NodoComun extends Nodo {
                 } else {
                     salida += "FLD _" + getIzq().getUltimoNodo().getNombre().replace('.', '_') + "\n";
                 }
+                salida+= "POP EBP \n";
                 salida += "ret " + "\n";
                 break;
             case "Outf":
@@ -573,7 +574,7 @@ public class NodoComun extends Nodo {
                     salida += "PUSH EBP" + "\n"; // Guardar EBP actual en la pila
                     salida += "MOV EBP, ESP" + "\n"; // Actualizar EBP al puntero actual de la pila
                     salida += "MOV EAX, [EBP + 8]" + "\n"; // Cargar el valor del parámetro real
-
+                    salida+= "MOV _" + getIzq().getNombre() + ",EAX" + "\n";
                     // No se aplica conversión en la definición de la función
                     salida += getDer().getAssembler();
                 }

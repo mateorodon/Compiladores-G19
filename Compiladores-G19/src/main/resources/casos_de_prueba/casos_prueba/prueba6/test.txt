@@ -1,0 +1,33 @@
+lala
+begin
+    ULONGINT asd,q;
+    asd := 10;
+    q := 5;
+
+    ULONGINT FUN devuelvoUno (ULONGINT param)
+    BEGIN
+        ULONGINT soyNueve;
+        soyNueve := 9;
+        OUTF({soyNueve:});
+        OUTF(soyNueve);
+        soyNueve := param;
+        OUTF({noSoyNueve:});
+        OUTF(soyNueve);
+        param := 1;
+        RET (param);
+    END;
+
+    ULONGINT res1,res2;
+
+    OUTF({asd:});
+    OUTF(asd);
+    res1 := devuelvoUno(asd);
+    OUTF({res1:});
+    OUTF(res1);
+
+    OUTF({q:});
+    OUTF(q);
+    res2 := devuelvoUno(q);
+    OUTF({res2:});
+    OUTF(res2);
+end

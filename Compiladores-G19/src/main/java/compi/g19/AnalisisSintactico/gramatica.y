@@ -317,7 +317,7 @@ parametro:
                    TablaSimbolos.removeToken($2.sval);
                    TablaSimbolos.addSimbolo(t.getLexema().toString(),t);
                }
-              Nodo param = new NodoHoja(t.getLexema().toString() + ambito, t);
+              Nodo param = new NodoHoja(t.getLexema().toString(), t);
               param.setTipo(tipoActual);
               $$.obj = param;
             }
@@ -943,8 +943,7 @@ private Nodo generarLlamadoFuncion(NodoComun funcion, Nodo copia, String tipoCas
         if (tipoCasteo == null) {
             // Sin casteo: los tipos deben coincidir
             if (tipoFormal.equals(tipoReal)) {
-                param.setNombre(copia.getNombre());
-                salida = new NodoComun(funcion, param, null);
+                salida = new NodoComun(funcion, copia, null);
                 salida.setUso("llamado");
             } else {
                 agregarErrorSemantico("El tipo del parámetro real no coincide con el del parámetro formal");
