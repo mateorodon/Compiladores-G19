@@ -125,13 +125,14 @@ public class NodoComun extends Nodo {
                     // tint t1; => el tipo de tint es ulongint/ENTERO
                     String tipoDelTipo = tiposDeclarados.get(getIzq().getTipo());
                     String arregloNombreTS = getIzq().getLexema().toString();
+                    String prefijo = "_";
                     if (tipoDelTipo.equals(ENTERO)){
                         // Generar código para asignación a un entero en el arreglo
-                        salida += "MOV EAX, " + getDer().getUltimoNodo().getNombre() + "\n";
+                        salida += "MOV EAX, " + prefijo + getDer().getUltimoNodo().getNombre() + "\n";
                         salida += "MOV [_" + arregloNombreTS + " + " + desplazamiento + "], EAX\n";
                     } else {
                         // Generar código para asignación a un flotante en el arreglo
-                        salida += "FLD " + getDer().getUltimoNodo().getNombre().replace('.','_') + "\n";
+                        salida += "FLD " + prefijo + getDer().getUltimoNodo().getNombre().replace('.','_') + "\n";
                         salida += "FSTP [_" + arregloNombreTS + " + " + desplazamiento + "]\n";
                     }
                 } else {
