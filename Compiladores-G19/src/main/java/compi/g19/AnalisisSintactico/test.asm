@@ -36,7 +36,7 @@ invoke ExitProcess, 0
 start:
 MOV EAX, _1
 MOV [_t1@main + 0], EAX
-MOV EAX, _t1[1]
+MOV EAX, [_t1@main + 0]
 MOV _a@main, EAX
 invoke printf, cfm$("%d\n"), [_a@main]
 invoke ExitProcess, 0 
