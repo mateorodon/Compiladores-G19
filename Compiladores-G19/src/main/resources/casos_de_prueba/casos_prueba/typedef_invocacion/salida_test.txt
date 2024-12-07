@@ -1,0 +1,80 @@
+SE RECONOCIO UN COMENTARIO EN LA LINEA 3
+SE RECONOCIO UN COMENTARIO EN LA LINEA 26
+----------ARBOL SINTACTICO -----------
+PROGRAMA
+    Sentencia
+        Sentencia
+            Sentencia
+                Sentencia
+                    Sentencia
+                        Sentencia
+                            Sentencia
+                                Sentencia
+                                    :=
+                                        x@main
+                                        3
+                                    :=
+                                        y@main
+                                        2
+                                :=
+                                    z@main
+                                    +
+                                        x@main
+                                        y@main
+                            Sentencia Declarativa
+                        Sentencia Declarativa
+                    Sentencia Declarativa
+                :=
+                    t1[1]
+                    f3@main
+                        y@main
+            Outf
+                y@main
+        Outf
+            t1[1]
+----------ARBOL SINTACTICO FUNCIONES -----------
+f3@main
+    i@main@f3
+    Sentencia
+        Sentencia
+            If
+                >
+                    x@main
+                    3
+                Cuerpo
+                    Then
+                        Outf
+                            i@main@f3
+                    Else
+                        Sentencia
+                            Sentencia
+                                :=
+                                    i@main@f3
+                                    1
+                                Outf
+                                    i es igual a 1
+                            Outf
+                                i@main@f3
+            :=
+                x@main
+                5
+        Return
+            x@main
+----------TABLA DE SIMBOLOS-----------
+Token{id=257, lexema=tint@main, linea=21, tipo=ulongint, uso = tipo}
+Token{id=262, lexema=1, linea=13, tipo=ulongint, uso = constante}
+Token{id=257, lexema=PROG_COMPLETO, linea=1, tipo=null, uso = null}
+Token{id=262, lexema=2, linea=5, tipo=ulongint, uso = constante}
+Token{id=262, lexema=3, linea=4, tipo=ulongint, uso = constante}
+Token{id=257, lexema=y@main, linea=5, tipo=ulongint, uso = variable}
+Token{id=262, lexema=5, linea=18, tipo=ulongint, uso = constante}
+Token{id=257, lexema=t1@main, linea=22, tipo=tint, uso = arreglo}
+Token{id=257, lexema=z@main, linea=6, tipo=ulongint, uso = variable}
+Token{id=257, lexema=f3@main, linea=7, tipo=single, uso = funcion}
+Token{id=257, lexema=i@main@f3, linea=7, tipo=ulongint, uso = parametro}
+Token{id=263, lexema=i es igual a 1, linea=14, tipo=cadena, uso = mensaje}
+Token{id=257, lexema=x@main, linea=4, tipo=ulongint, uso = variable}
+-----------ERRORES LEXICOS----------
+-----------ERRORES SINTACTICOS----------
+-----------ERRORES SEMANTICOS----------
+----------WARNINGS-----------

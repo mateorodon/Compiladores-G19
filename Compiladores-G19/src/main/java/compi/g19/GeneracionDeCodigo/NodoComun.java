@@ -128,14 +128,16 @@ public class NodoComun extends Nodo {
 
                     if (tipoDelTipo.equals(ENTERO)) {
                         // Asignación de un valor a un arreglo (ya estaba hecho)
-                        salida += "MOV EAX, " + prefijo + getDer().getUltimoNodo().getNombre() + "\n";
+                        if (getDer().getUso() != null && !(getDer().getUso().equals("llamado") || getDer().getUso().equals("llamadoConCasteo")))
+                            salida += "MOV EAX, " + prefijo + getDer().getUltimoNodo().getNombre() + "\n";
                         salida += "MOV [_" + arregloNombreTS + " + " + desplazamiento + "], EAX\n";
                     } else {
                         // Asignación de un flotante a un arreglo
-                        salida += "FLD " + prefijo + getDer().getUltimoNodo().getNombre().replace('.','_') + "\n";
+                        if (getDer().getUso() != null && !(getDer().getUso().equals("llamado") || getDer().getUso().equals("llamadoConCasteo")))
+                            salida += "FLD " + prefijo + getDer().getUltimoNodo().getNombre().replace('.','_') + "\n";
                         salida += "FSTP [_" + arregloNombreTS + " + " + desplazamiento + "]\n";
                     }
-                } else if (getDer().getUso().equals("arreglo")) {
+                } else if (getDer().getUso() != null && getDer().getUso().equals("arreglo")) {
                     // Asignación de un arreglo a una variable (lo que se necesita para a := t1[1])
                     String nombreConIndice = getDer().getNombre(); // Ejemplo: "t1[1]"
                     int indice = Integer.parseInt(nombreConIndice.substring(nombreConIndice.indexOf('[') + 1, nombreConIndice.indexOf(']')));
@@ -519,7 +521,7 @@ public class NodoComun extends Nodo {
                 }
                 // Caso de variable de tipo entero
                 else if (this.getIzq().getUltimoNodo().getTipo().equals(ENTERO)) {
-                    salida += "invoke printf, cfm$(\"%d\\n\"), [_" + this.getIzq().getUltimoNodo().getNombre() + "]\n";
+                    salida += salida + "invoke printf, cfm$(\"%d\\n\"), " + "[_" + this.getIzq().getUltimoNodo().getNombre() + "]" + "\n" ;
                 }
                 // Caso de arreglo o variable de tipo flotante
                 else if (this.getIzq().getUltimoNodo().getUso().equals("arreglo") && this.getIzq().getUltimoNodo().getTipo().equals(FLOTANTE)) {
@@ -536,8 +538,7 @@ public class NodoComun extends Nodo {
                 }
                 // Caso de variable de tipo flotante
                 else if (this.getIzq().getUltimoNodo().getTipo().equals(FLOTANTE)) {
-                    salida += "FLD _" + this.getIzq().getUltimoNodo().getNombre() + "\n";
-                    salida += "invoke printf, cfm$(\"%.20Lf\\n\"), ST(0)\n";
+                    salida += salida + "invoke printf, cfm$(\"%.20Lf\\n\"), " + "[_" + this.getIzq().getUltimoNodo().getNombre() + "]" + "\n" ;
                 }
                 break;
             case "Asignacion e Incremento":
