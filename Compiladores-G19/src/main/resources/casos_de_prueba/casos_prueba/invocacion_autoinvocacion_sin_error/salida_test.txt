@@ -1,0 +1,76 @@
+----------ARBOL SINTACTICO -----------
+PROGRAMA
+    Sentencia
+        Sentencia
+            Sentencia
+                Sentencia
+                    Sentencia
+                        Sentencia
+                            Sentencia
+                                Sentencia
+                                    Sentencia Declarativa
+                                    :=
+                                        x@main
+                                        2
+                                Outf
+                                    x@main
+                            Sentencia Declarativa
+                        :=
+                            x@main
+                            4
+                    :=
+                        y@main
+                        autoinvocacion@main
+                            x@main
+                Outf
+                    y@main
+            Outf
+                x@main
+        If
+            <
+                3
+                2
+            Cuerpo
+                Then
+                    Outf
+                        if true
+                Else
+                    Outf
+                        if false
+----------ARBOL SINTACTICO FUNCIONES -----------
+autoinvocacion@main
+    d@main@autoinvocacion
+    Sentencia
+        Sentencia
+            Sentencia
+                :=
+                    d@main@autoinvocacion
+                    2
+                Sentencia Declarativa
+            If
+                <
+                    3
+                    2
+                Cuerpo
+                    autoinvocacion
+        Return
+            d@main@autoinvocacion
+----------TABLA DE SIMBOLOS-----------
+Token{id=257, lexema=d@main@autoinvocacion, linea=6, tipo=ulongint, uso = parametro}
+Token{id=262, lexema=2, linea=4, tipo=ulongint, uso = constante}
+Token{id=257, lexema=y@main, linea=3, tipo=ulongint, uso = variable}
+Token{id=262, lexema=3, linea=10, tipo=ulongint, uso = constante}
+Token{id=262, lexema=4, linea=15, tipo=ulongint, uso = constante}
+Token{id=257, lexema=q@main@autoinvocacion, linea=9, tipo=ulongint, uso = variable}
+Token{id=263, lexema=if true, linea=20, tipo=cadena, uso = mensaje}
+Token{id=257, lexema=autoinvocacion@main, linea=6, tipo=ulongint, uso = funcion}
+Token{id=257, lexema=lalala, linea=1, tipo=null, uso = null}
+Token{id=263, lexema=if false, linea=22, tipo=cadena, uso = mensaje}
+Token{id=257, lexema=x@main, linea=3, tipo=ulongint, uso = variable}
+-----------ERRORES LEXICOS----------
+-----------ERRORES SINTACTICOS----------
+-----------ERRORES SEMANTICOS----------
+----------WARNINGS-----------
+WARNING: La variable 'x' ya esta declarada en la línea 3
+WARNING: La variable 'y' ya esta declarada en la línea 3
+WARNING: Se ha llamado a una función pero su valor no ha sido utilizado en la línea 11

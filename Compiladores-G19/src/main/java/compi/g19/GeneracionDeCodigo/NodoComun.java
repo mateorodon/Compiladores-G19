@@ -463,6 +463,9 @@ public class NodoComun extends Nodo {
                     salida += pilaLabels.pop() + ":\n";
                     salida += getDer().getAssembler() + labelFin + ":";
                 }
+                else {
+                    salida += pilaLabels.pop() + ":\n";
+                }
 
                 break;
             case "Return":

@@ -1,0 +1,45 @@
+prog
+begin
+    ulongint a,b,c;
+    a := 10;
+    b := 3;
+
+    c := a + b;
+    outf(c);
+
+    c := a - b;
+    outf(c);
+
+    c := a * b;
+    outf(c);
+
+    c := a / b;
+    outf(c);
+
+    c := a + 3;
+    outf(c);
+
+    c := a - 3;
+    outf(c);
+
+    c := a * 3;
+    outf(c);
+
+    c := a / 3;
+    outf(c);
+
+    c := 10 + b;
+    outf(c);
+
+    c := 10 - b;
+    outf(c);
+
+    c := 10 * b;
+    outf(c);
+
+    c := 10 / b;
+    outf(c);
+
+    c := 10 - 20;
+    outf(c);
+end

@@ -1,0 +1,16 @@
+prog
+begin
+    single fun f1(single param)
+    begin
+        outf(param);
+        param := param + 5.0;
+        outf(param);
+        ret(param);
+    end;
+    single res;
+    ulongint rr;
+    rr := 2;
+    res := f1(single(rr));
+    outf(res);
+    outf(rr);
+end

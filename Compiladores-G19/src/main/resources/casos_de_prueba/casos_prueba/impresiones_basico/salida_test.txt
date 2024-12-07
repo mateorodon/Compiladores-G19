@@ -1,0 +1,42 @@
+----------ARBOL SINTACTICO -----------
+PROGRAMA
+    Sentencia
+        Sentencia
+            Sentencia
+                Sentencia
+                    Sentencia
+                        Sentencia
+                            Sentencia Declarativa
+                            Sentencia Declarativa
+                        :=
+                            x@main
+                            -
+                                10
+                                *
+                                    4
+                                    2
+                    :=
+                        y@main
+                        2.0
+                Outf
+                    hola
+            Outf
+                x@main
+        Outf
+            y@main
+----------ARBOL SINTACTICO FUNCIONES -----------
+----------TABLA DE SIMBOLOS-----------
+Token{id=262, lexema=2, linea=5, tipo=ulongint, uso = constante}
+Token{id=257, lexema=y@main, linea=4, tipo=single, uso = variable}
+Token{id=262, lexema=4, linea=5, tipo=ulongint, uso = constante}
+Token{id=262, lexema=2.0, linea=6, tipo=single, uso = constante}
+Token{id=263, lexema=hola, linea=7, tipo=cadena, uso = mensaje}
+Token{id=257, lexema=prog, linea=1, tipo=null, uso = null}
+Token{id=257, lexema=x@main, linea=3, tipo=ulongint, uso = variable}
+Token{id=262, lexema=10, linea=5, tipo=ulongint, uso = constante}
+-----------ERRORES LEXICOS----------
+-----------ERRORES SINTACTICOS----------
+-----------ERRORES SEMANTICOS----------
+----------WARNINGS-----------
+WARNING: La variable 'x' ya esta declarada en la línea 3
+WARNING: La variable 'y' ya estaba declarada. Se cambio su tipo a single en la línea 4

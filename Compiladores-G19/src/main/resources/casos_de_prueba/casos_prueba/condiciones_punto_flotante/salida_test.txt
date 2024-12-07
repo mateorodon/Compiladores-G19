@@ -1,0 +1,64 @@
+----------ARBOL SINTACTICO -----------
+PROGRAMA
+    Sentencia
+        Sentencia
+            Sentencia
+                If
+                    <
+                        4.0
+                        3.0
+                    Cuerpo
+                        Then
+                            Outf
+                                4.0 < 3.0
+                        Else
+                            Outf
+                                4.0 >= 3.0
+                If
+                    =
+                        4.0
+                        3.0
+                    Cuerpo
+                        Then
+                            Outf
+                                4.0 = 3.0
+                        Else
+                            Outf
+                                4.0 != 3.0
+            If
+                !=
+                    4.0
+                    3.0
+                Cuerpo
+                    Then
+                        Outf
+                            4.0 != 3.0
+                    Else
+                        Outf
+                            4.0 = 3.0
+        If
+            >=
+                4.0
+                3.0
+            Cuerpo
+                Then
+                    Outf
+                        4 >= 3
+                Else
+                    Outf
+                        4 < 3
+----------ARBOL SINTACTICO FUNCIONES -----------
+----------TABLA DE SIMBOLOS-----------
+Token{id=263, lexema=4.0 >= 3.0, linea=6, tipo=cadena, uso = mensaje}
+Token{id=263, lexema=4 >= 3, linea=22, tipo=cadena, uso = mensaje}
+Token{id=262, lexema=3.0, linea=3, tipo=single, uso = constante}
+Token{id=263, lexema=4.0 = 3.0, linea=10, tipo=cadena, uso = mensaje}
+Token{id=262, lexema=4.0, linea=3, tipo=single, uso = constante}
+Token{id=257, lexema=lala, linea=1, tipo=null, uso = null}
+Token{id=263, lexema=4.0 < 3.0, linea=4, tipo=cadena, uso = mensaje}
+Token{id=263, lexema=4.0 != 3.0, linea=12, tipo=cadena, uso = mensaje}
+Token{id=263, lexema=4 < 3, linea=24, tipo=cadena, uso = mensaje}
+-----------ERRORES LEXICOS----------
+-----------ERRORES SINTACTICOS----------
+-----------ERRORES SEMANTICOS----------
+----------WARNINGS-----------

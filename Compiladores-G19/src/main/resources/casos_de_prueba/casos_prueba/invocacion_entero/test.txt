@@ -1,0 +1,18 @@
+prog
+begin
+    ulongint fun f1(ulongint param)
+    begin
+        param := param + 5;
+        outf(param);
+        ret(param);
+    end;
+    ulongint rr, res;
+    rr := 2;
+    res := f1(rr);
+    outf(res);
+    outf(rr);
+    rr := rr + 2;
+    res := f1(rr);
+    outf(res);
+    outf(rr);
+end

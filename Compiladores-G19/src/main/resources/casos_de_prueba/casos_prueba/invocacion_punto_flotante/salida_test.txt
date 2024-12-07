@@ -1,0 +1,63 @@
+----------ARBOL SINTACTICO -----------
+PROGRAMA
+    Sentencia
+        Sentencia
+            Sentencia
+                Sentencia
+                    Sentencia
+                        Sentencia
+                            Sentencia
+                                Sentencia
+                                    Sentencia
+                                        Sentencia Declarativa
+                                        Sentencia Declarativa
+                                    :=
+                                        rr@main
+                                        2.0
+                                :=
+                                    res@main
+                                    f1@main
+                                        rr@main
+                            Outf
+                                res@main
+                        Outf
+                            rr@main
+                    :=
+                        rr@main
+                        +
+                            rr@main
+                            2.0
+                :=
+                    res@main
+                    f1@main
+                        rr@main
+            Outf
+                res@main
+        Outf
+            rr@main
+----------ARBOL SINTACTICO FUNCIONES -----------
+f1@main
+    param@main@f1
+    Sentencia
+        Sentencia
+            :=
+                param@main@f1
+                +
+                    param@main@f1
+                    5.0
+            Outf
+                param@main@f1
+        Return
+            param@main@f1
+----------TABLA DE SIMBOLOS-----------
+Token{id=262, lexema=2.0, linea=10, tipo=single, uso = constante}
+Token{id=262, lexema=5.0, linea=5, tipo=single, uso = constante}
+Token{id=257, lexema=res@main, linea=9, tipo=single, uso = variable}
+Token{id=257, lexema=param@main@f1, linea=3, tipo=single, uso = parametro}
+Token{id=257, lexema=prog, linea=1, tipo=null, uso = null}
+Token{id=257, lexema=rr@main, linea=9, tipo=single, uso = variable}
+Token{id=257, lexema=f1@main, linea=3, tipo=single, uso = funcion}
+-----------ERRORES LEXICOS----------
+-----------ERRORES SINTACTICOS----------
+-----------ERRORES SEMANTICOS----------
+----------WARNINGS-----------

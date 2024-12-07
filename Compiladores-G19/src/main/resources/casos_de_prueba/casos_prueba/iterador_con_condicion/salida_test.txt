@@ -1,0 +1,98 @@
+----------ARBOL SINTACTICO -----------
+PROGRAMA
+    Sentencia
+        Sentencia
+            Sentencia
+                Sentencia
+                    Sentencia
+                        Sentencia
+                            Sentencia
+                                Sentencia
+                                    Sentencia
+                                        Sentencia
+                                            Sentencia
+                                                Sentencia
+                                                    Sentencia Declarativa
+                                                    :=
+                                                        x@main
+                                                        3
+                                                Outf
+                                                    x@main
+                                            :=
+                                                y@main
+                                                2
+                                        Outf
+                                            y@main
+                                    :=
+                                        z@main
+                                        +
+                                            x@main
+                                            y@main
+                                Outf
+                                    z@main
+                            Sentencia Declarativa
+                        :=
+                            a@main
+                            6
+                    For
+                        Encabezado For
+                            Asignacion e Incremento
+                                :=
+                                    i@main
+                                    1
+                                Incremento
+                                    Up
+                                    1
+                            Condiciones
+                                <
+                                    i@main
+                                    10
+                                <=
+                                    a@main
+                                    10
+                        Sentencia
+                            Sentencia
+                                Outf
+                                    en el for
+                                :=
+                                    a@main
+                                    +
+                                        a@main
+                                        1
+                            Outf
+                                a@main
+                Outf
+                    afuera del for
+            :=
+                z@main
+                +
+                    4
+                    *
+                        2
+                        8
+        Outf
+            z@main
+----------ARBOL SINTACTICO FUNCIONES -----------
+----------TABLA DE SIMBOLOS-----------
+Token{id=263, lexema=afuera del for, linea=18, tipo=cadena, uso = mensaje}
+Token{id=263, lexema=en el for, linea=14, tipo=cadena, uso = mensaje}
+Token{id=257, lexema=a@main, linea=10, tipo=ulongint, uso = variable}
+Token{id=257, lexema=prog, linea=1, tipo=null, uso = null}
+Token{id=262, lexema=1, linea=12, tipo=ulongint, uso = constante}
+Token{id=262, lexema=2, linea=6, tipo=ulongint, uso = constante}
+Token{id=257, lexema=y@main, linea=3, tipo=ulongint, uso = variable}
+Token{id=262, lexema=3, linea=4, tipo=ulongint, uso = constante}
+Token{id=262, lexema=4, linea=19, tipo=ulongint, uso = constante}
+Token{id=0, lexema=i@main, linea=12, tipo=ulongint, uso = variable}
+Token{id=262, lexema=6, linea=11, tipo=ulongint, uso = constante}
+Token{id=257, lexema=z@main, linea=3, tipo=ulongint, uso = variable}
+Token{id=262, lexema=8, linea=19, tipo=ulongint, uso = constante}
+Token{id=257, lexema=x@main, linea=3, tipo=ulongint, uso = variable}
+Token{id=262, lexema=10, linea=12, tipo=ulongint, uso = constante}
+-----------ERRORES LEXICOS----------
+-----------ERRORES SINTACTICOS----------
+-----------ERRORES SEMANTICOS----------
+----------WARNINGS-----------
+WARNING: La variable 'x' ya esta declarada en la línea 3
+WARNING: La variable 'y' ya esta declarada en la línea 3
+WARNING: La variable 'z' ya esta declarada en la línea 3

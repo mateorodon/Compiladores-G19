@@ -1,0 +1,62 @@
+----------ARBOL SINTACTICO -----------
+PROGRAMA
+    Sentencia
+        Sentencia
+            Sentencia
+                If
+                    <
+                        2
+                        3
+                    Cuerpo
+                        Then
+                            Outf
+                                2 < 3
+                        Else
+                            Outf
+                                2 >= 3
+                If
+                    =
+                        2
+                        3
+                    Cuerpo
+                        Then
+                            Outf
+                                2 = 3
+                        Else
+                            Outf
+                                2 != 3
+            If
+                !=
+                    2
+                    3
+                Cuerpo
+                    Then
+                        Outf
+                            2 != 3
+                    Else
+                        Outf
+                            2 = 3
+        If
+            >=
+                2
+                3
+            Cuerpo
+                Then
+                    Outf
+                        2 >= 3
+                Else
+                    Outf
+                        2 < 3
+----------ARBOL SINTACTICO FUNCIONES -----------
+----------TABLA DE SIMBOLOS-----------
+Token{id=263, lexema=2 < 3, linea=4, tipo=cadena, uso = mensaje}
+Token{id=262, lexema=2, linea=3, tipo=ulongint, uso = constante}
+Token{id=263, lexema=2 >= 3, linea=6, tipo=cadena, uso = mensaje}
+Token{id=263, lexema=2 = 3, linea=10, tipo=cadena, uso = mensaje}
+Token{id=262, lexema=3, linea=3, tipo=ulongint, uso = constante}
+Token{id=257, lexema=lala, linea=1, tipo=null, uso = null}
+Token{id=263, lexema=2 != 3, linea=12, tipo=cadena, uso = mensaje}
+-----------ERRORES LEXICOS----------
+-----------ERRORES SINTACTICOS----------
+-----------ERRORES SEMANTICOS----------
+----------WARNINGS-----------

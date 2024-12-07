@@ -1,0 +1,104 @@
+----------ARBOL SINTACTICO -----------
+PROGRAMA
+    Sentencia
+        Sentencia
+            Sentencia
+                Sentencia
+                    Sentencia
+                        Sentencia
+                            Sentencia
+                                Sentencia
+                                    Sentencia
+                                        Sentencia
+                                            Sentencia
+                                                Sentencia
+                                                    Sentencia
+                                                        Sentencia
+                                                            Sentencia Declarativa
+                                                            :=
+                                                                asd@main
+                                                                10
+                                                        :=
+                                                            q@main
+                                                            5
+                                                    Sentencia Declarativa
+                                                Sentencia Declarativa
+                                            Outf
+                                                asd:
+                                        Outf
+                                            asd@main
+                                    :=
+                                        res1@main
+                                        devuelvoUno@main
+                                            asd@main
+                                Outf
+                                    res1:
+                            Outf
+                                res1@main
+                        Outf
+                            q:
+                    Outf
+                        q@main
+                :=
+                    res2@main
+                    devuelvoUno@main
+                        q@main
+            Outf
+                res2:
+        Outf
+            res2@main
+----------ARBOL SINTACTICO FUNCIONES -----------
+devuelvoUno@main
+    param@main@devuelvoUno
+    Sentencia
+        Sentencia
+            Sentencia
+                Sentencia
+                    Sentencia
+                        Sentencia
+                            Sentencia
+                                Sentencia
+                                    Sentencia Declarativa
+                                    :=
+                                        soyNueve@main@devuelvoUno
+                                        9
+                                Outf
+                                    soyNueve:
+                            Outf
+                                soyNueve@main@devuelvoUno
+                        :=
+                            soyNueve@main@devuelvoUno
+                            param@main@devuelvoUno
+                    Outf
+                        noSoyNueve:
+                Outf
+                    soyNueve@main@devuelvoUno
+            :=
+                param@main@devuelvoUno
+                1
+        Return
+            param@main@devuelvoUno
+----------TABLA DE SIMBOLOS-----------
+Token{id=257, lexema=res2@main, linea=20, tipo=ulongint, uso = variable}
+Token{id=257, lexema=q@main, linea=3, tipo=ulongint, uso = variable}
+Token{id=263, lexema=asd:, linea=22, tipo=cadena, uso = mensaje}
+Token{id=263, lexema=soyNueve:, linea=11, tipo=cadena, uso = mensaje}
+Token{id=263, lexema=q:, linea=28, tipo=cadena, uso = mensaje}
+Token{id=257, lexema=param@main@devuelvoUno, linea=7, tipo=ulongint, uso = parametro}
+Token{id=262, lexema=1, linea=16, tipo=ulongint, uso = constante}
+Token{id=263, lexema=noSoyNueve:, linea=14, tipo=cadena, uso = mensaje}
+Token{id=262, lexema=5, linea=5, tipo=ulongint, uso = constante}
+Token{id=257, lexema=devuelvoUno@main, linea=7, tipo=ulongint, uso = funcion}
+Token{id=257, lexema=lala, linea=1, tipo=null, uso = null}
+Token{id=262, lexema=9, linea=10, tipo=ulongint, uso = constante}
+Token{id=257, lexema=asd@main, linea=3, tipo=ulongint, uso = variable}
+Token{id=257, lexema=soyNueve@main@devuelvoUno, linea=9, tipo=ulongint, uso = variable}
+Token{id=257, lexema=res1@main, linea=20, tipo=ulongint, uso = variable}
+Token{id=263, lexema=res2:, linea=31, tipo=cadena, uso = mensaje}
+Token{id=262, lexema=10, linea=4, tipo=ulongint, uso = constante}
+Token{id=263, lexema=res1:, linea=25, tipo=cadena, uso = mensaje}
+-----------ERRORES LEXICOS----------
+-----------ERRORES SINTACTICOS----------
+-----------ERRORES SEMANTICOS----------
+----------WARNINGS-----------
+WARNING: La variable 'soyNueve' ya estaba declarada. Se cambio su tipo a ULONGINT en la línea 9
