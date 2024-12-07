@@ -110,6 +110,7 @@ public class NodoComun extends Nodo {
             case ":=":
                 if (inFor)
                     varFor.add(getIzq().getNombre());
+
                 salida += getDer().getAssembler();
 
                 if (getIzq().getUso().equals("arreglo")) {
@@ -121,35 +122,53 @@ public class NodoComun extends Nodo {
                     int desplazamiento = (indice - 1) * (4); // Siempre 4 bytes
 
                     // Obtiene el tipo original del tipo declarado por el usuario
-                    // e.g TRIPLE <ulongint> tint;
-                    // tint t1; => el tipo de tint es ulongint/ENTERO
                     String tipoDelTipo = tiposDeclarados.get(getIzq().getTipo());
                     String arregloNombreTS = getIzq().getLexema().toString();
                     String prefijo = "_";
-                    if (tipoDelTipo.equals(ENTERO)){
-                        // Generar código para asignación a un entero en el arreglo
+
+                    if (tipoDelTipo.equals(ENTERO)) {
+                        // Asignación de un valor a un arreglo (ya estaba hecho)
                         salida += "MOV EAX, " + prefijo + getDer().getUltimoNodo().getNombre() + "\n";
                         salida += "MOV [_" + arregloNombreTS + " + " + desplazamiento + "], EAX\n";
                     } else {
-                        // Generar código para asignación a un flotante en el arreglo
+                        // Asignación de un flotante a un arreglo
                         salida += "FLD " + prefijo + getDer().getUltimoNodo().getNombre().replace('.','_') + "\n";
                         salida += "FSTP [_" + arregloNombreTS + " + " + desplazamiento + "]\n";
+                    }
+                } else if (getDer().getUso().equals("arreglo")) {
+                    // Asignación de un arreglo a una variable (lo que se necesita para a := t1[1])
+                    String nombreConIndice = getDer().getNombre(); // Ejemplo: "t1[1]"
+                    int indice = Integer.parseInt(nombreConIndice.substring(nombreConIndice.indexOf('[') + 1, nombreConIndice.indexOf(']')));
+
+                    // Calcular el desplazamiento del índice
+                    int desplazamiento = (indice - 1) * (4); // Siempre 4 bytes
+                    String arregloNombreTS = getDer().getLexema().toString();
+
+                    // Generar el código para acceder al arreglo y asignarlo a la variable
+                    if (getIzq().getTipo().equals(ENTERO)) {
+                        salida += "MOV EAX, [_" + arregloNombreTS + " + " + desplazamiento + "]\n";
+                        salida += "MOV _" + getIzq().getUltimoNodo().getNombre() + ", EAX\n"; // Asignación a la variable
+                    } else {
+                        salida += "FLD [_" + arregloNombreTS + " + " + desplazamiento + "]\n";
+                        salida += "FST _" + getIzq().getUltimoNodo().getNombre() + "\n";
+                        salida += "FSTP ST(0)" + "\n";
                     }
                 } else {
                     // Asignación estándar (no arreglo)
                     salida += getIzq().getAssembler();
                     if (getIzq().getTipo().equals(ENTERO)) {
-                        if (getDer().getUso() != null && !(getDer().getUso().equals("llamado") || getDer().getUso().equals("llamadoConCasteo")))
+                        if (getDer().getUso() != null && !getDer().getUso().equals("llamado"))
                             salida += "MOV EAX, _" + getDer().getUltimoNodo().getNombre() + "\n";
                         salida += "MOV _" + getIzq().getUltimoNodo().getNombre() + ", EAX\n";
                     } else {
-                        if (getDer().getUso() != null && !(getDer().getUso().equals("llamado") || getDer().getUso().equals("llamadoConCasteo")))
+                        if (getDer().getUso() != null && !getDer().getUso().equals("llamado"))
                             salida += "FLD _" + getDer().getUltimoNodo().getNombre().replace('.','_') + "\n";
                         salida += "FST _" + getIzq().getUltimoNodo().getNombre() + "\n";
                         salida += "FSTP ST(0)" + "\n";
                     }
                 }
                 break;
+
             case "+":
                 salida += getDer().getAssembler() + getIzq().getAssembler();
                 varAuxiliar = Nodo.getVariableAuxiliar();
@@ -480,15 +499,45 @@ public class NodoComun extends Nodo {
                 break;
             case "Outf":
                 String variablePrint = getVariablePrint();
+
+                // Caso de cadena
                 if (this.getIzq().getUltimoNodo().getTipo().equals("cadena")) {
                     data += variablePrint + " db \"" + this.getIzq().getUltimoNodo().getNombre() + "\", 10, 0 \n";
-                    salida += salida + "invoke printf, addr " + variablePrint + "\n" ;
+                    salida += "invoke printf, addr " + variablePrint + "\n";
                 }
-                else {
-                    if (this.getIzq().getUltimoNodo().getTipo().equals(ENTERO))
-                        salida += salida + "invoke printf, cfm$(\"%d\\n\"), " + "[_" + this.getIzq().getUltimoNodo().getNombre() + "]" + "\n" ;
-                    if (this.getIzq().getUltimoNodo().getTipo().equals(FLOTANTE))
-                        salida += salida + "invoke printf, cfm$(\"%.20Lf\\n\"), " + "[_" + this.getIzq().getUltimoNodo().getNombre() + "]" + "\n" ;
+                // Caso de arreglo o variable de tipo entero
+                else if (this.getIzq().getUltimoNodo().getUso().equals("arreglo")) {
+                    // Extraer el nombre del arreglo y el índice
+                    String nombreConIndice = this.getIzq().getUltimoNodo().getNombre(); // Ejemplo: "t1[1]"
+                    int indice = Integer.parseInt(nombreConIndice.substring(nombreConIndice.indexOf('[') + 1, nombreConIndice.indexOf(']')));
+
+                    // Calcular desplazamiento del índice
+                    int desplazamiento = (indice - 1) * 4; // Para enteros, 4 bytes de tamaño por elemento
+
+                    // Generar código de impresión para un entero en el arreglo
+                    salida += "invoke printf, cfm$(\"%d\\n\"), [_" + this.getIzq().getLexema() + " + " + desplazamiento + "]\n";
+                }
+                // Caso de variable de tipo entero
+                else if (this.getIzq().getUltimoNodo().getTipo().equals(ENTERO)) {
+                    salida += "invoke printf, cfm$(\"%d\\n\"), [_" + this.getIzq().getUltimoNodo().getNombre() + "]\n";
+                }
+                // Caso de arreglo o variable de tipo flotante
+                else if (this.getIzq().getUltimoNodo().getUso().equals("arreglo") && this.getIzq().getUltimoNodo().getTipo().equals(FLOTANTE)) {
+                    // Extraer el nombre del arreglo y el índice
+                    String nombreConIndice = this.getIzq().getUltimoNodo().getNombre(); // Ejemplo: "t1[1]"
+                    int indice = Integer.parseInt(nombreConIndice.substring(nombreConIndice.indexOf('[') + 1, nombreConIndice.indexOf(']')));
+
+                    // Calcular desplazamiento del índice
+                    int desplazamiento = (indice - 1) * 4; // Para flotantes, 4 bytes de tamaño por elemento
+
+                    // Generar código de impresión para un flotante en el arreglo
+                    salida += "FLD [_" + this.getIzq().getLexema() + " + " + desplazamiento + "]\n";
+                    salida += "invoke printf, cfm$(\"%.20Lf\\n\"), ST(0)\n";
+                }
+                // Caso de variable de tipo flotante
+                else if (this.getIzq().getUltimoNodo().getTipo().equals(FLOTANTE)) {
+                    salida += "FLD _" + this.getIzq().getUltimoNodo().getNombre() + "\n";
+                    salida += "invoke printf, cfm$(\"%.20Lf\\n\"), ST(0)\n";
                 }
                 break;
             case "Asignacion e Incremento":

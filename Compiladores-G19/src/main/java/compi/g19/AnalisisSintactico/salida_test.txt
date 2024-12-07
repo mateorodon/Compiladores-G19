@@ -5,28 +5,30 @@ PROGRAMA
             Sentencia
                 Sentencia
                     Sentencia
-                        Sentencia Declarativa
-                        Sentencia Declarativa
-                    :=
-                        t1[1]
-                        1
-                Sentencia Declarativa
-            :=
-                a@main
-                t1[1]
-        Outf
-            a@main
+                        Sentencia
+                            Sentencia
+                                Sentencia
+                                    Sentencia Declarativa
+                                    Sentencia Declarativa
+                                :=
+                                    t1[1]
+                                    1
+                            Sentencia Declarativa
+                        :=
+                            a@main
+                            t1[1]
+                    Outf
+                        a@main
+                Outf
+                    t1[1]
+            Outf
+                t1[2]
+        error
 ----------ARBOL SINTACTICO FUNCIONES -----------
-----------ESTRUCTURAS RECONOCIDAS-----------
-Se reconocio declaracion de tipo en la línea 4
-Se reconocio declaracion de variable/s en la línea 6
-Se reconocio una asignacion en la línea 8
-Se reconocio declaracion de variable/s en la línea 10
-Se reconocio una asignacion en la línea 12
-Se reconocio salida de mensaje por pantalla en la línea 14
-Se reconocio el programa en la línea 17
 ----------TABLA DE SIMBOLOS-----------
 Token{id=262, lexema=1, linea=8, tipo=ulongint, uso = constante}
+Token{id=262, lexema=2, linea=18, tipo=ulongint, uso = constante}
+Token{id=262, lexema=4, linea=20, tipo=ulongint, uso = constante}
 Token{id=257, lexema=t1@main, linea=6, tipo=tint, uso = arreglo}
 Token{id=257, lexema=PROG_base, linea=1, tipo=null, uso = null}
 Token{id=257, lexema=a@main, linea=10, tipo=ulongint, uso = variable}
@@ -34,4 +36,5 @@ Token{id=257, lexema=tint@main, linea=4, tipo=ulongint, uso = tipo}
 -----------ERRORES LEXICOS----------
 -----------ERRORES SINTACTICOS----------
 -----------ERRORES SEMANTICOS----------
+El indice esta fuera de rango. Debe estar entre 1 y 3 en la linea 20
 ----------WARNINGS-----------

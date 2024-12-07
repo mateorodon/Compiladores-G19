@@ -799,7 +799,7 @@ salida_mensaje:
     | OUTF '(' expresion ')' {   Nodo exp = (Nodo)$3.obj;
                                  if (!exp.getNombre().contains("error")){
                                      Token t = new Token(exp.getToken());
-                                     t.setUso("mensaje");
+                                     //t.setUso("mensaje");
                                      t.setTipo(exp.getTipo());
                                      $$.obj = new NodoComun("Outf", new NodoHoja(exp.getNombre(),t));
                                  }

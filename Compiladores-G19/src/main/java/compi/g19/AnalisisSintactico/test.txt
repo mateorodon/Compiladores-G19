@@ -13,5 +13,11 @@ BEGIN
 
     OUTF(a);
 
+    OUTF(t1[1]);
+
+    OUTF(t1[2]);
+
+    OUTF(t1[4]);
+
 
 END
