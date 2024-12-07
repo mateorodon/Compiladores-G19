@@ -508,7 +508,7 @@ public class NodoComun extends Nodo {
                     salida += "invoke printf, addr " + variablePrint + "\n";
                 }
                 // Caso de arreglo o variable de tipo entero
-                else if (this.getIzq().getUltimoNodo().getUso().equals("arreglo")) {
+                else if (this.getIzq().getUltimoNodo().getUso().equals("arreglo") && tiposDeclarados.get(getIzq().getTipo()).equals(ENTERO)) {
                     // Extraer el nombre del arreglo y el índice
                     String nombreConIndice = this.getIzq().getUltimoNodo().getNombre(); // Ejemplo: "t1[1]"
                     int indice = Integer.parseInt(nombreConIndice.substring(nombreConIndice.indexOf('[') + 1, nombreConIndice.indexOf(']')));
@@ -524,7 +524,7 @@ public class NodoComun extends Nodo {
                     salida += salida + "invoke printf, cfm$(\"%d\\n\"), " + "[_" + this.getIzq().getUltimoNodo().getNombre() + "]" + "\n" ;
                 }
                 // Caso de arreglo o variable de tipo flotante
-                else if (this.getIzq().getUltimoNodo().getUso().equals("arreglo") && this.getIzq().getUltimoNodo().getTipo().equals(FLOTANTE)) {
+                else if (this.getIzq().getUltimoNodo().getUso().equals("arreglo") && tiposDeclarados.get(getIzq().getTipo()).equals(FLOTANTE)) {
                     // Extraer el nombre del arreglo y el índice
                     String nombreConIndice = this.getIzq().getUltimoNodo().getNombre(); // Ejemplo: "t1[1]"
                     int indice = Integer.parseInt(nombreConIndice.substring(nombreConIndice.indexOf('[') + 1, nombreConIndice.indexOf(']')));
