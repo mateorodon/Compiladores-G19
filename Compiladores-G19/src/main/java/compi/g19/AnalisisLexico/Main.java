@@ -93,8 +93,6 @@ public class Main {
     }
 
     public static void imprimirEstructurasYErrores(){
-        System.out.println("----------ESTRUCTURAS RECONOCIDAS-----------");
-        AnalizadorLexico.imprimirEstructuras();
         System.out.println("----------TABLA DE SIMBOLOS-----------");
         TablaSimbolos.imprimirSimbolos();
         System.out.println("-----------ERRORES LEXICOS----------");

@@ -174,6 +174,8 @@ asignacion:
                                         t.setUso("variable");
                                         TablaSimbolos.removeToken($1.sval);
                                         TablaSimbolos.addSimbolo(t.getLexema().toString(),t);
+                                        NodoHoja id = new NodoHoja(t.getLexema().toString(),t);
+                                        $$.obj = new NodoComun($2.sval ,id, (Nodo)$3.obj);
                                   }
                               }
                               else {
@@ -935,7 +937,7 @@ private NodoComun controlarTipos(Nodo nodo1, String op, Nodo nodo3){
 private Nodo generarLlamadoFuncion(NodoComun funcion, Nodo copia, String tipoCasteo) {
     NodoComun salida = null;
     if (funcion != null) {
-        Nodo param = funcion.getIzq(); // Parámetro formal de la función
+        NodoHoja param = (NodoHoja)funcion.getIzq(); // Parámetro formal de la función
         String tipoFormal = param.getTipo(); // Tipo esperado por la función
         String tipoReal = copia.getTipo();   // Tipo de la expresión original
 
@@ -956,9 +958,10 @@ private Nodo generarLlamadoFuncion(NodoComun funcion, Nodo copia, String tipoCas
                 return new NodoHoja("error");
             } else if (tipoFormal.equals(tipoCasteo) && esCasteoValido(tipoReal, tipoCasteo)) {
                 // Casteo válido
-                param.setNombre(copia.getNombre());
+                //param.setNombre(copia.getNombre());
+                NodoHoja newCopia = new NodoHoja(copia.getNombre(),param.getToken());
                 NodoHoja nodoTipoReal = new NodoHoja(tipoReal, null);
-                salida = new NodoComun(funcion, param, nodoTipoReal);
+                salida = new NodoComun(funcion, newCopia, nodoTipoReal);
                 salida.setUso("llamadoConCasteo");
             } else {
                 // Casteo inválido
