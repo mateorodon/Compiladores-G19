@@ -11,30 +11,33 @@ PROGRAMA
                                     Sentencia Declarativa
                                     Sentencia Declarativa
                                 :=
-                                    t1[1]
-                                    1
-                            Sentencia Declarativa
-                        :=
-                            a@main
-                            t1[1]
+                                    t2[1]
+                                    10.0
+                            :=
+                                t2[2]
+                                55.0
+                        Outf
+                            t2[1]
                     Outf
-                        a@main
-                Outf
-                    t1[1]
-            Outf
-                t1[2]
-        error
+                        t2[2]
+                Sentencia Declarativa
+            :=
+                basico@main
+                1.0
+        Outf
+            basico@main
 ----------ARBOL SINTACTICO FUNCIONES -----------
 ----------TABLA DE SIMBOLOS-----------
-Token{id=262, lexema=1, linea=8, tipo=ulongint, uso = constante}
-Token{id=262, lexema=2, linea=18, tipo=ulongint, uso = constante}
-Token{id=262, lexema=4, linea=20, tipo=ulongint, uso = constante}
-Token{id=257, lexema=t1@main, linea=6, tipo=tint, uso = arreglo}
+Token{id=262, lexema=1, linea=5, tipo=ulongint, uso = constante}
+Token{id=262, lexema=2, linea=6, tipo=ulongint, uso = constante}
+Token{id=257, lexema=tsingle@main, linea=3, tipo=single, uso = tipo}
+Token{id=262, lexema=1.0, linea=11, tipo=single, uso = constante}
+Token{id=257, lexema=t2@main, linea=4, tipo=tsingle, uso = arreglo}
 Token{id=257, lexema=PROG_base, linea=1, tipo=null, uso = null}
-Token{id=257, lexema=a@main, linea=10, tipo=ulongint, uso = variable}
-Token{id=257, lexema=tint@main, linea=4, tipo=ulongint, uso = tipo}
+Token{id=262, lexema=10.0, linea=5, tipo=single, uso = constante}
+Token{id=262, lexema=55.0, linea=6, tipo=single, uso = constante}
+Token{id=257, lexema=basico@main, linea=10, tipo=single, uso = variable}
 -----------ERRORES LEXICOS----------
 -----------ERRORES SINTACTICOS----------
 -----------ERRORES SEMANTICOS----------
-El indice esta fuera de rango. Debe estar entre 1 y 3 en la linea 20
 ----------WARNINGS-----------

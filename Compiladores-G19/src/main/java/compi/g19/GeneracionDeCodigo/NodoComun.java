@@ -533,8 +533,11 @@ public class NodoComun extends Nodo {
                     int desplazamiento = (indice - 1) * 4; // Para flotantes, 4 bytes de tamaño por elemento
 
                     // Generar código de impresión para un flotante en el arreglo
-                    salida += "FLD [_" + this.getIzq().getLexema() + " + " + desplazamiento + "]\n";
-                    salida += "invoke printf, cfm$(\"%.20Lf\\n\"), ST(0)\n";
+                    salida += "FLD [_" + this.getIzq().getLexema() + " + " + desplazamiento + "]\n"; // Cargar el valor del arreglo en ST(0)
+                    salida += "sub esp, 8\n"; // Reservar espacio en la pila para el argumento
+                    salida += "FSTP qword ptr [esp]\n"; // Almacenar el valor flotante en la pila
+                    salida += "invoke printf, cfm$(\"%.20Lf\\n\"), qword ptr [esp]\n"; // Pasar el valor flotante a printf
+                    salida += "add esp, 8\n"; // Liberar el espacio reservado en la pila
                 }
                 // Caso de variable de tipo flotante
                 else if (this.getIzq().getUltimoNodo().getTipo().equals(FLOTANTE)) {

@@ -20,8 +20,11 @@ error db "Error", 0
 printMensaje db "Print", 0 
 _1 dd 1
 _2 dd 2
-_t1@main dd ?,?,?
-_a@main dd ?
+_1_0 dq 1.0
+_t2@main dd ?,?,?
+_10_0 dq 10.0
+_55_0 dq 55.0
+_basico@main dq ?
 limite_float dq 3.4e38
 
 .code
@@ -35,12 +38,23 @@ handle_overflow:
 invoke MessageBox, NULL, addr OverflowSumaFlotantes, addr error, MB_OK 
 invoke ExitProcess, 0 
 start:
-MOV EAX, _1
-MOV [_t1@main + 0], EAX
-MOV EAX, [_t1@main + 0]
-MOV _a@main, EAX
-invoke printf, cfm$("%d\n"), [_a@main]
-invoke printf, cfm$("%d\n"), [_t1@main + 0]
-invoke printf, cfm$("%d\n"), [_t1@main + 4]
+FLD _10_0
+FSTP [_t2@main + 0]
+FLD _55_0
+FSTP [_t2@main + 4]
+FLD [_t2@main + 0]
+sub esp, 8
+FSTP qword ptr [esp]
+invoke printf, cfm$("%.20Lf\n"), qword ptr [esp]
+add esp, 8
+FLD [_t2@main + 4]
+sub esp, 8
+FSTP qword ptr [esp]
+invoke printf, cfm$("%.20Lf\n"), qword ptr [esp]
+add esp, 8
+FLD _1_0
+FST _basico@main
+FSTP ST(0)
+invoke printf, cfm$("%.20Lf\n"), [_basico@main]
 invoke ExitProcess, 0 
 end start
