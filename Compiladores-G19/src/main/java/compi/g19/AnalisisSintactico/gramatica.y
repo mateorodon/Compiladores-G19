@@ -680,6 +680,8 @@ cuerpo_if_unico:
     sentencia_ejecutable ';' {$$ = $1;}
     | sentencia_return ';' {$$ = $1; cantReturns++;}
     | sentencia_return error {yyerror("Las sentencias deben terminar con ';'");}
+    | BEGIN sentencia_return ';' END {$$ = $2;}
+    //| BEGIN sentencia_ejecutable ';' END {$$ = $2;} //Tira shift-reduce
     ;
 
 cuerpo_if_bloque:
