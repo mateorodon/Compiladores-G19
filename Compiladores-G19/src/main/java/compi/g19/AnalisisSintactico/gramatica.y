@@ -19,7 +19,7 @@ import static compi.g19.AnalisisLexico.AnalizadorLexico.errorSintactico;
 
 %start programa;
 
-programa: ID BEGIN list_sentencias END {AnalizadorLexico.agregarEstructura("Se reconocio el programa"); raiz = new NodoComun("PROGRAMA", (Nodo)$3.obj);}
+programa: ID BEGIN list_sentencias END {AnalizadorLexico.agregarEstructura("Se reconocio el programa"); if (noHayErrores()){raiz = new NodoComun("PROGRAMA", (Nodo)$3.obj);}}
     | BEGIN list_sentencias END {yyerror("El programa debe tener un nombre");}
     | ID BEGIN list_sentencias {yyerror("Falta delimitador END del programa");}
     | ID list_sentencias END {yyerror("Falta delimitador BEGIN del programa");}
@@ -31,7 +31,7 @@ list_sentencias: list_sentencias sentencia {$$.obj = new NodoComun("Sentencia", 
     ;
 
 sentencia:
-    sentencia_declarativa ';' {$$.obj = new NodoHoja("Sentencia Declarativa");}
+    sentencia_declarativa ';'
     | sentencia_ejecutable ';' {$$=$1;}
     | sentencia_ejecutable {yyerror("Las sentencias deben terminar con ;");}
     | sentencia_declarativa {yyerror("Las sentencias deben terminar con ;");}
@@ -287,7 +287,7 @@ declaracion_funcion:
     encabezado_funcion '(' parametro ')' BEGIN cuerpo_funcion { if (!hasReturn) {
                                                             yyerror("Falta sentencia RET en la función");
                                                          }
-                                                         if (!((NodoComun)$6.obj).getNombre().equals("Cuerpo vacio")){
+                                                         if ((((NodoComun)$6.obj) != null)&&(!((NodoComun)$6.obj).getNombre().equals("Cuerpo vacio"))) {
                                                              Nodo parametro = (Nodo)$3.obj;
                                                              NodoComun funcion = (NodoComun)$1.obj; //Encabezado con nombre funcion, este tiene el tipo
                                                              NodoComun cuerpo = (NodoComun)$6.obj;
@@ -340,7 +340,7 @@ cuerpo_funcion:
                                                     hasReturn = true;}
     | list_sentencias_funcion {$$=$1;}
     | sentencia_return ';' {$$=$1; hasReturn = true;}
-    |  {yyerror("El cuerpo de la funcion no puede ser vacio"); $$.obj = new NodoHoja("Cuerpo vacio");}
+    |  {yyerror("El cuerpo de la funcion no puede ser vacio"); $$.obj = new NodoComun("Cuerpo vacio");}
     ;
 
 
@@ -679,6 +679,7 @@ bloque_if:
 cuerpo_if_unico:
     sentencia_ejecutable ';' {$$ = $1;}
     | sentencia_return ';' {$$ = $1; cantReturns++;}
+    | sentencia_return error {yyerror("Las sentencias deben terminar con ';'");}
     ;
 
 cuerpo_if_bloque:
@@ -693,7 +694,6 @@ list_sentencias_ejecutables:
     list_sentencias_ejecutables sentencia_ejecutable ';' {$$.obj = new NodoComun("Sentencia", (Nodo) $1.obj, (Nodo) $2.obj);}
     | sentencia_ejecutable ';' {$$ = $1;}
     ;
-
 
 comparacion:
     MAYORIGUAL {$$.obj = new NodoHoja($1.sval);}
@@ -808,8 +808,9 @@ salida_mensaje:
                                  }
                                  AnalizadorLexico.agregarEstructura("Se reconocio salida de mensaje por pantalla");
                               }
-    | OUTF '('')' {yyerror("Falta de parametro en funcion OUTF");}
-    ;
+
+    | OUTF '(' error ')' {yyerror("Los print unicamente pueden contener expresiones o cadenas");}
+    | OUTF '('')' {yyerror("Falta de parametro en funcion OUTF");};
 
 %%
 private static final String ENTERO = "ulongint";

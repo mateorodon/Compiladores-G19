@@ -1,14 +1,9 @@
-PROG_base
-BEGIN
-    typedef triple <single> tsingle;
-    tsingle t2;
-    t2[1] := 10.0;
-    t2[2] := 55.0;
-    OUTF(t2[1]);
-    OUTF(t2[2]);
-
-    SINGLE basico;
-    basico := 1.0;
-    OUTF(basico);
-
-END
+lala
+begin
+    ulongint fun f1(single a)
+    begin
+        ret(5);
+    end;
+    fun(4.5);
+    outf(fun(2.0));
+end
