@@ -389,7 +389,7 @@ public class NodoComun extends Nodo {
                         salida += "FLD _" + getIzq().getUltimoNodo().getNombre().replace('.', '_') + "\n";
                         salida += "FCOM _" + getDer().getUltimoNodo().getNombre().replace('.', '_') + "\n";
                         salida += "FSTSW AX \n" + "SAHF \n";
-                        salida += "JL " + label + "\n";
+                        salida += "JGE " + label + "\n";
                     }
                 }
                 break;
@@ -421,7 +421,7 @@ public class NodoComun extends Nodo {
                         salida += "FLD _" + getIzq().getUltimoNodo().getNombre().replace('.', '_') + "\n";
                         salida += "FCOM _" + getDer().getUltimoNodo().getNombre().replace('.', '_')+ "\n";
                         salida += "FSTSW AX \n" + "SAHF \n";
-                        salida += "JGE " + label + "\n";
+                        salida += "JL " + label + "\n";
                     }
                 }
                 break;
