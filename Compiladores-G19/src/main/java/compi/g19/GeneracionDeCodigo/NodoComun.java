@@ -666,12 +666,14 @@ public class NodoComun extends Nodo {
                         salida += "PUSH EBP" + "\n"; // Guardar EBP actual en la pila
                         salida += "MOV EBP, ESP" + "\n"; // Actualizar EBP al puntero actual de la pila
                         if (getIzq().getTipo().equals(ENTERO)) {
+                            String nombreParametro = getIzq().getNombre().replace('.', '_'); // Reemplazar punto por guion bajo
                             salida += "MOV EAX, [EBP + 8]" + "\n"; // Cargar el valor del parámetro real
-                            salida += "MOV _" + getIzq().getNombre() + ",EAX" + "\n";
+                            salida += "MOV _" + nombreParametro + ", EAX" + "\n";
                         }
                         if (getIzq().getTipo().equals(FLOTANTE)) {
+                            String nombreParametro = getIzq().getNombre().replace('.', '_'); // Reemplazar punto por guion bajo
                             salida += "FLD QWORD PTR [EBP + 8]" + "\n"; // Cargar el valor del parámetro real
-                            salida += "FSTP _" + getIzq().getNombre() + "\n";
+                            salida += "FSTP _" + nombreParametro + "\n";
                         }
                         // No se aplica conversión en la definición de la función
                         salida += getDer().getAssembler();
@@ -681,45 +683,49 @@ public class NodoComun extends Nodo {
                         this.ultimoNodo = new NodoHoja(varAuxiliar, t);
                         TablaSimbolos.addSimbolo(varAuxiliar, t);
                         if (uso.equals("llamado")) {
-                                if (getIzq().getTipo().equals(ENTERO)) {
-                                    salida += "MOV EAX, _" + getIzq().getNombre() + "\n"; // Cargar el valor del parámetro real
-                                    salida += "PUSH EAX" + "\n"; // Colocar en la pila el valor del parámetro
-                                }
-                                if (getIzq().getTipo().equals(FLOTANTE)) {
-                                    salida += "FLD _" + getIzq().getNombre() + "\n";
-                                    salida += "SUB ESP, 8" + "\n";
-                                    salida += "FSTP QWORD PTR [ESP]" + "\n";
-                                }
+                            if (getIzq().getTipo().equals(ENTERO)) {
+                                String nombreParametro = getIzq().getNombre().replace('.', '_'); // Reemplazar punto por guion bajo
+                                salida += "MOV EAX, _" + nombreParametro + "\n"; // Cargar el valor del parámetro real
+                                salida += "PUSH EAX" + "\n"; // Colocar en la pila el valor del parámetro
                             }
-                            if (uso.equals("llamadoConCasteo")) {
-                                // Obtener el tipo del parámetro real desde getDer()
-                                String tipoReal = getDer().getNombre(); // Nombre del nodo tipo (tipoReal)
-                                String tipoFormal = getIzq().getTipo();         // Tipo esperado por la función
-
-                                if (tipoReal.equals(ENTERO) && tipoFormal.equals(FLOTANTE)) {
-                                    // Casteo de entero a flotante
-                                    salida += "MOV EAX, _" + getIzq().getNombre() + "\n"; // Cargar el valor del parámetro real
-                                    salida += "PUSH EAX" + "\n"; // Colocar en la pila el valor del parámetro
-                                    salida += "FILD DWORD PTR [ESP]\n";  // Cargar el entero como flotante en la FPU
-                                    salida += "FSTP QWORD PTR [ESP]\n";  // Guardar el resultado como flotante en la pila
-                                } else if (tipoReal.equals(FLOTANTE) && tipoFormal.equals(ENTERO)) {
-                                    // Casteo de flotante a entero
-                                    salida += "FLD _" + getIzq().getNombre() + "\n";
-                                    salida += "SUB ESP, 8" + "\n";
-                                    salida += "FSTP QWORD PTR [ESP]" + "\n";
-                                    salida += "FLD QWORD PTR [ESP]\n";   // Cargar el flotante en la FPU
-                                    salida += "FISTP DWORD PTR [ESP]\n"; // Convertir a entero y guardar en la pila
-                                }
+                            if (getIzq().getTipo().equals(FLOTANTE)) {
+                                String nombreParametro = getIzq().getNombre().replace('.', '_'); // Reemplazar punto por guion bajo
+                                salida += "FLD _" + nombreParametro + "\n";
+                                salida += "SUB ESP, 8" + "\n";
+                                salida += "FSTP QWORD PTR [ESP]" + "\n";
                             }
+                        }
+                        if (uso.equals("llamadoConCasteo")) {
+                            // Obtener el tipo del parámetro real desde getDer()
+                            String tipoReal = getDer().getNombre(); // Nombre del nodo tipo (tipoReal)
+                            String tipoFormal = getIzq().getTipo(); // Tipo esperado por la función
 
-                            salida += "CALL " + getNombre() + "\n"; // Llamar a la función
-                            if (getTipo().equals(ENTERO))
-                                salida += "ADD ESP, 4" + "\n"; // Restaurar el puntero de la pila
-                            if (getTipo().equals(FLOTANTE))
-                                salida += "ADD ESP, 8" + "\n"; // Restaurar el puntero de la pila
+                            if (tipoReal.equals(ENTERO) && tipoFormal.equals(FLOTANTE)) {
+                                // Casteo de entero a flotante
+                                String nombreParametro = getIzq().getNombre().replace('.', '_'); // Reemplazar punto por guion bajo
+                                salida += "MOV EAX, _" + nombreParametro + "\n"; // Cargar el valor del parámetro real
+                                salida += "PUSH EAX" + "\n"; // Colocar en la pila el valor del parámetro
+                                salida += "FILD DWORD PTR [ESP]\n";  // Cargar el entero como flotante en la FPU
+                                salida += "FSTP QWORD PTR [ESP]\n";  // Guardar el resultado como flotante en la pila
+                            } else if (tipoReal.equals(FLOTANTE) && tipoFormal.equals(ENTERO)) {
+                                // Casteo de flotante a entero
+                                String nombreParametro = getIzq().getNombre().replace('.', '_'); // Reemplazar punto por guion bajo
+                                salida += "FLD _" + nombreParametro + "\n";
+                                salida += "SUB ESP, 8" + "\n";
+                                salida += "FSTP QWORD PTR [ESP]" + "\n";
+                                salida += "FLD QWORD PTR [ESP]\n";   // Cargar el flotante en la FPU
+                                salida += "FISTP DWORD PTR [ESP]\n"; // Convertir a entero y guardar en la pila
+                            }
+                        }
+
+                        salida += "CALL " + getNombre() + "\n"; // Llamar a la función
+                        if (getTipo().equals(ENTERO))
+                            salida += "ADD ESP, 4" + "\n"; // Restaurar el puntero de la pila
+                        if (getTipo().equals(FLOTANTE))
+                            salida += "ADD ESP, 8" + "\n"; // Restaurar el puntero de la pila
                     }
                 }
-                if (getNombre().equals("autoinvocacion")){
+                if (getNombre().equals("autoinvocacion")) {
                     salida += "JMP handle_autoinvocacion\n";
                 }
                 break;
