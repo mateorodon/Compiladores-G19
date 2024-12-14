@@ -527,6 +527,32 @@ public class NodoComun extends Nodo {
                     data += variablePrint + " db \"" + this.getIzq().getUltimoNodo().getNombre() + "\", 10, 0 \n";
                     salida += "invoke printf, addr " + variablePrint + "\n";
                 }
+                // Caso de invocación de función que retorna un entero
+                else if (this.getIzq().getUltimoNodo().getUso() != null
+                    && this.getIzq().getUltimoNodo().getUso().equals("llamado")
+                    && this.getIzq().getUltimoNodo().getTipo().equals(ENTERO))
+                {
+                    // La función ha retornado un valor entero, que se encuentra en EAX
+                    salida += "invoke printf, cfm$(\"%d\\n\"), eax\n";
+                }
+
+                // Caso de invocación de función que retorna un entero
+                else if (this.getIzq().getUltimoNodo().getUso() != null
+                        && this.getIzq().getUltimoNodo().getUso().equals("llamado")
+                        && this.getIzq().getUltimoNodo().getTipo().equals(FLOTANTE)) {
+                    // La función ha retornado un valor flotante, que se encuentra en ST(0)
+                    salida += "sub esp, 8\n"; // Reservar espacio en la pila
+                    salida += "FSTP qword ptr [esp]\n"; // Almacenar el valor flotante en la pila
+                    salida += "invoke printf, cfm$(\"%.20Lf\\n\"), qword ptr [esp]\n"; // Pasar el valor flotante a printf
+                    salida += "add esp, 8\n"; // Liberar el espacio reservado en la pila
+                }
+                else if (this.getIzq().getUltimoNodo().getUso() != null
+                        && this.getIzq().getUltimoNodo().getUso().equals("llamado")
+                        && this.getIzq().getUltimoNodo().getTipo().equals(ENTERO))
+                {
+                    // La función ha retornado un valor entero, que se encuentra en EAX
+                    salida += "invoke printf, cfm$(\"%d\\n\"), eax\n";
+                }
                 // Caso de arreglo o variable de tipo entero
                 else if (this.getIzq().getUltimoNodo().getUso() != null && this.getIzq().getUltimoNodo().getUso().equals("arreglo") && tiposDeclarados.get(getIzq().getTipo()).equals(ENTERO)) {
                     // Extraer el nombre del arreglo y el índice
@@ -563,6 +589,8 @@ public class NodoComun extends Nodo {
                 else if (this.getIzq().getUltimoNodo().getTipo().equals(FLOTANTE)) {
                     salida += salida + "invoke printf, cfm$(\"%.20Lf\\n\"), " + "[_" + this.getIzq().getUltimoNodo().getNombre() + "]" + "\n" ;
                 }
+                // Caso de invocación de función que retorna un entero
+
                 break;
             case "Asignacion e Incremento":
                 if (getIzq() != null) {
