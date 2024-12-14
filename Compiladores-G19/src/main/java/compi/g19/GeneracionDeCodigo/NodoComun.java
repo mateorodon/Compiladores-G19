@@ -114,7 +114,7 @@ public class NodoComun extends Nodo {
                 salida += getDer().getAssembler();
 
                 if (getIzq().getUso().equals("arreglo")) {
-                    // Extraer el nombre del arreglo para obtener su indice
+                    // Extraer el nombre del arreglo para obtener su índice
                     String nombreConIndice = getIzq().getNombre(); // Ejemplo: "arreglo[1]"
                     int indice = Integer.parseInt(nombreConIndice.substring(nombreConIndice.indexOf('[') + 1, nombreConIndice.indexOf(']')));
 
@@ -127,14 +127,24 @@ public class NodoComun extends Nodo {
                     String prefijo = "_";
 
                     if (tipoDelTipo.equals(ENTERO)) {
-                        // Asignación de un valor a un arreglo (ya estaba hecho)
-                        if (getDer().getUso() != null && !(getDer().getUso().equals("llamado") || getDer().getUso().equals("llamadoConCasteo")))
-                            salida += "MOV EAX, " + prefijo + getDer().getUltimoNodo().getNombre() + "\n";
+                        // Asignación de un valor a un arreglo
+                        if (getDer().getUso() != null && !(getDer().getUso().equals("llamado") || getDer().getUso().equals("llamadoConCasteo"))) {
+                            String nombreDer = getDer().getUltimoNodo().getNombre();
+                            if (nombreDer.startsWith("-")) {
+                                nombreDer = nombreDer.substring(1); // Remover el signo negativo si está presente
+                            }
+                            salida += "MOV EAX, " + prefijo + nombreDer + "\n";
+                        }
                         salida += "MOV [_" + arregloNombreTS + " + " + desplazamiento + "], EAX\n";
                     } else {
                         // Asignación de un flotante a un arreglo
-                        if (getDer().getUso() != null && !(getDer().getUso().equals("llamado") || getDer().getUso().equals("llamadoConCasteo")))
-                            salida += "FLD " + prefijo + getDer().getUltimoNodo().getNombre().replace('.','_') + "\n";
+                        if (getDer().getUso() != null && !(getDer().getUso().equals("llamado") || getDer().getUso().equals("llamadoConCasteo"))) {
+                            String nombreDer = getDer().getUltimoNodo().getNombre();
+                            if (nombreDer.startsWith("-")) {
+                                nombreDer = nombreDer.substring(1); // Remover el signo negativo si está presente
+                            }
+                            salida += "FLD " + prefijo + nombreDer.replace('.', '_') + "\n";
+                        }
                         salida += "FSTP [_" + arregloNombreTS + " + " + desplazamiento + "]\n";
                     }
                 } else if (getDer().getUso() != null && getDer().getUso().equals("arreglo")) {
@@ -159,12 +169,22 @@ public class NodoComun extends Nodo {
                     // Asignación estándar (no arreglo)
                     salida += getIzq().getAssembler();
                     if (getIzq().getTipo().equals(ENTERO)) {
-                        if (getDer().getUso() != null && !getDer().getUso().equals("llamado"))
-                            salida += "MOV EAX, _" + getDer().getUltimoNodo().getNombre() + "\n";
+                        if (getDer().getUso() != null && !getDer().getUso().equals("llamado")) {
+                            String nombreDer = getDer().getUltimoNodo().getNombre();
+                            if (nombreDer.startsWith("-")) {
+                                nombreDer = nombreDer.substring(1); // Remover el signo negativo si está presente
+                            }
+                            salida += "MOV EAX, _" + nombreDer + "\n";
+                        }
                         salida += "MOV _" + getIzq().getUltimoNodo().getNombre() + ", EAX\n";
                     } else {
-                        if (getDer().getUso() != null && !getDer().getUso().equals("llamado"))
-                            salida += "FLD _" + getDer().getUltimoNodo().getNombre().replace('.','_') + "\n";
+                        if (getDer().getUso() != null && !getDer().getUso().equals("llamado")) {
+                            String nombreDer = getDer().getUltimoNodo().getNombre();
+                            if (nombreDer.startsWith("-")) {
+                                nombreDer = nombreDer.substring(1); // Remover el signo negativo si está presente
+                            }
+                            salida += "FLD _" + nombreDer.replace('.', '_') + "\n";
+                        }
                         salida += "FST _" + getIzq().getUltimoNodo().getNombre() + "\n";
                         salida += "FSTP ST(0)" + "\n";
                     }

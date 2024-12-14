@@ -67,7 +67,12 @@ public class GeneradorAssembler {
                         data += prefijo + k + " dd " + k + "\n";
                     if (t.getTipo().equals("single")) {
                         String kNew = k.replace('.', '_');
-                        data += prefijo + kNew + " dq " + k + "\n";
+                        if (!t.getValor().contains("-")) {
+                            data += prefijo + kNew + " dq " + k + "\n";
+                        }
+                        else{
+                            data += prefijo + kNew + " dq " + "-" + k + "\n";
+                        }
                     }
                 }
                 if( uso.equals("variable")  ||  uso.equals("variableAuxiliar") || uso.equals("parametro"))
