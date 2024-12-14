@@ -585,28 +585,38 @@ public class NodoComun extends Nodo {
                 break;
             case "For":
                 label = getLabel();
-                pilaLabels.push(label); //Condicion
+                pilaLabels.push(label); // Condición de entrada al bucle
                 pilaLabels.push(label);
                 label = getLabel();
                 pilaLabels.push(label);
+
                 if (getIzq() != null) {
-                    salida += getIzq().getAssembler();
+                    salida += getIzq().getAssembler();  // Obtener el primer valor para la condición
                 }
+
                 String end_loop = getLabel();
-                salida += "JMP " + end_loop + "\n";
-                salida += labelFor + ":" + "\n";
-                if (segundaCondicion){
-                    salida += codCondicionFor;
-                    salida += "JMP " + end_loop + "\n";
-                    salida += labelSegundaCondicionFor + ":" + "\n";
+                salida += "JMP " + end_loop + "\n";  // Salto al final si no se cumple la condición
+                salida += labelFor + ":" + "\n";  // Etiqueta de inicio del bucle
+
+                if (segundaCondicion) {
+                    salida += codCondicionFor;  // Condición principal
+                    salida += "JMP " + end_loop + "\n";  // Si no cumple la condición, saltar al final
+                    salida += labelSegundaCondicionFor + ":" + "\n";  // Etiqueta de la segunda condición
                 }
+
                 segundaCondicion = false;
+
                 if (getDer() != null) {
-                    salida += getDer().getAssembler();
+                    salida += getDer().getAssembler();  // Ejecutar lo que se realiza dentro del bucle
                 }
+
+
                 salida += codigoIncremento;
-                salida += "JMP " + startFor + "\n";
-                salida += end_loop + ":" + "\n";
+
+                // Asegurarse de que el salto al inicio del bucle no tenga condiciones adicionales
+                salida += "JMP " + labelFor + "\n";  // Volver a la etiqueta de inicio del bucle
+
+                salida += end_loop + ":" + "\n";  // Etiqueta de salida del bucle
                 pilaLabels.clear();
                 break;
             case "Encabezado For":
@@ -623,22 +633,22 @@ public class NodoComun extends Nodo {
             case "Incremento":
                 varAuxiliar = Nodo.getVariableAuxiliar();
 
-                t = new Token(varAuxiliar,this.getDer().getTipo(),"variableAuxiliar");
-                this.ultimoNodo = new NodoHoja(varAuxiliar,t);
-                TablaSimbolos.addSimbolo(varAuxiliar,t);
+                t = new Token(varAuxiliar, this.getDer().getTipo(), "variableAuxiliar");
+                this.ultimoNodo = new NodoHoja(varAuxiliar, t);
+                TablaSimbolos.addSimbolo(varAuxiliar, t);
 
                 String var = varFor.pop();
 
-                if (getIzq().getNombre().equals("Down")) {
+                if (getIzq().getNombre().equals("Down")) {  // Control de dirección Down
                     codigoIncremento += "MOV EAX, _" + var + "\n";
-                    codigoIncremento += "SUB EAX, _" + getDer().getUltimoNodo().getNombre() + "\n";
-                    codigoIncremento += "JS handle_negativos\n";
-                    codigoIncremento += "MOV _" + var + ", EAX" + "\n";
+                    codigoIncremento += "SUB EAX, _" + getDer().getUltimoNodo().getNombre() + "\n";  // Decremento
+                    codigoIncremento += "JS handle_negativos\n";  // Manejo de valores negativos
+                    codigoIncremento += "MOV _" + var + ", EAX" + "\n";  // Asignación con decremento
 
-                } else {
+                } else {  // Control de incremento
                     codigoIncremento += "MOV EAX, _" + var + "\n";
-                    codigoIncremento += "ADD EAX, _" + getDer().getUltimoNodo().getNombre() + "\n";
-                    codigoIncremento += "MOV _" + var + ", EAX" + "\n";
+                    codigoIncremento += "ADD EAX, _" + getDer().getUltimoNodo().getNombre() + "\n";  // Incremento
+                    codigoIncremento += "MOV _" + var + ", EAX" + "\n";  // Asignación con incremento
                 }
 
                 break;
