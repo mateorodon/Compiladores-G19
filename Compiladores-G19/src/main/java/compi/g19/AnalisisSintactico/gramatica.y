@@ -180,20 +180,31 @@ asignacion:
                               }
                               else {
                                   t = TablaSimbolos.getToken($1.sval + "@" + ambitoVar);
-                                  Token t2 = TablaSimbolos.getToken($3.sval);
-                                  if (!(t.getUso().equals("variable") || t.getUso().equals("parametro"))){
-                                        agregarErrorSemantico("La expresion en la parte izquierda de la asignación debe ser una variable. Se encontró un elemento no asignable (" + t.getUso() + ")" );
-                                        $$.obj = new NodoHoja("error");
-                                  } else if ((t.getUso().equals("arreglo") && !(t2.getUso().equals("arreglo"))) || !(t.getUso().equals("arreglo")) && (t2.getUso().equals("arreglo"))) {
-                                        agregarErrorSemantico("Un arreglo puede ser asignado unicamente a otro arreglo" );
+
+                                  if (!(t.getUso().equals("variable") || t.getUso().equals("parametro"))) {
+                                      agregarErrorSemantico("La expresion en la parte izquierda de la asignación debe ser una variable. Se encontró un elemento no asignable (" + t.getUso() + ")");
+                                      $$.obj = new NodoHoja("error");
+                                  } else {
+                                      if (t.getUso().equals("arreglo")) {
+                                          Token t2 = TablaSimbolos.getToken($3.sval);
+                                          if (t2 != null) {
+                                              if (!t2.getUso().equals("arreglo")) {
+                                                  agregarErrorSemantico("Un arreglo puede ser asignado únicamente a otro arreglo");
+                                              } else {
+                                                  NodoHoja id = new NodoHoja(t.getLexema().toString(), t);
+                                                  $$.obj = new NodoComun($2.sval, id, (Nodo) $3.obj);
+                                              }
+                                          } else {
+                                              agregarErrorSemantico("Error: La expresión en la parte derecha de la asignación no está definida.");
+                                              $$.obj = new NodoHoja("error");
+                                          }
+                                      } else {
+                                          NodoHoja id = new NodoHoja(t.getLexema().toString(), t);
+                                          $$.obj = new NodoComun($2.sval, id, (Nodo) $3.obj);
+                                      }
                                   }
-                                  else {
-                                        NodoHoja id = new NodoHoja(t.getLexema().toString(),t);
-                                        $$.obj = new NodoComun($2.sval ,id, (Nodo)$3.obj);
-                                  }
-                              }
-                              TablaSimbolos.removeToken($1.sval);
-                            }
+                                  TablaSimbolos.removeToken($1.sval);
+                              }}
     | ID '[' CONSTANTE ']' ASIGNACION expresion {
                                                 String ambitoVar = buscarAmbito(ambito,$1.sval);
                                                 if (ambitoVar.equals("")){
