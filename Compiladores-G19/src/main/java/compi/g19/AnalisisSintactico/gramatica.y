@@ -324,8 +324,6 @@ parametro:
     tipo ID {
                Token t = TablaSimbolos.getToken($2.sval);
                if (t != null){
-                   if (t.getTipo() != null)
-                        AnalizadorLexico.agregarWarning("La variable '" + $2.sval + "' ya esta declarada");
                    t.getLexema().setLength(0);
                    t.getLexema().append($2.sval).append("@").append(ambito);
                    t.setAmbito(ambito);
