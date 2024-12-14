@@ -1,16 +1,35 @@
 ----------ARBOL SINTACTICO -----------
 ----------ARBOL SINTACTICO FUNCIONES -----------
 f1@main
-    a@main@f1
-    Return
-        5
+    aa@main@f1
+    Sentencia
+        Sentencia
+            If
+                <
+                    aa@main@f1
+                    b@main
+                Cuerpo
+                    autoinvocacion
+            :=
+                e[1]
+                3
+        Return
 ----------TABLA DE SIMBOLOS-----------
-Token{id=257, lexema=a@main@f1, linea=3, tipo=single, uso = parametro}
-Token{id=262, lexema=5, linea=5, tipo=ulongint, uso = constante}
+Token{id=257, lexema=aa@main, linea=2, tipo=single, uso = variable}
+Token{id=262, lexema=3450.0, linea=4, tipo=single, uso = constante}
+Token{id=257, lexema=b@main, linea=2, tipo=single, uso = variable}
+Token{id=257, lexema=e@main, linea=6, tipo=tint, uso = arreglo}
+Token{id=257, lexema=aa@main@f1, linea=7, tipo=single, uso = parametro}
+Token{id=257, lexema=tint@main, linea=3, tipo=ulongint, uso = tipo}
+Token{id=262, lexema=1, linea=11, tipo=ulongint, uso = constante}
+Token{id=262, lexema=3, linea=11, tipo=ulongint, uso = constante}
+Token{id=262, lexema=5.0, linea=5, tipo=single, uso = constante}
 Token{id=257, lexema=lala, linea=1, tipo=null, uso = null}
-Token{id=257, lexema=f1@main, linea=3, tipo=ulongint, uso = funcion}
+Token{id=257, lexema=f1@main, linea=7, tipo=tint, uso = funcion}
 -----------ERRORES LEXICOS----------
 -----------ERRORES SINTACTICOS----------
-ERROR SINTACTICO: stack underflow. aborting... en la línea 7
 -----------ERRORES SEMANTICOS----------
+'e' no es una variable. Es un/a arreglo en la linea 12
+La expresion en la parte izquierda de la asignación debe ser una variable. Se encontró un elemento no asignable (arreglo) en la linea 15
 ----------WARNINGS-----------
+WARNING: Se ha llamado a una función pero su valor no ha sido utilizado en la línea 9

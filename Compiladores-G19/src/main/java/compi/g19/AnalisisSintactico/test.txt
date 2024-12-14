@@ -1,9 +1,16 @@
-lala
-begin
-    ulongint fun f1(single a)
-    begin
-        ret(5);
+lala begin
+    single aa,b;
+    typedef triple <ulongint> tint;
+    aa  := 3.45s3;
+    b := 5.0;
+    tint e;
+    tint fun f1(single aa) begin
+        if (aa < b) then
+            f1(b*aa);
+        end_if;
+    e[1] :=3;
+    ret(e);
     end;
-    fun(4.5);
-    outf(fun(2.0));
+
+    e:= f1(aa);
 end

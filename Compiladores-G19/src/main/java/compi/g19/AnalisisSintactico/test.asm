@@ -18,23 +18,14 @@ OperacionEnteroNegativo db "El resultado de la operacion no puede ser negativo."
 OverflowSumaFlotantes db "Se produjo un un overflow en la suma de flotantes.", 0 
 error db "Error", 0 
 printMensaje db "Print", 0 
-_@aux4 dq ?
-_b@main dq ?
-_a@main dq ?
-_2_0 dq 2.0
-_3_0 dq 3.0
-_@aux3 dq ?
-_@aux2 dq ?
-_@aux1 dq ?
+_1 dd 1
+_a@main@f1 dq ?
+_2 dd 2
+_3 dd 3
+_5 dd 5
+_@aux2 dd ?
+_@aux1 dd ?
 limite_float dq 3.4e38
-@print1 db "a < b", 10, 0 
-@print2 db "a >= b", 10, 0 
-@print3 db "a = b", 10, 0 
-@print4 db "a != b", 10, 0 
-@print5 db "a != b", 10, 0 
-@print6 db "a = b", 10, 0 
-@print7 db "2 >= 3", 10, 0 
-@print8 db "2 < 3", 10, 0 
 
 .code
 handle_autoinvocacion: 
@@ -46,52 +37,23 @@ invoke ExitProcess, 0
 handle_overflow: 
 invoke MessageBox, NULL, addr OverflowSumaFlotantes, addr error, MB_OK 
 invoke ExitProcess, 0 
-start:
-FLD _-2_0
-FST _a@main
-FSTP ST(0)
-FLD _-3_0
-FST _b@main
-FSTP ST(0)
-FLD _a@main
-FCOM _b@main
-FSTSW AX 
-SAHF 
-JGE label1
-invoke printf, addr @print1
-JMP label2
+f1@main:
+PUSH EBP
+MOV EBP, ESP
+FLD QWORD PTR [EBP + 8]
+FSTP _a@main@f1
+MOV EAX, _2
+CMP EAX, _3
+JGE  label1
+MOV EAX, _1
+POP EBP 
+ret 
 label1:
-invoke printf, addr @print2
-label2:
-FLD _a@main
-FCOM _b@main
-FSTSW AX 
-SAHF 
-JNE label3
-invoke printf, addr @print3
-JMP label4
-label3:
-invoke printf, addr @print4
-label4:
-FLD _a@main
-FCOM _b@main
-FSTSW AX 
-SAHF 
-JE label5
-invoke printf, addr @print5
-JMP label6
-label5:
-invoke printf, addr @print6
-label6:
-FLD _a@main
-FCOM _b@main
-FSTSW AX 
-SAHF 
-JL label7
-invoke printf, addr @print7
-JMP label8
-label7:
-invoke printf, addr @print8
-label8:
+
+MOV EAX, _5
+POP EBP 
+ret 
+
+start:
 invoke ExitProcess, 0 
 end start
