@@ -595,6 +595,8 @@ invocacion_funcion:
         }
         TablaSimbolos.removeToken($1.sval);
     }
+    | FUN '(' expresion ')' { yyerror("El identificador de una funcion no puede ser una palabra reservada");
+    $$.obj = new NodoHoja("error");}
     | ID '(' bloque_list_expresiones ')' {yyerror("La funcion no puede tener mas de un parametro");}
     | ID '(' ')' {yyerror("La funcion debe tener un parametro");}
     | ID '(' tipo_base '(' expresion ')' ')' {
