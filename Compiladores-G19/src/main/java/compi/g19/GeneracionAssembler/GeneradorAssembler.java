@@ -7,6 +7,8 @@ import compi.g19.AnalisisSintactico.Parser;
 import compi.g19.GeneracionDeCodigo.Nodo;
 import compi.g19.GeneracionDeCodigo.NodoComun;
 
+import static compi.g19.AnalisisSintactico.Parser.tiposDeclarados;
+
 public class GeneradorAssembler {
 
     private String data, code, codigoArbol, bibliotecas, codigoFunciones;
@@ -83,6 +85,14 @@ public class GeneradorAssembler {
                         data += prefijo + k + " dd " + "?" + "\n";
                     if (t.getTipo() != null && t.getTipo().equals("single"))
                         data += prefijo + k + " dq " + "?" + "\n";
+                    if (uso.equals("parametro") && tiposDeclarados.containsKey(t.getTipo())){
+                        String tipoDelTipo = tiposDeclarados.get(t.getTipo());
+                        if (tipoDelTipo.equals(ENTERO))
+                            data += prefijo + k + " dd " + "?" + "\n";
+                        else if (tipoDelTipo.equals(FLOTANTE)) {
+                            data += prefijo + k + " dq " + "?" + "\n";
+                        }
+                    }
 
                 }
                 if (uso.equals("arreglo")){
