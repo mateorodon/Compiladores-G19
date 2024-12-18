@@ -1,0 +1,7 @@
+prog
+begin
+Single fun f3 (ulongint z)
+        BEGIN
+
+        end;
+end

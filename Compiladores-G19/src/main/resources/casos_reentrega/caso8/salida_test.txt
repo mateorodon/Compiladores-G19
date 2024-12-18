@@ -1,0 +1,76 @@
+----------ARBOL SINTACTICO -----------
+PROGRAMA
+    Sentencia
+        Sentencia
+            Sentencia
+                Sentencia
+                    Sentencia
+                        Sentencia
+                            Sentencia Declarativa
+                            :=
+                                a@main
+                                -2.0
+                        :=
+                            b@main
+                            -3.0
+                    If
+                        <
+                            a@main
+                            b@main
+                        Cuerpo
+                            Then
+                                Outf
+                                    a < b
+                            Else
+                                Outf
+                                    a >= b
+                If
+                    =
+                        a@main
+                        b@main
+                    Cuerpo
+                        Then
+                            Outf
+                                a = b
+                        Else
+                            Outf
+                                a != b
+            If
+                !=
+                    a@main
+                    b@main
+                Cuerpo
+                    Then
+                        Outf
+                            a != b
+                    Else
+                        Outf
+                            a = b
+        If
+            >=
+                a@main
+                b@main
+            Cuerpo
+                Then
+                    Outf
+                        2 >= 3
+                Else
+                    Outf
+                        2 < 3
+----------ARBOL SINTACTICO FUNCIONES -----------
+----------TABLA DE SIMBOLOS-----------
+Token{id=263, lexema=2 < 3, linea=59, tipo=cadena, uso = mensaje}
+Token{id=263, lexema=2 >= 3, linea=55, tipo=cadena, uso = mensaje}
+Token{id=257, lexema=b@main, linea=5, tipo=single, uso = variable}
+Token{id=262, lexema=2.0, linea=9, tipo=single, uso = constante}
+Token{id=262, lexema=3.0, linea=11, tipo=single, uso = constante}
+Token{id=263, lexema=a != b, linea=33, tipo=cadena, uso = mensaje}
+Token{id=257, lexema=a@main, linea=5, tipo=single, uso = variable}
+Token{id=263, lexema=a >= b, linea=21, tipo=cadena, uso = mensaje}
+Token{id=263, lexema=a = b, linea=29, tipo=cadena, uso = mensaje}
+Token{id=257, lexema=lala, linea=1, tipo=null, uso = null}
+Token{id=263, lexema=a < b, linea=17, tipo=cadena, uso = mensaje}
+-----------ERRORES LEXICOS----------
+-----------ERRORES SINTACTICOS----------
+-----------ERRORES SEMANTICOS----------
+----------WARNINGS-----------

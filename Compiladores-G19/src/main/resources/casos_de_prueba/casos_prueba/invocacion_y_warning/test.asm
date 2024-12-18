@@ -53,7 +53,7 @@ devuelvoUno@main:
 PUSH EBP
 MOV EBP, ESP
 MOV EAX, [EBP + 8]
-MOV _param@main@devuelvoUno,EAX
+MOV _param@main@devuelvoUno, EAX
 MOV EAX, _9
 MOV _soyNueve@main@devuelvoUno, EAX
 invoke printf, addr @print1

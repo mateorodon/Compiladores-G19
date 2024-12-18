@@ -1,0 +1,25 @@
+----------ARBOL SINTACTICO -----------
+PROGRAMA
+    Sentencia
+        Sentencia Declarativa
+        f1@main
+            3.4
+----------ARBOL SINTACTICO FUNCIONES -----------
+f1@main
+    a@main@f1
+    Sentencia
+        autoinvocacion
+        Return
+            a@main@f1
+----------TABLA DE SIMBOLOS-----------
+Token{id=257, lexema=a@main@f1, linea=5, tipo=single, uso = parametro}
+Token{id=257, lexema=lala, linea=1, tipo=null, uso = null}
+Token{id=262, lexema=3.4, linea=17, tipo=single, uso = constante}
+Token{id=262, lexema=4.5, linea=7, tipo=single, uso = constante}
+Token{id=257, lexema=f1@main, linea=5, tipo=ulongint, uso = funcion}
+-----------ERRORES LEXICOS----------
+-----------ERRORES SINTACTICOS----------
+-----------ERRORES SEMANTICOS----------
+----------WARNINGS-----------
+WARNING: Se ha llamado a una función pero su valor no ha sido utilizado en la línea 7
+WARNING: Se ha llamado a una función pero su valor no ha sido utilizado en la línea 17

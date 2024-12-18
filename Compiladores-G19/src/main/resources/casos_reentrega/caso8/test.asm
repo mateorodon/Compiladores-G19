@@ -18,28 +18,23 @@ OperacionEnteroNegativo db "El resultado de la operacion no puede ser negativo."
 OverflowSumaFlotantes db "Se produjo un un overflow en la suma de flotantes.", 0 
 error db "Error", 0 
 printMensaje db "Print", 0 
-_@aux6 dd ?
-_@aux5 dd ?
-_@aux4 dd ?
-_a@main dd ?
-_0 dd 0
-_1 dd 1
-_2 dd 2
-_y@main dd ?
-_3 dd 3
-_4 dd 4
-_i@main dd ?
-_6 dd 6
-_z@main dd ?
-_8 dd 8
-_@aux3 dd ?
-_@aux2 dd ?
-_@aux1 dd ?
-_x@main dd ?
-_10 dd 10
+_@aux4 dq ?
+_b@main dq ?
+_a@main dq ?
+_2_0 dq -2.0
+_3_0 dq -3.0
+_@aux3 dq ?
+_@aux2 dq ?
+_@aux1 dq ?
 limite_float dq 3.4e38
-@print4 db "en el for", 10, 0 
-@print6 db "afuera del for", 10, 0 
+@print1 db "a < b", 10, 0 
+@print2 db "a >= b", 10, 0 
+@print3 db "a = b", 10, 0 
+@print4 db "a != b", 10, 0 
+@print5 db "a != b", 10, 0 
+@print6 db "a = b", 10, 0 
+@print7 db "2 >= 3", 10, 0 
+@print8 db "2 < 3", 10, 0 
 
 .code
 handle_autoinvocacion: 
@@ -52,43 +47,51 @@ handle_overflow:
 invoke MessageBox, NULL, addr OverflowSumaFlotantes, addr error, MB_OK 
 invoke ExitProcess, 0 
 start:
-MOV EAX, _3
-MOV _x@main, EAX
-invoke printf, cfm$("%d\n"), [_x@main]
-MOV EAX, _2
-MOV _y@main, EAX
-invoke printf, cfm$("%d\n"), [_y@main]
-MOV EAX, _x@main
-ADD EAX, _y@main
-MOV _z@main, EAX
-invoke printf, cfm$("%d\n"), [_z@main]
-MOV EAX, _6
-MOV _a@main, EAX
-MOV EAX, _0
-MOV _i@main, EAX
-MOV EAX, _i@main
-label2:
-CMP EAX, _10
-JL  label1
-JMP label3
-label1:
-invoke printf, addr @print4
-MOV EAX, _a@main
-ADD EAX, _1
-MOV _a@main, EAX
-invoke printf, cfm$("%d\n"), [_i@main]
-MOV EAX, _i@main
-ADD EAX, _1
-MOV _i@main, EAX
+FLD _2_0
+FST _a@main
+FSTP ST(0)
+FLD _3_0
+FST _b@main
+FSTP ST(0)
+FLD _a@main
+FCOM _b@main
+FSTSW AX 
+SAHF 
+JGE label1
+invoke printf, addr @print1
 JMP label2
+label1:
+invoke printf, addr @print2
+label2:
+FLD _a@main
+FCOM _b@main
+FSTSW AX 
+SAHF 
+JNE label3
+invoke printf, addr @print3
+JMP label4
 label3:
+invoke printf, addr @print4
+label4:
+FLD _a@main
+FCOM _b@main
+FSTSW AX 
+SAHF 
+JE label5
+invoke printf, addr @print5
+JMP label6
+label5:
 invoke printf, addr @print6
-MOV EAX, _2
-IMUL EAX, _8
-MOV _@aux5, EAX
-MOV EAX, _4
-ADD EAX, _@aux5
-MOV _z@main, EAX
-invoke printf, cfm$("%d\n"), [_z@main]
+label6:
+FLD _a@main
+FCOM _b@main
+FSTSW AX 
+SAHF 
+JL label7
+invoke printf, addr @print7
+JMP label8
+label7:
+invoke printf, addr @print8
+label8:
 invoke ExitProcess, 0 
 end start

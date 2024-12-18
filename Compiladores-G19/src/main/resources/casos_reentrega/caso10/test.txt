@@ -1,0 +1,21 @@
+lala begin
+
+
+
+              ulongint fun f1(single a) begin
+
+
+
+                             if (2 < 3) then
+
+                                           ret(1)
+
+                            end_if;
+
+
+
+              end;
+
+
+
+end

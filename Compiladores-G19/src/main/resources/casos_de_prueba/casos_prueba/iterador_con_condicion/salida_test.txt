@@ -39,17 +39,13 @@ PROGRAMA
                             Asignacion e Incremento
                                 :=
                                     i@main
-                                    1
+                                    0
                                 Incremento
                                     Up
                                     1
-                            Condiciones
-                                <
-                                    i@main
-                                    10
-                                <=
-                                    a@main
-                                    10
+                            <
+                                i@main
+                                10
                         Sentencia
                             Sentencia
                                 Outf
@@ -60,7 +56,7 @@ PROGRAMA
                                         a@main
                                         1
                             Outf
-                                a@main
+                                i@main
                 Outf
                     afuera del for
             :=
@@ -78,6 +74,7 @@ Token{id=263, lexema=afuera del for, linea=18, tipo=cadena, uso = mensaje}
 Token{id=263, lexema=en el for, linea=14, tipo=cadena, uso = mensaje}
 Token{id=257, lexema=a@main, linea=10, tipo=ulongint, uso = variable}
 Token{id=257, lexema=prog, linea=1, tipo=null, uso = null}
+Token{id=262, lexema=0, linea=12, tipo=ulongint, uso = constante}
 Token{id=262, lexema=1, linea=12, tipo=ulongint, uso = constante}
 Token{id=262, lexema=2, linea=6, tipo=ulongint, uso = constante}
 Token{id=257, lexema=y@main, linea=3, tipo=ulongint, uso = variable}

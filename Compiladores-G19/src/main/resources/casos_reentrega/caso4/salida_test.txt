@@ -1,0 +1,12 @@
+----------ARBOL SINTACTICO -----------
+----------ARBOL SINTACTICO FUNCIONES -----------
+----------TABLA DE SIMBOLOS-----------
+Token{id=257, lexema=f3@main, linea=3, tipo=single, uso = funcion}
+Token{id=257, lexema=prog, linea=1, tipo=null, uso = null}
+Token{id=257, lexema=z@main@f3, linea=3, tipo=ulongint, uso = parametro}
+-----------ERRORES LEXICOS----------
+-----------ERRORES SINTACTICOS----------
+ERROR SINTACTICO: El cuerpo de la funcion no puede ser vacio en la línea 6
+ERROR SINTACTICO: Falta sentencia RET en la función en la línea 6
+-----------ERRORES SEMANTICOS----------
+----------WARNINGS-----------

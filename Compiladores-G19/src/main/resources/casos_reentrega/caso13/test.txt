@@ -1,0 +1,25 @@
+lala begin
+
+
+
+              ulongint fun f1(single a) begin
+
+
+
+                            ret(5);
+
+
+
+              end;
+
+
+
+              fun(4.5);
+
+
+
+              outf(fun(2.0));
+
+
+
+end

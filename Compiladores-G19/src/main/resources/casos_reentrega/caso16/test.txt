@@ -1,0 +1,34 @@
+lala begin
+
+
+
+              single aa,b;
+
+              typedef triple <ulongint> tint;
+
+              aa  := 3.45s3;
+
+              b := 5.0;
+
+
+
+              ulongint fun f1(tint a) begin
+
+                             if (aa < b) then
+
+                            f1(b*aa);
+
+                            end_if;
+
+                            ret(a);
+
+
+
+              end;
+
+tint e;
+
+              x := f1(e);
+
+
+end

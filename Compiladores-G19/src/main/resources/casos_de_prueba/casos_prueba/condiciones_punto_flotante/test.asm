@@ -19,14 +19,15 @@ OverflowSumaFlotantes db "Se produjo un un overflow en la suma de flotantes.", 0
 error db "Error", 0 
 printMensaje db "Print", 0 
 _@aux4 dq ?
+_2_0 dq 2.0
 _3_0 dq 3.0
 _4_0 dq 4.0
 _@aux3 dq ?
 _@aux2 dq ?
 _@aux1 dq ?
 limite_float dq 3.4e38
-@print1 db "4.0 < 3.0", 10, 0 
-@print2 db "4.0 >= 3.0", 10, 0 
+@print1 db "2.0 < 3.0", 10, 0 
+@print2 db "2.0 >= 3.0", 10, 0 
 @print3 db "4.0 = 3.0", 10, 0 
 @print4 db "4.0 != 3.0", 10, 0 
 @print5 db "4.0 != 3.0", 10, 0 
@@ -45,11 +46,11 @@ handle_overflow:
 invoke MessageBox, NULL, addr OverflowSumaFlotantes, addr error, MB_OK 
 invoke ExitProcess, 0 
 start:
-FLD _4_0
-FCOM _3_0
+FLD _3_0
+FCOM _2_0
 FSTSW AX 
 SAHF 
-JGE label1
+JG label1
 invoke printf, addr @print1
 JMP label2
 label1:

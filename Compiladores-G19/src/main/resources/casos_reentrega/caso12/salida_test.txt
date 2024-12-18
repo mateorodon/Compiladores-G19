@@ -1,0 +1,28 @@
+----------ARBOL SINTACTICO -----------
+PROGRAMA
+    Sentencia Declarativa
+----------ARBOL SINTACTICO FUNCIONES -----------
+f1@main
+    a@main@f1
+    Sentencia
+        If
+            <
+                2
+                3
+            Cuerpo
+                Return
+                    1
+        Return
+            5
+----------TABLA DE SIMBOLOS-----------
+Token{id=262, lexema=1, linea=11, tipo=ulongint, uso = constante}
+Token{id=257, lexema=a@main@f1, linea=5, tipo=single, uso = parametro}
+Token{id=262, lexema=2, linea=9, tipo=ulongint, uso = constante}
+Token{id=262, lexema=3, linea=9, tipo=ulongint, uso = constante}
+Token{id=262, lexema=5, linea=19, tipo=ulongint, uso = constante}
+Token{id=257, lexema=lala, linea=1, tipo=null, uso = null}
+Token{id=257, lexema=f1@main, linea=5, tipo=ulongint, uso = funcion}
+-----------ERRORES LEXICOS----------
+-----------ERRORES SINTACTICOS----------
+-----------ERRORES SEMANTICOS----------
+----------WARNINGS-----------

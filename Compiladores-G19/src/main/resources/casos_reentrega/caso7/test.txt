@@ -1,0 +1,55 @@
+lala begin
+
+
+
+              if (2.0 < 3.0) then
+
+        OUTF({2.0 < 3.0});
+
+    else
+
+        OUTF({2.0 >= 3.0});
+
+    end_if;
+
+
+
+              if (2.0 = 3.0) then
+
+        OUTF({2.0 = 3.0});
+
+    else
+
+        OUTF({2.0 != 3.0});
+
+    end_if;
+
+
+
+
+
+              if (2.0 != 3.0) then
+
+        OUTF({2.0 != 3.0});
+
+    else
+
+        OUTF({2.0 = 3.0});
+
+    end_if;
+
+
+
+              if (2.0 >= 3.0) then
+
+        OUTF({2 >= 3});
+
+    else
+
+        OUTF({2 < 3});
+
+    end_if;
+
+
+
+end

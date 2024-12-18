@@ -175,31 +175,39 @@ asignacion:
                                         TablaSimbolos.removeToken($1.sval);
                                         TablaSimbolos.addSimbolo(t.getLexema().toString(),t);
                                         NodoHoja id = new NodoHoja(t.getLexema().toString(),t);
+                                        if (((Nodo)$3.obj).getTipo() != null){
+                                            if (!(id.getTipo().equals(((Nodo)$3.obj).getTipo())))
+                                                agregarErrorSemantico("Incompatibilidad de tipos");
+                                        }
                                         $$.obj = new NodoComun($2.sval ,id, (Nodo)$3.obj);
                                   }
                               }
                               else {
                                   t = TablaSimbolos.getToken($1.sval + "@" + ambitoVar);
 
-                                  if (!(t.getUso().equals("variable") || t.getUso().equals("parametro"))) {
+                                  if (!(t.getUso().equals("variable") || t.getUso().equals("parametro") || t.getUso().equals("arreglo"))) {
                                       agregarErrorSemantico("La expresion en la parte izquierda de la asignación debe ser una variable. Se encontró un elemento no asignable (" + t.getUso() + ")");
                                       $$.obj = new NodoHoja("error");
                                   } else {
                                       if (t.getUso().equals("arreglo")) {
-                                          Token t2 = TablaSimbolos.getToken($3.sval);
+                                          Token t2 = TablaSimbolos.getToken($3.sval + "@" + ambitoVar);
                                           if (t2 != null) {
-                                              if (!t2.getUso().equals("arreglo")) {
-                                                  agregarErrorSemantico("Un arreglo puede ser asignado únicamente a otro arreglo");
+                                              if (!(t2.getTipo().equals(t.getTipo()))) {
+                                                  agregarErrorSemantico("Incompatibilidad de tipos");
                                               } else {
                                                   NodoHoja id = new NodoHoja(t.getLexema().toString(), t);
                                                   $$.obj = new NodoComun($2.sval, id, (Nodo) $3.obj);
                                               }
                                           } else {
-                                              agregarErrorSemantico("Error: La expresión en la parte derecha de la asignación no está definida.");
+                                              agregarErrorSemantico("La expresión en la parte derecha de la asignación no está definida.");
                                               $$.obj = new NodoHoja("error");
                                           }
                                       } else {
                                           NodoHoja id = new NodoHoja(t.getLexema().toString(), t);
+                                          if (((Nodo)$3.obj).getTipo() != null){
+                                          if (!(id.getTipo().equals(((Nodo)$3.obj).getTipo())))
+                                            agregarErrorSemantico("Incompatibilidad de tipos");
+                                          }
                                           $$.obj = new NodoComun($2.sval, id, (Nodo) $3.obj);
                                       }
                                   }
@@ -218,6 +226,10 @@ asignacion:
                                                         String tipoTriple = tiposDeclarados.get(tipo);
                                                         NodoHoja nodo = new NodoHoja($1.sval + $2.sval + $3.sval + $4.sval, t);
                                                         nodo.setUso("arreglo");
+                                                        if (((Nodo)$6.obj).getTipo() != null){
+                                                            if (!(tipoTriple.equals(((Nodo)$6.obj).getTipo())))
+                                                                agregarErrorSemantico("Incompatibilidad de tipos");
+                                                        }
                                                         $$.obj = new NodoComun($5.sval,nodo,(Nodo)$6.obj);
                                                     }
                                                     else {
@@ -440,7 +452,7 @@ factor:
         }
         else {
             Token t = TablaSimbolos.getToken($1.sval + "@" + ambitoVar);
-            if (!(t.getUso().equals("variable") || t.getUso().equals("parametro")))
+            if (!(t.getUso().equals("variable") || t.getUso().equals("parametro") || t.getUso().equals("arreglo")))
                 agregarErrorSemantico("'" + $1.sval + "' no es una variable. Es un/a " + t.getUso());
             else {
                 Nodo aux = new NodoHoja($1.sval+"@"+ambitoVar, t);
@@ -487,7 +499,7 @@ factor:
                      }
                      else {
                          Token t = TablaSimbolos.getToken($2.sval + "@" + ambitoVar);
-                         if (!(t.getUso().equals("variable") || t.getUso().equals("parametro"))){
+                         if (!(t.getUso().equals("variable") || t.getUso().equals("parametro") || t.getUso().equals("arreglo"))){
                              agregarErrorSemantico("'" + $2.sval + "' no es una variable. Es un/a " + t.getUso());
                              $$.obj = new NodoHoja("error");
                          }

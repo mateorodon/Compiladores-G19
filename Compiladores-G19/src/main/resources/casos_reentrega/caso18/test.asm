@@ -18,28 +18,16 @@ OperacionEnteroNegativo db "El resultado de la operacion no puede ser negativo."
 OverflowSumaFlotantes db "Se produjo un un overflow en la suma de flotantes.", 0 
 error db "Error", 0 
 printMensaje db "Print", 0 
-_@aux6 dd ?
-_@aux5 dd ?
-_@aux4 dd ?
-_a@main dd ?
-_0 dd 0
+_aa@main dq ?
+_3450_0 dq 3450.0
+_b@main dq ?
+_e@main dd ?,?,?
+_aa@main@f1 dq ?
 _1 dd 1
-_2 dd 2
-_y@main dd ?
 _3 dd 3
-_4 dd 4
-_i@main dd ?
-_6 dd 6
-_z@main dd ?
-_8 dd 8
-_@aux3 dd ?
-_@aux2 dd ?
-_@aux1 dd ?
-_x@main dd ?
-_10 dd 10
+_5_0 dq 5.0
+_@aux2 dq ?
 limite_float dq 3.4e38
-@print4 db "en el for", 10, 0 
-@print6 db "afuera del for", 10, 0 
 
 .code
 handle_autoinvocacion: 
@@ -51,44 +39,41 @@ invoke ExitProcess, 0
 handle_overflow: 
 invoke MessageBox, NULL, addr OverflowSumaFlotantes, addr error, MB_OK 
 invoke ExitProcess, 0 
-start:
-MOV EAX, _3
-MOV _x@main, EAX
-invoke printf, cfm$("%d\n"), [_x@main]
-MOV EAX, _2
-MOV _y@main, EAX
-invoke printf, cfm$("%d\n"), [_y@main]
-MOV EAX, _x@main
-ADD EAX, _y@main
-MOV _z@main, EAX
-invoke printf, cfm$("%d\n"), [_z@main]
-MOV EAX, _6
-MOV _a@main, EAX
-MOV EAX, _0
-MOV _i@main, EAX
-MOV EAX, _i@main
-label2:
-CMP EAX, _10
-JL  label1
-JMP label3
+f1@main:
+PUSH EBP
+MOV EBP, ESP
+FLD QWORD PTR [EBP + 8]
+FSTP _aa@main@f1
+FLD _aa@main@f1
+FCOM _b@main
+FSTSW AX 
+SAHF 
+JGE label1
+JMP handle_autoinvocacion
 label1:
-invoke printf, addr @print4
-MOV EAX, _a@main
-ADD EAX, _1
-MOV _a@main, EAX
-invoke printf, cfm$("%d\n"), [_i@main]
-MOV EAX, _i@main
-ADD EAX, _1
-MOV _i@main, EAX
-JMP label2
-label3:
-invoke printf, addr @print6
-MOV EAX, _2
-IMUL EAX, _8
-MOV _@aux5, EAX
-MOV EAX, _4
-ADD EAX, _@aux5
-MOV _z@main, EAX
-invoke printf, cfm$("%d\n"), [_z@main]
+
+MOV EAX, _3
+MOV [_e@main + 0], EAX
+FLD _e@main
+POP EBP 
+ret 
+
+start:
+FLD _3450_0
+FST _aa@main
+FSTP ST(0)
+FLD _5_0
+FST _b@main
+FSTP ST(0)
+MOV ECX, 3
+MOV ESI, _g@main
+MOV EDI, _e@main
+COPIA_INICIO_0:
+FLD QWORD PTR [ESI]
+FSTP QWORD PTR [EDI]
+ADD ESI, 4
+ADD EDI, 4
+LOOP COPIA_INICIO_0
+COPIA_FIN_1:
 invoke ExitProcess, 0 
 end start

@@ -1,0 +1,65 @@
+lala begin
+
+
+
+              single a,b;
+
+
+
+              a := -2.0;
+
+              b := -3.0;
+
+
+
+              if (a < b) then
+
+        OUTF({a < b});
+
+    else
+
+        OUTF({a >= b});
+
+    end_if;
+
+
+
+              if (a = b) then
+
+        OUTF({a = b});
+
+    else
+
+        OUTF({a != b});
+
+    end_if;
+
+
+
+
+
+              if (a != b) then
+
+        OUTF({a != b});
+
+    else
+
+        OUTF({a = b});
+
+    end_if;
+
+
+
+              if (a >= b) then
+
+        OUTF({2 >= 3});
+
+    else
+
+        OUTF({2 < 3});
+
+    end_if;
+
+
+
+end

@@ -1,0 +1,18 @@
+----------ARBOL SINTACTICO -----------
+----------ARBOL SINTACTICO FUNCIONES -----------
+----------TABLA DE SIMBOLOS-----------
+Token{id=262, lexema=2, linea=5, tipo=ulongint, uso = constante}
+Token{id=262, lexema=3, linea=5, tipo=ulongint, uso = constante}
+Token{id=257, lexema=lala, linea=1, tipo=null, uso = null}
+-----------ERRORES LEXICOS----------
+-----------ERRORES SINTACTICOS----------
+ERROR SINTACTICO: Los print unicamente pueden contener expresiones o cadenas en la línea 7
+ERROR SINTACTICO: Los print unicamente pueden contener expresiones o cadenas en la línea 11
+ERROR SINTACTICO: Los print unicamente pueden contener expresiones o cadenas en la línea 19
+ERROR SINTACTICO: Los print unicamente pueden contener expresiones o cadenas en la línea 23
+ERROR SINTACTICO: Los print unicamente pueden contener expresiones o cadenas en la línea 33
+ERROR SINTACTICO: Los print unicamente pueden contener expresiones o cadenas en la línea 37
+ERROR SINTACTICO: Los print unicamente pueden contener expresiones o cadenas en la línea 45
+ERROR SINTACTICO: Los print unicamente pueden contener expresiones o cadenas en la línea 49
+-----------ERRORES SEMANTICOS----------
+----------WARNINGS-----------

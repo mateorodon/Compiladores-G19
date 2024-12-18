@@ -48,7 +48,7 @@ f3@main:
 PUSH EBP
 MOV EBP, ESP
 MOV EAX, [EBP + 8]
-MOV _i@main@f3,EAX
+MOV _i@main@f3, EAX
 MOV EAX, _x@main
 CMP EAX, _3
 JLE  label1

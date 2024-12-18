@@ -47,7 +47,7 @@ autoinvocacion@main:
 PUSH EBP
 MOV EBP, ESP
 MOV EAX, [EBP + 8]
-MOV _d@main@autoinvocacion,EAX
+MOV _d@main@autoinvocacion, EAX
 MOV EAX, _2
 MOV _d@main@autoinvocacion, EAX
 MOV EAX, _3

@@ -18,28 +18,13 @@ OperacionEnteroNegativo db "El resultado de la operacion no puede ser negativo."
 OverflowSumaFlotantes db "Se produjo un un overflow en la suma de flotantes.", 0 
 error db "Error", 0 
 printMensaje db "Print", 0 
-_@aux6 dd ?
-_@aux5 dd ?
-_@aux4 dd ?
-_a@main dd ?
-_0 dd 0
-_1 dd 1
-_2 dd 2
-_y@main dd ?
-_3 dd 3
-_4 dd 4
-_i@main dd ?
-_6 dd 6
-_z@main dd ?
-_8 dd 8
-_@aux3 dd ?
+_a@main@f1 dq ?
+_2_0 dq 2.0
+_5 dd 5
+_4_5 dq 4.5
 _@aux2 dd ?
 _@aux1 dd ?
-_x@main dd ?
-_10 dd 10
 limite_float dq 3.4e38
-@print4 db "en el for", 10, 0 
-@print6 db "afuera del for", 10, 0 
 
 .code
 handle_autoinvocacion: 
@@ -51,44 +36,21 @@ invoke ExitProcess, 0
 handle_overflow: 
 invoke MessageBox, NULL, addr OverflowSumaFlotantes, addr error, MB_OK 
 invoke ExitProcess, 0 
+f1@main:
+PUSH EBP
+MOV EBP, ESP
+FLD QWORD PTR [EBP + 8]
+FSTP _a@main@f1
+MOV EAX, _5
+POP EBP 
+ret 
+
 start:
-MOV EAX, _3
-MOV _x@main, EAX
-invoke printf, cfm$("%d\n"), [_x@main]
-MOV EAX, _2
-MOV _y@main, EAX
-invoke printf, cfm$("%d\n"), [_y@main]
-MOV EAX, _x@main
-ADD EAX, _y@main
-MOV _z@main, EAX
-invoke printf, cfm$("%d\n"), [_z@main]
-MOV EAX, _6
-MOV _a@main, EAX
-MOV EAX, _0
-MOV _i@main, EAX
-MOV EAX, _i@main
-label2:
-CMP EAX, _10
-JL  label1
-JMP label3
-label1:
-invoke printf, addr @print4
-MOV EAX, _a@main
-ADD EAX, _1
-MOV _a@main, EAX
-invoke printf, cfm$("%d\n"), [_i@main]
-MOV EAX, _i@main
-ADD EAX, _1
-MOV _i@main, EAX
-JMP label2
-label3:
-invoke printf, addr @print6
-MOV EAX, _2
-IMUL EAX, _8
-MOV _@aux5, EAX
-MOV EAX, _4
-ADD EAX, _@aux5
-MOV _z@main, EAX
-invoke printf, cfm$("%d\n"), [_z@main]
+FLD _4_5
+SUB ESP, 8
+FSTP QWORD PTR [ESP]
+CALL f1@main
+ADD ESP, 4
+invoke printf, cfm$("%d\n"), eax
 invoke ExitProcess, 0 
 end start

@@ -1,0 +1,17 @@
+----------ARBOL SINTACTICO -----------
+----------ARBOL SINTACTICO FUNCIONES -----------
+f3@main
+    z@main@f3
+    Return
+        z@main@f3
+----------TABLA DE SIMBOLOS-----------
+Token{id=257, lexema=f3@main, linea=3, tipo=single, uso = funcion}
+Token{id=257, lexema=prog, linea=1, tipo=null, uso = null}
+Token{id=257, lexema=z@main@f3, linea=3, tipo=ulongint, uso = parametro}
+-----------ERRORES LEXICOS----------
+-----------ERRORES SINTACTICOS----------
+-----------ERRORES SEMANTICOS----------
+La variable 'x' no fue declarada en la linea 7
+El tipo del parámetro real no coincide con el del parámetro formal en la linea 7
+----------WARNINGS-----------
+WARNING: Se ha llamado a una función pero su valor no ha sido utilizado en la línea 7

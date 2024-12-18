@@ -44,7 +44,7 @@ f1@main:
 PUSH EBP
 MOV EBP, ESP
 MOV EAX, [EBP + 8]
-MOV _param@main@f1,EAX
+MOV _param@main@f1, EAX
 MOV EAX, _param@main@f1
 ADD EAX, _5
 MOV _param@main@f1, EAX
