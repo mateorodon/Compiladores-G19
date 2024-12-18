@@ -446,13 +446,16 @@ termino:
 factor:
     ID {String ambitoVar = buscarAmbito(ambito,$1.sval);
         String idToString = $1.sval;
-        if (ambitoVar.equals("") && (idToString.startsWith("x") || idToString.startsWith("z"))) {
+        if (ambitoVar.equals("") && (idToString.startsWith("x") || idToString.startsWith("z") || idToString.startsWith("s"))) {
             Token t = TablaSimbolos.getToken(idToString);
             t.getLexema().setLength(0);
             t.getLexema().append(idToString).append("@").append(ambito);
             t.setAmbito(ambito);
             t.setUso("variable");
-            t.setTipo(ENTERO);
+            if (idToString.startsWith("s")) {
+                t.setTipo(FLOTANTE);}
+            else {
+                t.setTipo(ENTERO);}
             TablaSimbolos.removeToken(idToString);
             TablaSimbolos.addSimbolo(t.getLexema().toString(),t);
             Nodo aux = new NodoHoja($1.sval+"@"+ambito, t);
