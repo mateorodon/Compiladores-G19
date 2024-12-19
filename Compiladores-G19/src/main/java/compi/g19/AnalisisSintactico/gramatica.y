@@ -311,23 +311,21 @@ encabezado_funcion:
     ;
 
 declaracion_funcion:
-    encabezado_funcion '(' parametro ')' BEGIN cuerpo_funcion { if (!hasReturn) {
+    encabezado_funcion '(' parametro ')' BEGIN  { if (!hasReturn) {
                                                             yyerror("Falta sentencia RET en la función");
                                                          }
-                                                         if ((((NodoComun)$6.obj) != null)&&(!((NodoComun)$6.obj).getNombre().equals("Cuerpo vacio"))) {
                                                              Nodo parametro = (Nodo)$3.obj;
                                                              NodoComun funcion = (NodoComun)$1.obj; //Encabezado con nombre funcion, este tiene el tipo
-                                                             NodoComun cuerpo = (NodoComun)$6.obj;
 
                                                              funcion.setUso("funcion");
                                                              funcion.setIzq(parametro);
-                                                             funcion.setDer(cuerpo);
 
                                                              funcionesDeclaradas.put(funcion.getNombre(),funcion);
                                                              removeAmbito();
                                                              enFuncion = false;
-                                                             }
-                                                         } END
+                                                         } cuerpo_funcion END { NodoComun funcion = funcionesDeclaradas.get(((Nodo)$1.obj).getNombre());
+                                                                                NodoComun cuerpo = (NodoComun)$7.obj;
+                                                                                funcion.setDer(cuerpo);}
     | encabezado_funcion '(' bloque_list_parametro ')' BEGIN cuerpo_funcion END {yyerror("La funciones no puede tener más de un parámetro");removeAmbito();}
     | encabezado_funcion '(' ')' BEGIN cuerpo_funcion END {yyerror("La función debe tener parámetro");removeAmbito();}
     ;
@@ -606,19 +604,19 @@ invocacion_funcion:
             $$.obj = new NodoHoja("error");
         }
         else {
-            if (enFuncion && funcionActual.equals($1.sval)){
-                $$.obj = new NodoComun("autoinvocacion");
-            }
-            else {
+            NodoComun funcion = funcionesDeclaradas.get($1.sval + "@" + ambitoVar);
+            String tipoParametroFormal = funcion.getIzq().getTipo();
+            if (((Nodo)$3.obj).getTipo().equals(tipoParametroFormal)){
                 if (funcionesDeclaradas.containsKey($1.sval + "@" + ambitoVar)){
-                    Nodo exp = (Nodo)$3.obj;
-                    NodoComun funcion = funcionesDeclaradas.get($1.sval + "@" + ambitoVar);
-                    $$.obj = generarLlamadoFuncion(funcion,exp,null);
-                }
-                else {
-                    agregarErrorSemantico("La funcion '" + $1.sval + "' no fue declarada");
-                    $$.obj = new NodoHoja("error");
-                }
+                        Nodo exp = (Nodo)$3.obj;
+                        $$.obj = generarLlamadoFuncion(funcion,exp,null);
+                    }
+                    else {
+                        agregarErrorSemantico("La funcion '" + $1.sval + "' no fue declarada");
+                        $$.obj = new NodoHoja("error");
+                    }
+            } else {
+                agregarErrorSemantico("El tipo del parametro real no coincide con el del real");
             }
         }
         TablaSimbolos.removeToken($1.sval);
