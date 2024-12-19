@@ -279,7 +279,7 @@ list_variables:
 encabezado_funcion:
     tipo FUN ID {hasReturn = false;
                 enFuncion = true;
-                funcionActual = $3.sval;
+                funcionActual = $3.sval + "@" + ambito;
                 String idFuncion = $3.sval;
                  Token t = TablaSimbolos.getToken(idFuncion);
                  if (t.getTipo() == null){
@@ -321,11 +321,12 @@ declaracion_funcion:
                                                              funcion.setIzq(parametro);
 
                                                              funcionesDeclaradas.put(funcion.getNombre(),funcion);
-                                                             enFuncion = false;
+                                                             funcionYTipoParametro.put(funcion.getNombre(), funcion.getIzq().getTipo());
                                                          } cuerpo_funcion { NodoComun funcion = funcionesDeclaradas.get(((Nodo)$1.obj).getNombre());
                                                                             NodoComun cuerpo = (NodoComun)$7.obj;
                                                                             funcion.setDer(cuerpo);
-                                                                            removeAmbito(); } END
+                                                                            removeAmbito();
+                                                                            enFuncion = false;} END
     | encabezado_funcion '(' bloque_list_parametro ')' BEGIN cuerpo_funcion END {yyerror("La funciones no puede tener más de un parámetro");removeAmbito();}
     | encabezado_funcion '(' ')' BEGIN cuerpo_funcion END {yyerror("La función debe tener parámetro");removeAmbito();}
     ;
@@ -377,8 +378,12 @@ sentencia_return:
     RET '(' expresion ')' {if (ambito.length() < 5){  //si es menor es que es main
                                 yyerror("No puede haber una sentencia de retorno fuera de una funcion");
                            } else {
-                                if (){
-
+                                NodoComun funAct = funcionesDeclaradas.get(funcionActual);
+                                String tipoFun = funAct.getTipo();
+                                if (!(((Nodo)$3.obj).getTipo().equals(tipoFun))){
+                                    agregarErrorSemantico("El tipo del retorno no coincide con el de la funcion");
+                                } else {
+                                    $$.obj = new NodoHoja("error");
                                 }
                            }
                            $$.obj = new NodoComun("Return", (Nodo)$3.obj);
