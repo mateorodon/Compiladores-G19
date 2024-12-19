@@ -31,7 +31,7 @@ list_sentencias: list_sentencias sentencia {$$.obj = new NodoComun("Sentencia", 
     ;
 
 sentencia:
-    sentencia_declarativa ';' {$$.obj = new NodoHoja("Sentencia Declarativa");}
+    sentencia_declarativa ';' {$$.obj = null;}
     | sentencia_ejecutable ';' {$$=$1;}
     | sentencia_ejecutable {yyerror("Las sentencias deben terminar con ;");}
     | sentencia_declarativa {yyerror("Las sentencias deben terminar con ;");}
