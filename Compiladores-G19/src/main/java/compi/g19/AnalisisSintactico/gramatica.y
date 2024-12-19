@@ -321,11 +321,11 @@ declaracion_funcion:
                                                              funcion.setIzq(parametro);
 
                                                              funcionesDeclaradas.put(funcion.getNombre(),funcion);
-                                                             removeAmbito();
                                                              enFuncion = false;
-                                                         } cuerpo_funcion END { NodoComun funcion = funcionesDeclaradas.get(((Nodo)$1.obj).getNombre());
-                                                                                NodoComun cuerpo = (NodoComun)$7.obj;
-                                                                                funcion.setDer(cuerpo);}
+                                                         } cuerpo_funcion { NodoComun funcion = funcionesDeclaradas.get(((Nodo)$1.obj).getNombre());
+                                                                            NodoComun cuerpo = (NodoComun)$7.obj;
+                                                                            funcion.setDer(cuerpo);
+                                                                            removeAmbito(); } END
     | encabezado_funcion '(' bloque_list_parametro ')' BEGIN cuerpo_funcion END {yyerror("La funciones no puede tener más de un parámetro");removeAmbito();}
     | encabezado_funcion '(' ')' BEGIN cuerpo_funcion END {yyerror("La función debe tener parámetro");removeAmbito();}
     ;
@@ -376,6 +376,10 @@ list_sentencias_funcion:
 sentencia_return:
     RET '(' expresion ')' {if (ambito.length() < 5){  //si es menor es que es main
                                 yyerror("No puede haber una sentencia de retorno fuera de una funcion");
+                           } else {
+                                if (){
+
+                                }
                            }
                            $$.obj = new NodoComun("Return", (Nodo)$3.obj);
                            AnalizadorLexico.agregarEstructura("Se reconocio sentencia de retorno");}
