@@ -311,10 +311,7 @@ encabezado_funcion:
     ;
 
 declaracion_funcion:
-    encabezado_funcion '(' parametro ')' BEGIN  { if (!hasReturn) {
-                                                            yyerror("Falta sentencia RET en la función");
-                                                         }
-                                                             Nodo parametro = (Nodo)$3.obj;
+    encabezado_funcion '(' parametro ')' BEGIN  {           Nodo parametro = (Nodo)$3.obj;
                                                              NodoComun funcion = (NodoComun)$1.obj; //Encabezado con nombre funcion, este tiene el tipo
 
                                                              funcion.setUso("funcion");
@@ -322,7 +319,10 @@ declaracion_funcion:
 
                                                              funcionesDeclaradas.put(funcion.getNombre(),funcion);
                                                              funcionYTipoParametro.put(funcion.getNombre(), funcion.getIzq().getTipo());
-                                                         } cuerpo_funcion { NodoComun funcion = funcionesDeclaradas.get(((Nodo)$1.obj).getNombre());
+                                                         } cuerpo_funcion { if (!hasReturn) {
+                                                                                yyerror("Falta sentencia RET en la función");
+                                                                                }
+                                                                            NodoComun funcion = funcionesDeclaradas.get(((Nodo)$1.obj).getNombre());
                                                                             NodoComun cuerpo = (NodoComun)$7.obj;
                                                                             funcion.setDer(cuerpo);
                                                                             removeAmbito();
@@ -609,9 +609,13 @@ invocacion_funcion:
         AnalizadorLexico.agregarEstructura("Se reconocio invocacion a funcion");
         String ambitoVar = buscarAmbito(ambito,$1.sval);
         if (ambitoVar.equals("")){
-            agregarErrorSemantico("La funcion '" + $1.sval + "' no fue declarada");
-            $$.obj = new NodoHoja("error");
-        }
+                    agregarErrorSemantico("La funcion '" + $1.sval + "' no fue declarada");
+                    $$.obj = new NodoHoja("error");
+                } else if (enFuncion && funcionActual.equals($1.sval)){
+                        NodoComun nodoFunActual = funcionesDeclaradas.get($1.sval + "@" + ambito);
+                        Nodo exp = (Nodo)$1.obj;
+                        generarLlamadoFuncion(nodoFunActual,exp,null);
+                }
         else {
             NodoComun funcion = funcionesDeclaradas.get($1.sval + "@" + ambitoVar);
             String tipoParametroFormal = funcion.getIzq().getTipo();
@@ -844,8 +848,8 @@ static NodoComun raiz;
 static String ambito = "main";
 static boolean inIF = false;
 static boolean hasReturn = false;
-static boolean enFuncion = false;
-static String funcionActual;
+public static boolean enFuncion = false;
+public static String funcionActual;
 static int cantReturns = 0;
 static List<String> varDeclaradas = new ArrayList<>();
 static String tipoActual;
