@@ -248,7 +248,15 @@ asignacion:
                                                 TablaSimbolos.removeToken($1.sval);
 
                                                 }
-    | ID ASIGNACION error {yyerror("Falta parte derecha de la asignacion");}
+    | ID ASIGNACION error {if (yychar == ID || yychar == CONSTANTE) {
+                            yyerror("Se esperaba un operador");
+                           } else {
+                            if (!(yychar == 91 || yychar == 40))
+                                yyerror("Falta parte derecha de la asignación");
+                           }
+                           while (yychar != 59)
+                                yychar = yylex();
+                           }
     ;
 
 tipo:
@@ -418,7 +426,11 @@ expresion:
                             $$.obj = new NodoHoja("error");
                          }
                         }
-    | termino {$$ = $1;}
+    | termino {if (yychar == ID || yychar == CONSTANTE) {
+                yyerror("Se esperaba un operador");
+                yychar = yylex();
+              }
+              $$ = $1;}
     | expresion '+' error {yyerror("Se esperaba un termino");}
     | expresion '-' error {yyerror("Se esperaba un termino");}
     ;
@@ -448,9 +460,13 @@ termino:
                             $$.obj = new NodoHoja("error");
                          }
                         }
-    | factor {$$ = $1;}
-    | termino '*' error {$$.obj = new NodoHoja("error sintactico"); yyerror("Se esperaba un factor");}
-    | termino '/' error {$$.obj = new NodoHoja("error sintactico"); yyerror("Se esperaba un factor");}
+    | factor {if (yychar == ID || yychar == CONSTANTE) {
+                                   yyerror("Se esperaba un operador");
+                                   yychar = yylex();
+                               }
+                               $$ = $1;}
+    | termino '*' error {$$.obj = new NodoHoja("error"); yyerror("Se esperaba un factor");}
+    | termino '/' error {$$.obj = new NodoHoja("error"); yyerror("Se esperaba un factor");}
     ;
 
 factor:
