@@ -123,12 +123,12 @@ public class NodoComun extends Nodo {
                     String arregloOrigen = getDer().getNombre(); // Nombre del arreglo origen
 
                     // Obtener el tamaño del arreglo (en elementos)
-                    int tamañoArreglo = 3;
+                    int tamañoArreglo = 3; // Este valor debería ser dinámico según el contexto
 
                     // Registro base para índices
                     salida += "MOV ECX, " + tamañoArreglo + "\n";
-                    salida += "MOV ESI, " + arregloOrigen + "\n";
-                    salida += "MOV EDI, _" + arregloDestino + "\n";
+                    salida += "MOV ESI, OFFSET _" + arregloOrigen + "\n";
+                    salida += "MOV EDI, OFFSET _" + arregloDestino + "\n";
 
                     // Etiqueta para el bucle
                     String etiquetaInicio = generarEtiqueta("COPIA_INICIO");
@@ -136,26 +136,27 @@ public class NodoComun extends Nodo {
 
                     salida += etiquetaInicio + ":\n";
 
-                    if (getIzq().getTipo().equals(ENTERO)) {
+                    String tipoDelTipo = tiposDeclarados.get(getIzq().getTipo());
+                    if (tipoDelTipo.equals(ENTERO)) {
                         // Copiar un entero (4 bytes)
                         salida += "MOV EAX, [ESI]\n";
                         salida += "MOV [EDI], EAX\n";
                     } else {
-                        // Copiar un flotante (4 bytes)
+                        // Copiar un flotante (8 bytes)
                         salida += "FLD QWORD PTR [ESI]\n";
                         salida += "FSTP QWORD PTR [EDI]\n";
                     }
 
                     // Incrementar punteros
-                    salida += "ADD ESI, 4\n";
+                    salida += "ADD ESI, 4\n"; // Desplazamiento para 4 bytes (tamaño de un entero)
                     salida += "ADD EDI, 4\n";
 
                     // Decrementar contador y bucle
                     salida += "LOOP " + etiquetaInicio + "\n";
 
                     salida += etiquetaFin + ":\n";
-
-                } else if (getIzq().getUso().equals("arreglo")) {
+                }
+                else if (getIzq().getUso().equals("arreglo")) {
                     // Extraer el nombre del arreglo para obtener su índice
                     String nombreConIndice = getIzq().getNombre(); // Ejemplo: "arreglo[1]"
                     int indice = Integer.parseInt(nombreConIndice.substring(nombreConIndice.indexOf('[') + 1, nombreConIndice.indexOf(']')));
