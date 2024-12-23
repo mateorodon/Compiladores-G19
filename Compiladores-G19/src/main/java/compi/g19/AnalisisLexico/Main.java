@@ -42,13 +42,14 @@ public class Main {
             Parser parser = new Parser();
             parser.run();
             System.out.println("----------ARBOL SINTACTICO -----------");
-            if (parser.getRaiz()!=null)
+            if (parser.getRaiz()!=null) {
                 parser.getRaiz().recorrerArbol(0);
-            System.out.println("----------ARBOL SINTACTICO FUNCIONES -----------");
-            if (parser.getFuncionesDeclaradas() != null) {
-                for (Nodo funcion : parser.getFuncionesDeclaradas()) {
-                    if (funcion != null)
-                        funcion.recorrerArbol(0);
+                System.out.println("----------ARBOL SINTACTICO FUNCIONES -----------");
+                if (parser.getFuncionesDeclaradas() != null) {
+                    for (Nodo funcion : parser.getFuncionesDeclaradas()) {
+                        if (funcion != null)
+                            funcion.recorrerArbol(0);
+                    }
                 }
             }
             imprimirEstructurasYErrores();

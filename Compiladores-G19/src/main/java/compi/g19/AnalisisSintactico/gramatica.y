@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
+import java.util.Stack;
 import java.util.Map;
 
 import compi.g19.AnalisisLexico.*;
@@ -330,13 +331,19 @@ declaracion_funcion:
 
                                                              funcionesDeclaradas.put(funcion.getNombre(),funcion);
                                                              funcionYTipoParametro.put(funcion.getNombre(), funcion.getIzq().getTipo());
-                                                         } cuerpo_funcion { if (!hasReturn) {
-                                                                                yyerror("Falta sentencia RET en la función");
-                                                                                }
+                                                         } cuerpo_funcion {
                                                                             NodoComun funcion = funcionesDeclaradas.get(((Nodo)$1.obj).getNombre());
                                                                             NodoComun cuerpo = (NodoComun)$7.obj;
                                                                             funcion.setDer(cuerpo);
                                                                             removeAmbito();
+
+                                                                            if (functionTieneIF && faltaReturn && !hasReturn){
+                                                                                agregarErrorSemantico("Falta sentencia return en la funcion");
+                                                                            }
+
+                                                                            faltaReturn = false;
+                                                                            hasReturn = false;
+                                                                            functionTieneIF = false;
                                                                             enFuncion = false;} END
     | encabezado_funcion '(' bloque_list_parametro ')' BEGIN cuerpo_funcion END {yyerror("La funciones no puede tener más de un parámetro");removeAmbito();}
     | encabezado_funcion '(' ')' BEGIN cuerpo_funcion END {yyerror("La función debe tener parámetro");removeAmbito();}
@@ -693,23 +700,48 @@ bloque_sentencias_ejecutables:
     ;
 
 encabezado_if:
-    IF {inIF=true; $$=$1;}
+    IF {inIF=true; $$=$1; cantIF++; returnIFStack.push(false);}
     ;
 
 bloque_if:
-     encabezado_if '(' condicion ')' THEN cuerpo_if_bloque fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF"); inIF=false; Nodo cuerpo = new NodoComun("Cuerpo", (Nodo)$6.obj);
-                                                                                                                                          $$.obj = new NodoComun("If", (Nodo)$3.obj, cuerpo);}
+     encabezado_if '(' condicion ')' THEN cuerpo_if_bloque {if (ifHasReturn){returnIFStack.pop();returnIFStack.push(true); ifHasReturn=false;}} fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF"); inIF=false; Nodo cuerpo = new NodoComun("Cuerpo", (Nodo)$6.obj);
+                                                                                                                                          $$.obj = new NodoComun("If", (Nodo)$3.obj, cuerpo);
+                                                                                                                                          boolean currentReturnIF = returnIFStack.pop();
+                                                                                                                                          //if (enFuncion){
+                                                                                                                                            functionTieneIF = true;
+                                                                                                                                           // if (!(currentReturnIF)){
+                                                                                                                                                faltaReturn = true;
+                                                                                                                                           // }
+                                                                                                                                          //}
+                                                                                                                                          //returnIF = false;
+                                                                                                                                          if (!(--cantIF == 0))
+                                                                                                                                              inIF = true;
+                                                                                                                                          }
 
 
 
-    | encabezado_if '(' condicion ')' THEN cuerpo_if_bloque ELSE cuerpo_if_bloque fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE");inIF=false; NodoComun nThen = new NodoComun("Then", (Nodo)$6.obj);
-                                                                                                                                                                    NodoComun nElse = new NodoComun("Else", (Nodo)$8.obj);
+    | encabezado_if '(' condicion ')' THEN cuerpo_if_bloque {inIF=false; if (ifHasReturn){ returnIFStack.pop();returnIFStack.push(true); ifHasReturn=false;} returnELSEStack.push(false);} ELSE cuerpo_if_bloque{if (ifHasReturn){returnELSEStack.pop();returnELSEStack.push(true); ifHasReturn=false;}} fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF/ELSE"); NodoComun nThen = new NodoComun("Then", (Nodo)$6.obj);
+                                                                                                                                                                    NodoComun nElse = new NodoComun("Else", (Nodo)$9.obj);
                                                                                                                                                                     Nodo cuerpo  = new NodoComun("Cuerpo", nThen, nElse);
                                                                                                                                                                     $$.obj = new NodoComun("If", (Nodo)$3.obj,cuerpo);
-                                                                                                                                                                    if ((cantReturns == 2) && (enFuncion)){
-                                                                                                                                                                        hasReturn = true;
+                                                                                                                                                                    boolean currentReturnIF = returnIFStack.pop();
+                                                                                                                                                                    boolean currentReturnELSE = returnELSEStack.pop();
+                                                                                                                                                                    if (enFuncion){
+                                                                                                                                                                        functionTieneIF = true;
+                                                                                                                                                                        if (!(currentReturnIF && currentReturnELSE)){
+                                                                                                                                                                            faltaReturn = true;
+                                                                                                                                                                        } else {
+                                                                                                                                                                            ifHasReturn=true;
+                                                                                                                                                                        }
                                                                                                                                                                     }
-                                                                                                                                                                    cantReturns = 0;
+                                                                                                                                                                    //returnELSE = false;
+                                                                                                                                                                    //returnIF = false;
+
+                                                                                                                                                                    cantIF--;
+                                                                                                                                                                    if (!(cantIF == 0)){
+                                                                                                                                                                        inIF = true;
+                                                                                                                                                                    }else{
+                                                                                                                                                                        inIF=false;}
                                                                                                                                                                     }
 
 
@@ -723,17 +755,39 @@ end_cuerpo_if:
 
 cuerpo_if_bloque:
     sentencia_ejecutable ';' {$$ = $1;}
-    | sentencia_return ';' {$$ = $1; cantReturns++;}
+    | sentencia_return ';' {$$ = $1; if (inIF) {
+                                        returnIFStack.pop();
+                                        returnIFStack.push(true); // Marcamos el return en el nivel actual
+                                             } else {
+                                                 returnELSEStack.pop();
+                                                 returnELSEStack.push(true); // Marcamos el return en el nivel actual
+                                             }
+                            }
     | sentencia_ejecutable  {yyerror("Falta ; en la sentencia");}
     | sentencia_return  {yyerror("Falta ; en la sentencia");}
-    | BEGIN sentencia_return ';' end_cuerpo_if {$$ = $2;cantReturns++;}
+    | BEGIN sentencia_return ';' end_cuerpo_if {$$ = $2;if (inIF) {
+                                                                    returnIFStack.pop();
+                                                                    returnIFStack.push(true); // Marcamos el return en el nivel actual
+                                                                } else {
+                                                                    returnELSEStack.pop();
+                                                                    returnELSEStack.push(true); // Marcamos el return en el nivel actual
+                                                                }
+                                                }
     | BEGIN list_sentencias_ejecutables end_cuerpo_if {$$ = $2;}
     | BEGIN list_sentencias_ejecutables sentencia_return end_cuerpo_if {yyerror("Falta ; en la sentencia");}
-    | BEGIN list_sentencias_ejecutables sentencia_return ';' end_cuerpo_if {$$ = $2; cantReturns++;}
+    | BEGIN list_sentencias_ejecutables sentencia_return ';' end_cuerpo_if {$$ = $2; if (inIF) {
+                                                                                                 returnIFStack.pop();
+                                                                                                 returnIFStack.push(true); // Marcamos el return en el nivel actual
+                                                                                             } else {
+                                                                                                 returnELSEStack.pop();
+                                                                                                 returnELSEStack.push(true); // Marcamos el return en el nivel actual
+                                                                                             }}
     | list_sentencias_ejecutables END  {yyerror("Se encontró 'end_cuerpo_if' sin un bloque BEGIN correspondiente en el cuerpo IF/ELSE");}
     //| BEGIN error {yyerror("Se esperaba 'END' después del bloque BEGIN en el cuerpo IF/ELSE");}
     //| error {yyerror("Se esperaba BEGIN y END por sentencias multiples");}
     ;
+
+
 
 list_sentencias_ejecutables:
     list_sentencias_ejecutables sentencia_ejecutable ';' {$$.obj = new NodoComun("Sentencia", (Nodo) $1.obj, (Nodo) $2.obj);}
@@ -867,8 +921,14 @@ private static final float NEGATIVE_MAX = 3.40282347e+38f;
 static NodoComun raiz;
 static String ambito = "main";
 static boolean inIF = false;
+static boolean faltaReturn = false;
 static boolean hasReturn = false;
+static boolean functionTieneIF = false;
+static int cantIF = 0;
 public static boolean enFuncion = false;
+static boolean ifHasReturn = false;
+Stack<Boolean> returnIFStack = new Stack<>();
+Stack<Boolean> returnELSEStack = new Stack<>();
 public static String funcionActual;
 static int cantReturns = 0;
 static List<String> varDeclaradas = new ArrayList<>();
