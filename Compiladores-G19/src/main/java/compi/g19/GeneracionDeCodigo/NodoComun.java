@@ -117,7 +117,9 @@ public class NodoComun extends Nodo {
 
                 salida += getDer().getAssembler();
 
-                if (getIzq().getUso().equals("arreglo") && !getIzq().getNombre().contains("[")) {
+                if (getIzq().getUso().equals("arreglo") && !getIzq().getNombre().contains("[")
+                        && getDer().getUso().equals("arreglo") && !getDer().getNombre().contains("["))
+                {
                     // Asignación de un arreglo completo a otro
                     String arregloDestino = getIzq().getNombre(); // Nombre del arreglo destino
                     String arregloOrigen = getDer().getNombre(); // Nombre del arreglo origen
@@ -156,7 +158,7 @@ public class NodoComun extends Nodo {
 
                     salida += etiquetaFin + ":\n";
                 }
-                else if (getIzq().getUso().equals("arreglo")) {
+                else if (getIzq().getUso().equals("arreglo") && getIzq().getNombre().contains("[")) {
                     // Extraer el nombre del arreglo para obtener su índice
                     String nombreConIndice = getIzq().getNombre(); // Ejemplo: "arreglo[1]"
                     int indice = Integer.parseInt(nombreConIndice.substring(nombreConIndice.indexOf('[') + 1, nombreConIndice.indexOf(']')));
