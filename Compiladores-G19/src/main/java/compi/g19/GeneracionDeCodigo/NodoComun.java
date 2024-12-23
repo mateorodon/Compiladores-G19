@@ -599,7 +599,10 @@ public class NodoComun extends Nodo {
                     salida += "invoke printf, cfm$(\"%d\\n\"), eax\n";
                 }
                 // Caso de arreglo o variable de tipo entero
-                else if (this.getIzq().getUltimoNodo().getUso() != null && this.getIzq().getUltimoNodo().getUso().equals("arreglo") && tiposDeclarados.get(getIzq().getTipo()).equals(ENTERO)) {
+                else if (this.getIzq().getUltimoNodo().getUso() != null
+                        && this.getIzq().getUltimoNodo().getUso().equals("arreglo")
+                        && tiposDeclarados.get(getIzq().getTipo()).equals(ENTERO)
+                        && getIzq().getNombre().contains("[")) {
                     // Extraer el nombre del arreglo y el índice
                     String nombreConIndice = this.getIzq().getUltimoNodo().getNombre(); // Ejemplo: "t1[1]"
                     int indice = Integer.parseInt(nombreConIndice.substring(nombreConIndice.indexOf('[') + 1, nombreConIndice.indexOf(']')));
@@ -615,7 +618,10 @@ public class NodoComun extends Nodo {
                     salida += salida + "invoke printf, cfm$(\"%d\\n\"), " + "[_" + this.getIzq().getUltimoNodo().getNombre() + "]" + "\n" ;
                 }
                 // Caso de arreglo o variable de tipo flotante
-                else if (this.getIzq().getUltimoNodo().getUso() != null && this.getIzq().getUltimoNodo().getUso().equals("arreglo") && tiposDeclarados.get(getIzq().getTipo()).equals(FLOTANTE)) {
+                else if (this.getIzq().getUltimoNodo().getUso() != null
+                        && this.getIzq().getUltimoNodo().getUso().equals("arreglo")
+                        && tiposDeclarados.get(getIzq().getTipo()).equals(FLOTANTE)
+                        && getIzq().getNombre().contains("[")) {
                     // Extraer el nombre del arreglo y el índice
                     String nombreConIndice = this.getIzq().getUltimoNodo().getNombre(); // Ejemplo: "t1[1]"
                     int indice = Integer.parseInt(nombreConIndice.substring(nombreConIndice.indexOf('[') + 1, nombreConIndice.indexOf(']')));
@@ -630,11 +636,33 @@ public class NodoComun extends Nodo {
                     salida += "invoke printf, cfm$(\"%.20Lf\\n\"), qword ptr [esp]\n"; // Pasar el valor flotante a printf
                     salida += "add esp, 8\n"; // Liberar el espacio reservado en la pila
                 }
+                // Caso de arreglo completo
+                else if (this.getIzq().getUltimoNodo().getUso() != null
+                        && this.getIzq().getUltimoNodo().getUso().equals("arreglo")
+                        && !getIzq().getNombre().contains("[")) {
+                    // Obtener información del arreglo
+                    String nombreArreglo = this.getIzq().getUltimoNodo().getNombre();
+                    String tipoArreglo = tiposDeclarados.get(getIzq().getTipo());
+                    int tamanoArreglo = 3;
+
+                    // Generar código para iterar e imprimir cada elemento
+                    for (int i = 0; i < tamanoArreglo; i++) {
+                        int desplazamiento = i * 4; // Asumimos 4 bytes por elemento (para enteros o flotantes)
+                        if (tipoArreglo.equals(ENTERO)) {
+                            salida += "invoke printf, cfm$(\"%d\\n\"), [_" + nombreArreglo + " + " + desplazamiento + "]\n";
+                        } else if (tipoArreglo.equals(FLOTANTE)) {
+                            salida += "FLD [_" + nombreArreglo + " + " + desplazamiento + "]\n";
+                            salida += "sub esp, 8\n";
+                            salida += "FSTP qword ptr [esp]\n";
+                            salida += "invoke printf, cfm$(\"%.20Lf\\n\"), qword ptr [esp]\n";
+                            salida += "add esp, 8\n";
+                        }
+                    }
+                }
                 // Caso de variable de tipo flotante
                 else if (this.getIzq().getUltimoNodo().getTipo().equals(FLOTANTE)) {
                     salida += salida + "invoke printf, cfm$(\"%.20Lf\\n\"), " + "[_" + this.getIzq().getUltimoNodo().getNombre() + "]" + "\n" ;
                 }
-                // Caso de invocación de función que retorna un entero
 
                 break;
             case "Asignacion e Incremento":
