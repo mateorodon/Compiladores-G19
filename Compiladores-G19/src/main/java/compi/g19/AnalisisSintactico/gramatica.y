@@ -52,11 +52,14 @@ sentencia_declarativa:
                                 t.getLexema().setLength(0);
                                 t.getLexema().append(var).append("@").append(ambito);
                                 t.setAmbito(ambito);
-                                t.setUso("variable");
+                                if (tipoActual.equals(ENTERO) || tipoActual.equals(FLOTANTE)) {
+                                    t.setUso("variable");
+                                } else {
+                                    t.setUso("arreglo");
+                                }
                                 t.setTipo(tipoActual);
                                 TablaSimbolos.removeToken(var);
                                 TablaSimbolos.addSimbolo(t.getLexema().toString(),t);
-
                             }
                             else {
                                 TablaSimbolos.removeToken(var);
