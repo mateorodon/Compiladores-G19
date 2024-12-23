@@ -118,7 +118,7 @@ public class NodoComun extends Nodo {
                 salida += getDer().getAssembler();
 
                 if (getIzq().getUso().equals("arreglo") && !getIzq().getNombre().contains("[")
-                        && getDer().getUso().equals("arreglo") && !getDer().getNombre().contains("["))
+                        && getDer().getUso() != null && getDer().getUso().equals("arreglo") && !getDer().getNombre().contains("["))
                 {
                     // Asignación de un arreglo completo a otro
                     String arregloDestino = getIzq().getNombre(); // Nombre del arreglo destino
@@ -247,6 +247,7 @@ public class NodoComun extends Nodo {
                 if (getIzq().getTipo().equals(ENTERO)) {
                     salida += "MOV EAX, _" + getIzq().getUltimoNodo().getNombre() + "\n";
                     salida += "ADD EAX, _" + getDer().getUltimoNodo().getNombre() + "\n";
+                    salida += "MOV _" + varAuxiliar + ", EAX" + "\n";
                 } else {
                     salida += "FLD _" + getIzq().getUltimoNodo().getNombre().replace('.', '_') + "\n";
                     salida += "FADD _" + getDer().getUltimoNodo().getNombre().replace('.', '_') + "\n";
@@ -256,6 +257,7 @@ public class NodoComun extends Nodo {
                     salida += "SAHF \n";
                     salida += "JBE handle_overflow\n";
                     salida += "FSTP ST(0)\n";
+                    salida += "FST _" + varAuxiliar + "\n";
                 }
                 break;
             case "-":
@@ -274,11 +276,13 @@ public class NodoComun extends Nodo {
                 if (getIzq().getTipo().equals(ENTERO)) {
                     salida += "MOV EAX, _" + getIzq().getUltimoNodo().getNombre() + "\n";
                     salida += "SUB EAX, _" + getDer().getUltimoNodo().getNombre() + "\n";
+                    salida += "MOV _" + varAuxiliar + ", EAX" + "\n";
                     salida += "JS handle_negativos\n";
 
                 } else {
                     salida += "FLD _" + getIzq().getUltimoNodo().getNombre().replace('.', '_') + "\n";
                     salida += "FSUB _" + getDer().getUltimoNodo().getNombre().replace('.', '_') + "\n";
+                    salida += "FST _" + varAuxiliar + "\n";
                 }
                 break;
             case "*":
@@ -792,13 +796,18 @@ public class NodoComun extends Nodo {
                             salida += "JMP handle_autoinvocacion\n";
                         } else {
                             if (uso.equals("llamado")) {
+                                String nombreParametro = getIzq().getNombre();
+                                if (nombreParametro.equals("+") || nombreParametro.equals("-") || nombreParametro.equals("*") || nombreParametro.equals("/")) {
+                                    salida += getIzq().getAssembler();
+                                    nombreParametro = getIzq().getUltimoNodo().getNombre();
+                                }
                                 if (getIzq().getTipo().equals(ENTERO)) {
-                                    String nombreParametro = getIzq().getNombre().replace('.', '_'); // Reemplazar punto por guion bajo
+                                    nombreParametro = nombreParametro.replace('.', '_'); // Reemplazar punto por guion bajo
                                     salida += "MOV EAX, _" + nombreParametro + "\n"; // Cargar el valor del parámetro real
                                     salida += "PUSH EAX\n"; // Colocar en la pila el valor del parámetro
                                 }
                                 if (getIzq().getTipo().equals(FLOTANTE)) {
-                                    String nombreParametro = getIzq().getNombre().replace('.', '_'); // Reemplazar punto por guion bajo
+                                    nombreParametro = nombreParametro.replace('.', '_'); // Reemplazar punto por guion bajo
                                     salida += "FLD _" + nombreParametro + "\n";
                                     salida += "SUB ESP, 8\n";
                                     salida += "FSTP QWORD PTR [ESP]\n";
@@ -807,15 +816,19 @@ public class NodoComun extends Nodo {
                             if (uso.equals("llamadoConCasteo")) {
                                 String tipoReal = getDer().getNombre(); // Nombre del nodo tipo (tipoReal)
                                 String tipoFormal = getIzq().getTipo(); // Tipo esperado por la función
-
+                                String nombreParametro = getIzq().getNombre();
+                                if (nombreParametro.equals("+") || nombreParametro.equals("-") || nombreParametro.equals("*") || nombreParametro.equals("/")) {
+                                    salida += getIzq().getAssembler();
+                                    nombreParametro = getIzq().getUltimoNodo().getNombre();
+                                }
                                 if (tipoReal.equals(ENTERO) && tipoFormal.equals(FLOTANTE)) {
-                                    String nombreParametro = getIzq().getNombre().replace('.', '_'); // Reemplazar punto por guion bajo
+                                    nombreParametro = nombreParametro.replace('.', '_'); // Reemplazar punto por guion bajo
                                     salida += "MOV EAX, _" + nombreParametro + "\n"; // Cargar el valor del parámetro real
                                     salida += "PUSH EAX\n"; // Colocar en la pila el valor del parámetro
                                     salida += "FILD DWORD PTR [ESP]\n";  // Cargar el entero como flotante en la FPU
                                     salida += "FSTP QWORD PTR [ESP]\n";  // Guardar el resultado como flotante en la pila
                                 } else if (tipoReal.equals(FLOTANTE) && tipoFormal.equals(ENTERO)) {
-                                    String nombreParametro = getIzq().getNombre().replace('.', '_'); // Reemplazar punto por guion bajo
+                                    nombreParametro = nombreParametro.replace('.', '_'); // Reemplazar punto por guion bajo
                                     salida += "FLD _" + nombreParametro + "\n";
                                     salida += "SUB ESP, 8\n";
                                     salida += "FSTP QWORD PTR [ESP]\n";

@@ -630,11 +630,12 @@ invocacion_funcion:
         if (ambitoVar.equals("")){
                     agregarErrorSemantico("La funcion '" + $1.sval + "' no fue declarada");
                     $$.obj = new NodoHoja("error");
-                } else if (enFuncion && funcionActual.equals($1.sval)){
+        }
+        else if (enFuncion && funcionActual.equals($1.sval)){
                         NodoComun nodoFunActual = funcionesDeclaradas.get($1.sval + "@" + ambito);
                         Nodo exp = (Nodo)$1.obj;
                         generarLlamadoFuncion(nodoFunActual,exp,null);
-                }
+        }
         else {
             NodoComun funcion = funcionesDeclaradas.get($1.sval + "@" + ambitoVar);
             String tipoParametroFormal = funcion.getIzq().getTipo();
@@ -1002,7 +1003,6 @@ private Nodo generarLlamadoFuncion(NodoComun funcion, Nodo copia, String tipoCas
             if (tipoCasteo.equals(tipoReal)) {
                 // Intento de forzar un casteo al mismo tipo
                 AnalizadorLexico.agregarWarning("El tipo del parámetro real ya es del tipo solicitado en el casteo");
-                return new NodoHoja("error");
             } else if (tipoFormal.equals(tipoCasteo) && esCasteoValido(tipoReal, tipoCasteo)) {
                 // Casteo válido
                 //param.setNombre(copia.getNombre());
