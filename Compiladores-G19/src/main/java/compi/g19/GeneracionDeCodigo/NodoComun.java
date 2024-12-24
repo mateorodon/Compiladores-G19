@@ -43,6 +43,7 @@ public class NodoComun extends Nodo {
     private static String labelSegundaCondicionFor;
     private static String labelFor;
     private int contadorEtiqueta = 0;
+    private static String funActual;
 
     private String generarEtiqueta(String prefijo) {
         return prefijo + "_" + (contadorEtiqueta++);
@@ -781,7 +782,9 @@ public class NodoComun extends Nodo {
                             salida += "FSTP _" + nombreParametro + "\n";
                         }
                         // No se aplica conversión en la definición de la función
+                        funActual = getNombre();
                         salida += getDer().getAssembler();
+                        funActual = null;
                     } else if (uso.equals("llamado") || uso.equals("llamadoConCasteo")) {
                         varAuxiliar = Nodo.getVariableAuxiliar();
                         t = new Token(varAuxiliar, this.getTipo(), "variableAuxiliar");
@@ -792,7 +795,7 @@ public class NodoComun extends Nodo {
                         String lexemaVariableQueInvoca = getIzq().getNombre();
 
                         // Comparar lexemas para verificar autoinvocación (usando name mangling)
-                        if (compararLexemas(lexemaVariableQueInvoca, lexemaFuncion)) {
+                        if (funActual != null && funActual.equals(getNombre())) {
                             salida += "JMP handle_autoinvocacion\n";
                         } else {
                             if (uso.equals("llamado")) {
@@ -873,26 +876,5 @@ public class NodoComun extends Nodo {
 
         return salida;
     }
-
-    public static boolean compararLexemas(String lexemaVariable, String lexemaFuncion) {
-        try {
-            // Recorta todo hasta el primer '@'
-            String recortado = lexemaVariable.substring(lexemaVariable.indexOf('@') + 1);
-
-            // Invierte el orden para que quede como f1@main
-            String[] partes = recortado.split("@");
-            if (partes.length == 2) {
-                String lexemaInvertido = partes[1] + "@" + partes[0];
-                // Compara el resultado con el lexema de la función
-                return lexemaInvertido.equals(lexemaFuncion);
-            }
-        } catch (Exception e) {
-            // Si ocurre un error, como que no tenga el formato esperado, devuelve false
-            return false;
-        }
-        // Si no tiene el formato esperado, devuelve false
-        return false;
-    }
-
 
 }
