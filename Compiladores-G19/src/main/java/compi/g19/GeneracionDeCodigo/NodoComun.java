@@ -119,6 +119,26 @@ public class NodoComun extends Nodo {
                 salida += getDer().getAssembler();
 
                 if (getIzq().getUso().equals("arreglo") && !getIzq().getNombre().contains("[")
+                        && getDer().getUso() != null && getDer().getUso().equals("llamado")
+                        && getIzq().getTipo().equals(getDer().getTipo()))
+                {
+                    String arregloDestino = getIzq().getNombre();
+                    String tipoDelTipo = tiposDeclarados.get(getIzq().getTipo());
+
+                    if (tipoDelTipo.equals(ENTERO)) {
+                        // Para arreglos de enteros
+                        salida += "MOV [_" + arregloDestino + " + 0], EAX\n";
+                        salida += "MOV [_" + arregloDestino + " + 4], EBX\n";
+                        salida += "MOV [_" + arregloDestino + " + 8], EDX\n";
+                    } else {
+                        // Para arreglos de flotantes
+                        // Los valores ya están en la pila FPU en orden inverso (ST(2), ST(1), ST(0))
+                        salida += "FSTP DWORD PTR [_" + arregloDestino + " + 8]\n";  // Tercer elemento
+                        salida += "FSTP DWORD PTR [_" + arregloDestino + " + 4]\n";  // Segundo elemento
+                        salida += "FSTP DWORD PTR [_" + arregloDestino + " + 0]\n";  // Primer elemento
+                    }
+                }
+                else if (getIzq().getUso().equals("arreglo") && !getIzq().getNombre().contains("[")
                         && getDer().getUso() != null && getDer().getUso().equals("arreglo") && !getDer().getNombre().contains("["))
                 {
                     // Asignación de un arreglo completo a otro
@@ -560,14 +580,32 @@ public class NodoComun extends Nodo {
 
                 break;
             case "Return":
-                salida += getIzq().getAssembler();
-                if (getIzq().getTipo().equals(ENTERO)) {
-                    salida += "MOV EAX, _" + getIzq().getUltimoNodo().getNombre() + "\n";
+                if (getIzq().getUso().equals("arreglo") && !getIzq().getNombre().contains("[")) {
+                    String arregloOrigen = "_" + getIzq().getNombre();
+                    String tipoDelTipo = tiposDeclarados.get(getIzq().getTipo());
+
+                    if (tipoDelTipo.equals(ENTERO)) {
+                        // Para arreglos de enteros
+                        salida += "MOV EAX, [" + arregloOrigen + " + 0]\n";
+                        salida += "MOV EBX, [" + arregloOrigen + " + 4]\n";
+                        salida += "MOV EDX, [" + arregloOrigen + " + 8]\n";
+                    } else {
+                        // Para arreglos de flotantes
+                        salida += "FLD DWORD PTR [" + arregloOrigen + " + 0]\n";
+                        salida += "FLD DWORD PTR [" + arregloOrigen + " + 4]\n";
+                        salida += "FLD DWORD PTR [" + arregloOrigen + " + 8]\n";
+                    }
                 } else {
-                    salida += "FLD _" + getIzq().getUltimoNodo().getNombre().replace('.', '_') + "\n";
+                    // Código original para valores no-arreglo
+                    salida += getIzq().getAssembler();
+                    if (getIzq().getTipo().equals(ENTERO)) {
+                        salida += "MOV EAX, _" + getIzq().getUltimoNodo().getNombre() + "\n";
+                    } else {
+                        salida += "FLD _" + getIzq().getUltimoNodo().getNombre().replace('.', '_') + "\n";
+                    }
                 }
-                salida+= "POP EBP \n";
-                salida += "ret " + "\n";
+                salida += "POP EBP \n";
+                salida += "ret \n";
                 break;
             case "Outf":
                 String variablePrint = getVariablePrint();
