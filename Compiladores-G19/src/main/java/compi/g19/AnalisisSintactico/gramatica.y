@@ -163,13 +163,13 @@ up_down:
 
 asignacion:
     ID ASIGNACION expresion { String ambitoVar = buscarAmbito(ambito,$1.sval);
-                              Nodo asignacion = new NodoHoja("error");
+                              Nodo asignacion = null;
                               Token t = null;
                               if (ambitoVar.equals("")){
                                   t = TablaSimbolos.getToken($1.sval);
                                   if (t.getTipo() == null){
                                         agregarErrorSemantico("La variable '" + $1.sval + "' no fue declarada");
-                                        $$.obj = new NodoHoja("error");
+                                        $$.obj = null;
                                   }
                                   else {
                                         t.getLexema().setLength(0);
@@ -191,7 +191,7 @@ asignacion:
 
                                   if (!(t.getUso().equals("variable") || t.getUso().equals("parametro") || t.getUso().equals("arreglo"))) {
                                       agregarErrorSemantico("La expresion en la parte izquierda de la asignación debe ser una variable. Se encontró un elemento no asignable (" + t.getUso() + ")");
-                                      $$.obj = new NodoHoja("error");
+                                      $$.obj = null;
                                   } else {
                                       if (t.getUso().equals("arreglo")) {
                                           Token t2 = TablaSimbolos.getToken($3.sval + "@" + ambitoVar);
@@ -204,11 +204,11 @@ asignacion:
                                               }
                                           } else {
                                               agregarErrorSemantico("La expresión en la parte derecha de la asignación no está definida.");
-                                              $$.obj = new NodoHoja("error");
+                                              $$.obj = null;
                                           }
                                       } else {
                                           NodoHoja id = new NodoHoja(t.getLexema().toString(), t);
-                                          if (((Nodo)$3.obj).getTipo() != null){
+                                          if ((Nodo)$3.obj != null && ((Nodo)$3.obj).getTipo() != null){
                                           if (!(id.getTipo().equals(((Nodo)$3.obj).getTipo())))
                                             agregarErrorSemantico("Incompatibilidad de tipos");
                                           }
@@ -221,7 +221,7 @@ asignacion:
                                                 String ambitoVar = buscarAmbito(ambito,$1.sval);
                                                 if (ambitoVar.equals("")){
                                                     agregarErrorSemantico("La variable '" + $1.sval + "' no fue declarada");
-                                                    $$.obj = new NodoHoja("error");
+                                                    $$.obj = null;
                                                 }
                                                 else {
                                                     Token t = TablaSimbolos.getToken($1.sval + "@" + ambitoVar);
@@ -238,13 +238,13 @@ asignacion:
                                                     }
                                                     else {
                                                         agregarErrorSemantico("La variable '" + $1.sval + "' no es de un tipo TRIPLE definido");
-                                                        $$.obj = new NodoHoja("error");
+                                                        $$.obj = null;
                                                     }
                                                 }
                                                 String index = TablaSimbolos.getToken($3.sval).getLexema().toString();
                                                 if (!(index != null && (index.equals("1") || index.equals("2") || index.equals("3")))){
                                                     agregarErrorSemantico("El indice esta fuera de rango. Debe estar entre 1 y 3");
-                                                    $$.obj = new NodoHoja("error");
+                                                    $$.obj = null;
                                                 }
                                                 TablaSimbolos.removeToken($1.sval);
 
@@ -314,7 +314,7 @@ encabezado_funcion:
                  }
                  else {
                     agregarErrorSemantico("La variable '" + idFuncion + "' ya fue declarada");
-                    $$.obj = new NodoComun("error");
+                    $$.obj = null;
                  }
 
                  addAmbito(idFuncion);
@@ -401,7 +401,7 @@ sentencia_return:
                                 if (!(((Nodo)$3.obj).getTipo().equals(tipoFun))){
                                     agregarErrorSemantico("El tipo del retorno no coincide con el de la funcion");
                                 } else {
-                                    $$.obj = new NodoHoja("error");
+                                    $$.obj = null;
                                 }
                            }
                            $$.obj = new NodoComun("Return", (Nodo)$3.obj);
@@ -412,25 +412,25 @@ expresion:
     expresion '+' termino {
                          String expresion = ((Nodo)$1.obj).getNombre();
                          String termino = ((Nodo)$3.obj).getNombre();
-                         if (!(expresion.contains("error") || termino.contains("error"))){
+                         if (!(expresion == null || termino == null)){
                              Nodo nIzq = (Nodo)$1.obj;
                              Nodo nDer = (Nodo)$3.obj;
                              $$.obj = controlarTipos(nIzq,$2.sval,nDer);
                          }
                          else {
-                            $$.obj = new NodoHoja("error");
+                            $$.obj = null;
                          }
                         }
     | expresion '-' termino {
                          String expresion = ((Nodo)$1.obj).getNombre();
                          String termino = ((Nodo)$3.obj).getNombre();
-                         if (!(expresion.contains("error") || termino.contains("error"))){
+                         if (!(expresion == null || termino == null)){
                              Nodo nIzq = (Nodo)$1.obj;
                              Nodo nDer = (Nodo)$3.obj;
                              $$.obj = controlarTipos(nIzq,$2.sval,nDer);
                          }
                          else {
-                            $$.obj = new NodoHoja("error");
+                            $$.obj = null;
                          }
                         }
     | termino {if (yychar == ID || yychar == CONSTANTE) {
@@ -446,25 +446,25 @@ termino:
     termino '*' factor {
                          String termino = ((Nodo)$1.obj).getNombre();
                          String factor = ((Nodo)$3.obj).getNombre();
-                         if (!(termino.contains("error") || factor.contains("error"))){
+                         if (!(termino == null || factor == null)){
                              Nodo nIzq = (Nodo)$1.obj;
                              Nodo nDer = (Nodo)$3.obj;
                              $$.obj = controlarTipos(nIzq,$2.sval,nDer);
                          }
                          else {
-                            $$.obj = new NodoHoja("error");
+                            $$.obj = null;
                          }
                         }
     | termino '/' factor {
                          String termino = ((Nodo)$1.obj).getNombre();
                          String factor = ((Nodo)$3.obj).getNombre();
-                         if (!(termino.contains("error") || factor.contains("error"))){
+                         if (!(termino == null || factor == null)){
                              Nodo nIzq = (Nodo)$1.obj;
                              Nodo nDer = (Nodo)$3.obj;
                              $$.obj = controlarTipos(nIzq,$2.sval,nDer);
                          }
                          else {
-                            $$.obj = new NodoHoja("error");
+                            $$.obj = null;
                          }
                         }
     | factor {if (yychar == ID || yychar == CONSTANTE) {
@@ -472,8 +472,8 @@ termino:
                                    yychar = yylex();
                                }
                                $$ = $1;}
-    | termino '*' error {$$.obj = new NodoHoja("error"); yyerror("Se esperaba un factor");}
-    | termino '/' error {$$.obj = new NodoHoja("error"); yyerror("Se esperaba un factor");}
+    | termino '*' error {$$.obj = null; yyerror("Se esperaba un factor");}
+    | termino '/' error {$$.obj = null; yyerror("Se esperaba un factor");}
     ;
 
 factor:
@@ -496,7 +496,7 @@ factor:
         }
         else if (ambitoVar.equals("")) {
                     agregarErrorSemantico("La variable '" + $1.sval + "' no fue declarada");
-                    Nodo aux = new NodoHoja("error");
+                    Nodo aux = null;
                     $$.obj = aux;
         }
         else {
@@ -519,7 +519,7 @@ factor:
     | ID '[' CONSTANTE ']' {    String ambitoVar = buscarAmbito(ambito,$1.sval);
                                 if (ambitoVar.equals("")){
                                     agregarErrorSemantico("La variable '" + $1.sval + "' no fue declarada");
-                                    $$.obj = new NodoHoja("error");
+                                    $$.obj = null;
                                 }
                                 else {
                                     Token t = TablaSimbolos.getToken($1.sval + "@" + ambitoVar);
@@ -531,26 +531,26 @@ factor:
                                     }
                                     else {
                                         agregarErrorSemantico("La variable '" + $1.sval + "' no es de un tipo TRIPLE definido");
-                                        $$.obj = new NodoHoja("error");
+                                        $$.obj = null;
                                     }
                                 }
                              String index = TablaSimbolos.getToken($3.sval).getLexema().toString();
                              if (!(index != null && (index.equals("1") || index.equals("2") || index.equals("3")))){
                                  agregarErrorSemantico("El indice esta fuera de rango. Debe estar entre 1 y 3");
-                                 $$.obj = new NodoHoja("error");
+                                 $$.obj = null;
                              }
                              TablaSimbolos.removeToken($1.sval);
                             }
     | '-' ID {String ambitoVar = buscarAmbito(ambito,$2.sval);
                      if (ambitoVar.equals("")){
                          agregarErrorSemantico("La variable '" + $2.sval + "' no fue declarada");
-                         $$.obj = new NodoHoja("error");
+                         $$.obj = null;
                      }
                      else {
                          Token t = TablaSimbolos.getToken($2.sval + "@" + ambitoVar);
                          if (!(t.getUso().equals("variable") || t.getUso().equals("parametro") || t.getUso().equals("arreglo"))){
                              agregarErrorSemantico("'" + $2.sval + "' no es una variable. Es un/a " + t.getUso());
-                             $$.obj = new NodoHoja("error");
+                             $$.obj = null;
                          }
                          else {
                              $$.obj = new NodoHoja($1.sval + $2.sval + "@" + ambitoVar,t);
@@ -561,7 +561,7 @@ factor:
     | '-' CONSTANTE {Token t = TablaSimbolos.getToken($2.sval);
                                         if (t != null && t.getTipo().equals(ENTERO)) {
                                             yyerror("Las constantes de tipo ulongint no pueden ser negativas");
-                                            $$.obj = new NodoHoja("error");
+                                            $$.obj = null;
                                         }
                                         else if (t != null && (t.getTipo().equals(FLOTANTE))) {
                                             String lexema = t.getLexema().toString();
@@ -575,7 +575,7 @@ factor:
     | '-' ID '[' CONSTANTE ']' {String ambitoVar = buscarAmbito(ambito,$2.sval);
                                 if (ambitoVar.equals("")){
                                     agregarErrorSemantico("La variable '" + $2.sval + "' no fue declarada");
-                                    $$.obj = new NodoHoja("error");
+                                    $$.obj = null;
                                 }
                                 else {
                                     Token t = TablaSimbolos.getToken($2.sval + "@" + ambitoVar);
@@ -587,13 +587,13 @@ factor:
                                     }
                                     else {
                                         agregarErrorSemantico("La variable '" + $2.sval + "' no es de un tipo TRIPLE definido");
-                                        $$.obj = new NodoHoja("error");
+                                        $$.obj = null;
                                     }
                                 }
                              String index = TablaSimbolos.getToken($4.sval).getLexema().toString();
                              if (!(index != null && (index.equals("1") || index.equals("2") || index.equals("3")))){
                                  agregarErrorSemantico("El indice esta fuera de rango. Debe estar entre 1 y 3");
-                                 $$.obj = new NodoHoja("error");
+                                 $$.obj = null;
                              }
                              TablaSimbolos.removeToken($2.sval);
                             }
@@ -620,7 +620,7 @@ declaracion_tipo:
                                          }
                                          else {
                                             agregarErrorSemantico("La variable '" + idTipo + "' ya fue declarada");
-                                            $$.obj = new NodoComun("error");
+                                            $$.obj = null;
                                          }
                                          }
     | TYPEDEF TRIPLE '<' tipo_base '>' error {yyerror("Falta ID al final de la declaracion de tipo");}
@@ -636,7 +636,7 @@ invocacion_funcion:
         String ambitoVar = buscarAmbito(ambito,$1.sval);
         if (ambitoVar.equals("")){
                     agregarErrorSemantico("La funcion '" + $1.sval + "' no fue declarada");
-                    $$.obj = new NodoHoja("error");
+                    $$.obj = null;
         }
         else if (enFuncion && funcionActual.equals($1.sval)){
                         NodoComun nodoFunActual = funcionesDeclaradas.get($1.sval + "@" + ambito);
@@ -653,7 +653,7 @@ invocacion_funcion:
                     }
                     else {
                         agregarErrorSemantico("La funcion '" + $1.sval + "' no fue declarada");
-                        $$.obj = new NodoHoja("error");
+                        $$.obj = null;
                     }
             } else {
                 agregarErrorSemantico("El tipo del parametro real no coincide con el del real");
@@ -662,7 +662,7 @@ invocacion_funcion:
         TablaSimbolos.removeToken($1.sval);
     }
     | FUN '(' expresion ')' { yyerror("El identificador de una funcion no puede ser una palabra reservada");
-    $$.obj = new NodoHoja("error");}
+    $$.obj = null;}
     | ID '(' bloque_list_expresiones ')' {yyerror("La funcion no puede tener mas de un parametro");}
     | ID '(' ')' {yyerror("La funcion debe tener un parametro");}
     | ID '(' tipo_base '(' expresion ')' ')' {
@@ -670,7 +670,7 @@ invocacion_funcion:
             String ambitoVar = buscarAmbito(ambito,$1.sval);
             if (ambitoVar.equals("")){
                 agregarErrorSemantico("La funcion '" + $1.sval + "' no fue declarada");
-                $$.obj = new NodoHoja("error");
+                $$.obj = null;
             }
             else {
                 if (funcionesDeclaradas.containsKey($1.sval + "@" + ambitoVar)){
@@ -681,7 +681,7 @@ invocacion_funcion:
                 }
                 else {
                         agregarErrorSemantico("La funcion '" + $1.sval + "' no fue declarada");
-                        $$.obj = new NodoHoja("error");
+                        $$.obj = null;
                 }
             }
             TablaSimbolos.removeToken($1.sval);
@@ -807,16 +807,16 @@ comparacion:
 condicion:
     expresion comparacion expresion {   Nodo exp1 = (Nodo)$1.obj;
                                         Nodo exp2 = (Nodo)$3.obj;
-                                        if (!(exp1.getNombre().contains("error") || exp2.getNombre().contains("error"))) {
+                                        if (!(exp1 == null || exp2 == null)) {
                                             if (!((Nodo)$1.obj).getTipo().equals(((Nodo)$3.obj).getTipo())){
                                                 agregarErrorSemantico("Los tipos son incompatibles en la condicion");
-                                                $$.obj = new NodoHoja("error");
+                                                $$.obj = null;
                                             }
                                             else
                                                 $$.obj = new NodoComun($2.sval, (Nodo)$1.obj, (Nodo)$3.obj);
                                         }
                                         else {
-                                            $$.obj = new NodoHoja("error");
+                                            $$.obj = null;
                                         }
                                     }
     | '(' {inList1 = true;} bloque_list_expresiones {inList1 = false;} ')' comparacion '(' {inList2 = true;} bloque_list_expresiones {inList2 = false;} ')'
@@ -827,13 +827,13 @@ condicion:
             for (int i = 0; i < expresiones1.size(); i++) {
                 Nodo exp1 = expresiones1.get(i);
                 Nodo exp2 = expresiones2.get(i);
-                if (exp1.getNombre().contains("error") || exp2.getNombre().contains("error")){
-                    salida = new NodoComun("error");
+                if (exp1 == null || exp2 == null){
+                    salida = null;
                     break;
                 }
                 if (!(exp1.getTipo().equals(exp2.getTipo()))){
                     agregarErrorSemantico("Las expresiones en la posicion " + i + " no tienen el mismo tipo");
-                    aux = new NodoHoja("error");
+                    aux = null;
                     }
                 else {
                     aux = new NodoComun($6.sval, exp1, exp2);
@@ -897,14 +897,14 @@ salida_mensaje:
                             AnalizadorLexico.agregarEstructura("Se reconocio salida de mensaje por pantalla");
                         }
     | OUTF '(' expresion ')' {   Nodo exp = (Nodo)$3.obj;
-                                 if (!exp.getNombre().contains("error")){
+                                 if (!(exp == null)){
                                      Token t = new Token(exp.getToken());
                                      //t.setUso("mensaje");
                                      t.setTipo(exp.getTipo());
                                      $$.obj = new NodoComun("Outf", new NodoHoja(exp.getNombre(),t));
                                  }
                                  else {
-                                    $$.obj = new NodoComun("error");
+                                    $$.obj = null;
                                  }
                                  AnalizadorLexico.agregarEstructura("Se reconocio salida de mensaje por pantalla");
                               }
@@ -1030,10 +1030,10 @@ private void variableYaDeclarada(String var){
 
 private NodoComun controlarTipos(Nodo nodo1, String op, Nodo nodo3){
     NodoComun ret = new NodoComun(op, nodo1, nodo3);
-    if (!(nodo1.getNombre().contains("error") || nodo3.getNombre().contains("error"))) {
+    if (!(nodo1 == null || nodo3 == null)) {
     if (!(nodo1.getTipo().equals(nodo3.getTipo()))){
         agregarErrorSemantico("Incompatibilidad de tipos en la " + op);
-        ret = new NodoComun("error");
+        ret = null;
     }
     else
         ret.setTipo(nodo1.getTipo());
@@ -1056,7 +1056,7 @@ private Nodo generarLlamadoFuncion(NodoComun funcion, Nodo copia, String tipoCas
                 salida.setUso("llamado");
             } else {
                 agregarErrorSemantico("El tipo del parámetro real no coincide con el del parámetro formal");
-                return new NodoHoja("error");
+                return null;
             }
         } else {
             // Con casteo: validar que sea permitido
@@ -1073,7 +1073,7 @@ private Nodo generarLlamadoFuncion(NodoComun funcion, Nodo copia, String tipoCas
             } else {
                 // Casteo inválido
                 agregarErrorSemantico("El casteo de " + tipoReal + " a " + tipoCasteo + " no es válido");
-                return new NodoHoja("error");
+                return null;
             }
         }
     }
