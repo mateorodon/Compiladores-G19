@@ -26,15 +26,21 @@ autoinvocacion@main
                 :=
                     d@main@autoinvocacion
                     2
-            autoinvocacion@main
-                q@main@autoinvocacion
+            If
+                <
+                    3
+                    2
+                Cuerpo
+                    autoinvocacion@main
+                        q@main@autoinvocacion
         Return
             d@main@autoinvocacion
 ----------TABLA DE SIMBOLOS-----------
 Token{id=257, lexema=d@main@autoinvocacion, linea=6, tipo=ulongint, uso = parametro}
 Token{id=262, lexema=2, linea=4, tipo=ulongint, uso = constante}
 Token{id=257, lexema=y@main, linea=3, tipo=ulongint, uso = variable}
-Token{id=262, lexema=4, linea=13, tipo=ulongint, uso = constante}
+Token{id=262, lexema=3, linea=10, tipo=ulongint, uso = constante}
+Token{id=262, lexema=4, linea=15, tipo=ulongint, uso = constante}
 Token{id=257, lexema=q@main@autoinvocacion, linea=9, tipo=ulongint, uso = variable}
 Token{id=257, lexema=autoinvocacion@main, linea=6, tipo=ulongint, uso = funcion}
 Token{id=257, lexema=lalala, linea=1, tipo=null, uso = null}
@@ -43,6 +49,6 @@ Token{id=257, lexema=x@main, linea=3, tipo=ulongint, uso = variable}
 -----------ERRORES SINTACTICOS----------
 -----------ERRORES SEMANTICOS----------
 ----------WARNINGS-----------
-WARNING: La variable 'x' ya esta declarada en la lÃ­nea 3
-WARNING: La variable 'y' ya esta declarada en la lÃ­nea 3
-WARNING: Se ha llamado a una funciÃ³n pero su valor no ha sido utilizado en la lÃ­nea 10
+WARNING: La variable 'x' ya esta declarada en la línea 3
+WARNING: La variable 'y' ya esta declarada en la línea 3
+WARNING: Se ha llamado a una función pero su valor no ha sido utilizado en la línea 11

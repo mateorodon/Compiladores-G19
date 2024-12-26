@@ -18,15 +18,16 @@ OperacionEnteroNegativo db "El resultado de la operacion no puede ser negativo."
 OverflowSumaFlotantes db "Se produjo un un overflow en la suma de flotantes.", 0 
 error db "Error", 0 
 printMensaje db "Print", 0 
-_d@main@autoinvocacion dd ?
-_2 dd 2
-_y@main dd ?
-_4 dd 4
-_q@main@autoinvocacion dd ?
-_@aux3 dd ?
-_@aux2 dd ?
-_@aux1 dd ?
-_x@main dd ?
+_@aux6 dq ?
+_@aux5 dq ?
+_@aux4 dq ?
+_a@main@f1 dq ?
+_a@main@f2 dq ?
+_3_4 dq 3.4
+_4_5 dq 4.5
+_@aux3 dq ?
+_@aux2 dq ?
+_@aux1 dq ?
 limite_float dq 3.4e38
 
 .code
@@ -39,28 +40,38 @@ invoke ExitProcess, 0
 handle_overflow: 
 invoke MessageBox, NULL, addr OverflowSumaFlotantes, addr error, MB_OK 
 invoke ExitProcess, 0 
-autoinvocacion@main:
+f2@main:
 PUSH EBP
 MOV EBP, ESP
-MOV EAX, [EBP + 8]
-MOV _d@main@autoinvocacion, EAX
-MOV EAX, _2
-MOV _d@main@autoinvocacion, EAX
+FLD QWORD PTR [EBP + 8]
+FSTP _a@main@f2
+FLD _a@main@f2
+FMUL _4_5
+FST _@aux3
+FLD _@aux3
+SUB ESP, 8
+FSTP QWORD PTR [ESP]
+CALL f1@main
+ADD ESP, 8
+FLD _a@main@f2
+POP EBP 
+ret 
+
+f1@main:
+PUSH EBP
+MOV EBP, ESP
+FLD QWORD PTR [EBP + 8]
+FSTP _a@main@f1
 JMP handle_autoinvocacion
-MOV EAX, _d@main@autoinvocacion
+FLD _a@main@f1
 POP EBP 
 ret 
 
 start:
-MOV EAX, _2
-MOV _x@main, EAX
-invoke printf, cfm$("%d\n"), [_x@main]
-MOV EAX, _4
-MOV _x@main, EAX
-MOV EAX, _x@main
-PUSH EAX
-CALL autoinvocacion@main
-ADD ESP, 4
-MOV _y@main, EAX
+FLD _3_4
+SUB ESP, 8
+FSTP QWORD PTR [ESP]
+CALL f1@main
+ADD ESP, 8
 invoke ExitProcess, 0 
 end start

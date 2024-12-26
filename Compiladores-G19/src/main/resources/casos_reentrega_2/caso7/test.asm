@@ -18,15 +18,20 @@ OperacionEnteroNegativo db "El resultado de la operacion no puede ser negativo."
 OverflowSumaFlotantes db "Se produjo un un overflow en la suma de flotantes.", 0 
 error db "Error", 0 
 printMensaje db "Print", 0 
-_d@main@autoinvocacion dd ?
+_aa@main dq ?
+_3450_0 dq 3450.0
+_b@main dq ?
+_15 dd 15
+_e@main dd ?,?,?
+_aa@main@f1 dq ?
+_g@main dd ?,?,?
+_1 dd 1
 _2 dd 2
-_y@main dd ?
-_4 dd 4
-_q@main@autoinvocacion dd ?
-_@aux3 dd ?
-_@aux2 dd ?
-_@aux1 dd ?
-_x@main dd ?
+_3 dd 3
+_5 dd 5
+_5_0 dq 5.0
+_@aux2 dq ?
+_10 dd 10
 limite_float dq 3.4e38
 
 .code
@@ -39,28 +44,59 @@ invoke ExitProcess, 0
 handle_overflow: 
 invoke MessageBox, NULL, addr OverflowSumaFlotantes, addr error, MB_OK 
 invoke ExitProcess, 0 
-autoinvocacion@main:
+f1@main:
 PUSH EBP
 MOV EBP, ESP
-MOV EAX, [EBP + 8]
-MOV _d@main@autoinvocacion, EAX
-MOV EAX, _2
-MOV _d@main@autoinvocacion, EAX
+FLD QWORD PTR [EBP + 8]
+FSTP _aa@main@f1
+FLD _aa@main@f1
+FCOM _b@main
+FSTSW AX 
+SAHF 
+JAE label1
 JMP handle_autoinvocacion
-MOV EAX, _d@main@autoinvocacion
+label1:
+
+MOV EAX, _3
+MOV [_e@main + 0], EAX
+MOV EAX, _5
+MOV [_e@main + 4], EAX
+MOV EAX, _10
+MOV [_e@main + 8], EAX
+MOV EAX, [_e@main + 0]
+MOV EBX, [_e@main + 4]
+MOV EDX, [_e@main + 8]
 POP EBP 
 ret 
 
 start:
-MOV EAX, _2
-MOV _x@main, EAX
-invoke printf, cfm$("%d\n"), [_x@main]
-MOV EAX, _4
-MOV _x@main, EAX
-MOV EAX, _x@main
-PUSH EAX
-CALL autoinvocacion@main
-ADD ESP, 4
-MOV _y@main, EAX
+FLD _3450_0
+FST _aa@main
+FSTP ST(0)
+FLD _5_0
+FST _b@main
+FSTP ST(0)
+FLD _aa@main
+SUB ESP, 8
+FSTP QWORD PTR [ESP]
+CALL f1@main
+MOV [_e@main + 0], EAX
+MOV [_e@main + 4], EBX
+MOV [_e@main + 8], EDX
+MOV EAX, _15
+MOV [_e@main + 8], EAX
+invoke printf, cfm$("%d\n"), [_e@main + 0]
+invoke printf, cfm$("%d\n"), [_e@main + 4]
+invoke printf, cfm$("%d\n"), [_e@main + 8]
+FLD _aa@main
+SUB ESP, 8
+FSTP QWORD PTR [ESP]
+CALL f1@main
+MOV [_g@main + 0], EAX
+MOV [_g@main + 4], EBX
+MOV [_g@main + 8], EDX
+invoke printf, cfm$("%d\n"), [_g@main + 0]
+invoke printf, cfm$("%d\n"), [_g@main + 4]
+invoke printf, cfm$("%d\n"), [_g@main + 8]
 invoke ExitProcess, 0 
 end start

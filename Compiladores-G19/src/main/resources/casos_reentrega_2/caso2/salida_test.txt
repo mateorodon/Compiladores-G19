@@ -1,0 +1,21 @@
+----------ARBOL SINTACTICO -----------
+----------TABLA DE SIMBOLOS-----------
+Token{id=257, lexema=e@main@juancito3, linea=23, tipo=ulongint, uso = parametro}
+Token{id=257, lexema=e@main@juancito2, linea=12, tipo=ulongint, uso = parametro}
+Token{id=257, lexema=e@main@juancito, linea=3, tipo=ulongint, uso = parametro}
+Token{id=257, lexema=juancito2@main, linea=12, tipo=ulongint, uso = funcion}
+Token{id=257, lexema=x@main@juancito, linea=6, tipo=ulongint, uso = variable}
+Token{id=257, lexema=juancito@main, linea=3, tipo=ulongint, uso = funcion}
+Token{id=262, lexema=2, linea=34, tipo=ulongint, uso = constante}
+Token{id=262, lexema=3, linea=5, tipo=ulongint, uso = constante}
+Token{id=262, lexema=4, linea=4, tipo=ulongint, uso = constante}
+Token{id=257, lexema=lala, linea=1, tipo=null, uso = null}
+Token{id=257, lexema=x@main@juancito2, linea=15, tipo=ulongint, uso = variable}
+Token{id=257, lexema=x@main@juancito3, linea=26, tipo=ulongint, uso = variable}
+Token{id=257, lexema=juancito3@main, linea=23, tipo=ulongint, uso = funcion}
+-----------ERRORES LEXICOS----------
+-----------ERRORES SINTACTICOS----------
+-----------ERRORES SEMANTICOS----------
+Falta sentencia return en la funcion en la linea 11
+Falta sentencia return en la funcion en la linea 37
+----------WARNINGS-----------

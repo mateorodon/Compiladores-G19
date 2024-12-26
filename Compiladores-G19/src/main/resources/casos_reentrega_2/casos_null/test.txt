@@ -1,0 +1,17 @@
+lalala
+begin
+    ulongint x,y;
+    x:= 2;
+    outf(x);
+    ulongint fun autoinvocacion(ulongint d)
+    begin
+        d := 2;
+        ulongint q;
+        if (3<2) then
+            autoinvocacion(q);
+        end_if;
+        ret(d);
+    end;
+    x := 4;
+    y := autoinvocacion(x);
+end

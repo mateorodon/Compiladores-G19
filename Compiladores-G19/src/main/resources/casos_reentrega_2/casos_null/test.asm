@@ -18,11 +18,13 @@ OperacionEnteroNegativo db "El resultado de la operacion no puede ser negativo."
 OverflowSumaFlotantes db "Se produjo un un overflow en la suma de flotantes.", 0 
 error db "Error", 0 
 printMensaje db "Print", 0 
+_@aux4 dd ?
+_q@main@autoinvocacion dd ?
 _d@main@autoinvocacion dd ?
 _2 dd 2
 _y@main dd ?
+_3 dd 3
 _4 dd 4
-_q@main@autoinvocacion dd ?
 _@aux3 dd ?
 _@aux2 dd ?
 _@aux1 dd ?
@@ -46,7 +48,12 @@ MOV EAX, [EBP + 8]
 MOV _d@main@autoinvocacion, EAX
 MOV EAX, _2
 MOV _d@main@autoinvocacion, EAX
+MOV EAX, _3
+CMP EAX, _2
+JGE  label1
 JMP handle_autoinvocacion
+label1:
+
 MOV EAX, _d@main@autoinvocacion
 POP EBP 
 ret 

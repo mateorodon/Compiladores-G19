@@ -1,0 +1,12 @@
+prog
+begin
+    ulongint x,y,z;
+    z := x  y;
+    x := 2 z;
+    x := x f[1];
+    ulongint fun f1(unlongint j)
+    begin
+        j := 2;
+    end;
+    x := 2 f1(z);
+end

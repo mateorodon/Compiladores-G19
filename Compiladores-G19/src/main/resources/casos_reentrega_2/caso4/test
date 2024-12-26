@@ -1,0 +1,11 @@
+lala begin
+    ulongint fun f1(single a) begin
+        f1(a*4.5);
+        ret(a);
+    end;
+    ulongint fun f2(single a) begin
+        f1(a*4.5);
+        ret(a);
+    end;
+    f1(3.4);
+end

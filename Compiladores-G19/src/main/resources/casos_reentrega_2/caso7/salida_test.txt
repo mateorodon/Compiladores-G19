@@ -1,0 +1,88 @@
+----------ARBOL SINTACTICO -----------
+PROGRAMA
+    Sentencia
+        Sentencia
+            Sentencia
+                Sentencia
+                    Sentencia
+                        Sentencia
+                            Sentencia
+                                Sentencia
+                                    Sentencia
+                                        Sentencia
+                                            Sentencia
+                                                Sentencia
+                                                :=
+                                                    aa@main
+                                                    3450.0
+                                            :=
+                                                b@main
+                                                5.0
+                                :=
+                                    e@main
+                                    f1@main
+                                        aa@main
+                            :=
+                                e[3]
+                                15
+                        Outf
+                            e[1]
+                    Outf
+                        e[2]
+                Outf
+                    e[3]
+            :=
+                g@main
+                f1@main
+                    aa@main
+        Outf
+            g@main
+----------ARBOL SINTACTICO FUNCIONES -----------
+f1@main
+    aa@main@f1
+    Sentencia
+        Sentencia
+            Sentencia
+                Sentencia
+                    If
+                        <
+                            aa@main@f1
+                            b@main
+                        Cuerpo
+                            f1@main
+                                *
+                                    b@main
+                                    aa@main@f1
+                    :=
+                        e[1]
+                        3
+                :=
+                    e[2]
+                    5
+            :=
+                e[3]
+                10
+        Return
+            e@main
+----------TABLA DE SIMBOLOS-----------
+Token{id=257, lexema=aa@main, linea=2, tipo=single, uso = variable}
+Token{id=262, lexema=3450.0, linea=4, tipo=single, uso = constante}
+Token{id=257, lexema=b@main, linea=2, tipo=single, uso = variable}
+Token{id=262, lexema=15, linea=17, tipo=ulongint, uso = constante}
+Token{id=257, lexema=e@main, linea=6, tipo=tint, uso = arreglo}
+Token{id=257, lexema=aa@main@f1, linea=7, tipo=single, uso = parametro}
+Token{id=257, lexema=tint@main, linea=3, tipo=ulongint, uso = tipo}
+Token{id=257, lexema=g@main, linea=6, tipo=tint, uso = arreglo}
+Token{id=262, lexema=1, linea=11, tipo=ulongint, uso = constante}
+Token{id=262, lexema=2, linea=12, tipo=ulongint, uso = constante}
+Token{id=262, lexema=3, linea=11, tipo=ulongint, uso = constante}
+Token{id=262, lexema=5, linea=12, tipo=ulongint, uso = constante}
+Token{id=262, lexema=5.0, linea=5, tipo=single, uso = constante}
+Token{id=257, lexema=lala, linea=1, tipo=null, uso = null}
+Token{id=257, lexema=f1@main, linea=7, tipo=tint, uso = funcion}
+Token{id=262, lexema=10, linea=13, tipo=ulongint, uso = constante}
+-----------ERRORES LEXICOS----------
+-----------ERRORES SINTACTICOS----------
+-----------ERRORES SEMANTICOS----------
+----------WARNINGS-----------
+WARNING: Se ha llamado a una función pero su valor no ha sido utilizado en la línea 9

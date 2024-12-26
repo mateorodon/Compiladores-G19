@@ -704,7 +704,7 @@ encabezado_if:
     ;
 
 bloque_if:
-     encabezado_if '(' condicion ')' THEN cuerpo_if_bloque {if (ifHasReturn){returnIFStack.pop();returnIFStack.push(true); ifHasReturn=false;}} fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF"); inIF=false; Nodo cuerpo = new NodoComun("Cuerpo", (Nodo)$6.obj);
+     encabezado_if '(' condicion ')' THEN cuerpo_if_bloque fin_if {AnalizadorLexico.agregarEstructura("Se reconocio un IF"); inIF=false; Nodo cuerpo = new NodoComun("Cuerpo", (Nodo)$6.obj);
                                                                                                                                           $$.obj = new NodoComun("If", (Nodo)$3.obj, cuerpo);
                                                                                                                                           boolean currentReturnIF = returnIFStack.pop();
                                                                                                                                           //if (enFuncion){
@@ -746,6 +746,8 @@ bloque_if:
 
 
 
+    | encabezado_if '('')' THEN cuerpo_if_bloque fin_if {yyerror("Falta condicion en el IF");}
+    | encabezado_if '('condicion')' cuerpo_if_bloque fin_if {yyerror("Falta THEN en el IF");}
     ;
 
 end_cuerpo_if:

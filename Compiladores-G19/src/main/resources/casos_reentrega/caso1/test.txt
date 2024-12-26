@@ -1,0 +1,12 @@
+prog
+begin
+    ulongint x,y,z;
+    y := x y;
+    x := 1 x;
+    x := 1 f1(z);
+	z := f1(1) x;
+	x := x 2;
+	x := x f1[2];
+	x := f1[2] x;
+end
+

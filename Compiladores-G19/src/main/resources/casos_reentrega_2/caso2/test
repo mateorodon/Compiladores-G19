@@ -1,0 +1,38 @@
+lala
+begin
+    ulongint FUN juancito ( ulongint e ) BEGIN
+        if (e < 4) then
+            IF (e < 3) THEN
+                RET (x);
+            ELSE
+                RET (e);
+            END_IF;
+        end_if;
+    END;
+    ulongint FUN juancito2 ( ulongint e ) BEGIN
+        if (e < 4) then
+            IF (e < 3) THEN
+                RET (x);
+            ELSE
+                RET (e);
+            END_IF;
+        else
+            ret(x);
+        end_if;
+    END;
+    ulongint FUN juancito3 ( ulongint e ) BEGIN
+        if (e < 4) then
+            IF (e < 3) THEN
+                RET (x);
+            ELSE
+                RET (e);
+            END_IF;
+        else
+            IF (e < 3) THEN
+                RET (x);
+            ELSE
+                x:=2;
+            END_IF;
+        end_if;
+    END;
+end

@@ -1,0 +1,5 @@
+prog
+begin
+    x := x + 2.0;
+    x := s + x;
+end

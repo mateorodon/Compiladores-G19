@@ -18,17 +18,12 @@ OperacionEnteroNegativo db "El resultado de la operacion no puede ser negativo."
 OverflowSumaFlotantes db "Se produjo un un overflow en la suma de flotantes.", 0 
 error db "Error", 0 
 printMensaje db "Print", 0 
-_1 dd 1
 _2 dd 2
-_@aux5 dd ?
-_@aux4 dd ?
-_i@main dd ?
-_j@main dd ?
-_m@main dd ?
-_6 dd 6
-_@aux3 dd ?
+_y@main dd ?
+_z@main dd ?
 _@aux2 dd ?
 _@aux1 dd ?
+_x@main dd ?
 limite_float dq 3.4e38
 
 .code
@@ -42,40 +37,11 @@ handle_overflow:
 invoke MessageBox, NULL, addr OverflowSumaFlotantes, addr error, MB_OK 
 invoke ExitProcess, 0 
 start:
-MOV EAX, _1
-MOV _j@main, EAX
-MOV EAX, _i@main
-CMP EAX, _6
-JL  label1
-MOV EAX, _j@main
-CMP EAX, _2
-JL  label1
-MOV EAX, _2
-MOV _i@main, EAX
-JMP label2
-label1:
-MOV EAX, _1
-MOV _i@main, EAX
-MOV EAX, _1
-MOV _m@main, EAX
-MOV EAX, _m@main
-label4:
-CMP EAX, _2
-JL  label3
-JMP label6
-label3:
-MOV EAX, _m@main
-CMP EAX, _1
-JG  label5
-JMP label6
-label5:
-MOV EAX, _2
-MOV _i@main, EAX
-MOV EAX, _m@main
-ADD EAX, _1
-MOV _m@main, EAX
-JMP label4
-label6:
-label2:
+MOV EAX, _y@main
+IMUL EAX, _2
+MOV _@aux1, EAX
+MOV EAX, _x@main
+ADD EAX, _@aux1
+MOV _z@main, EAX
 invoke ExitProcess, 0 
 end start

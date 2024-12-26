@@ -1,0 +1,19 @@
+----------ARBOL SINTACTICO -----------
+----------TABLA DE SIMBOLOS-----------
+Token{id=257, lexema=aa@main, linea=2, tipo=single, uso = variable}
+Token{id=262, lexema=3450.0, linea=4, tipo=single, uso = constante}
+Token{id=257, lexema=a@main@f1, linea=6, tipo=tint, uso = parametro}
+Token{id=257, lexema=b@main, linea=2, tipo=single, uso = variable}
+Token{id=257, lexema=e@main, linea=12, tipo=tint, uso = arreglo}
+Token{id=262, lexema=5.0, linea=5, tipo=single, uso = constante}
+Token{id=257, lexema=lala, linea=1, tipo=null, uso = null}
+Token{id=257, lexema=tint@main, linea=3, tipo=ulongint, uso = tipo}
+Token{id=257, lexema=f1@main, linea=6, tipo=ulongint, uso = funcion}
+Token{id=257, lexema=x@main, linea=13, tipo=ulongint, uso = variable}
+-----------ERRORES LEXICOS----------
+-----------ERRORES SINTACTICOS----------
+-----------ERRORES SEMANTICOS----------
+El tipo del parametro real no coincide con el del real en la linea 8
+El tipo del retorno no coincide con el de la funcion en la linea 10
+----------WARNINGS-----------
+WARNING: Se ha llamado a una función pero su valor no ha sido utilizado en la línea 8

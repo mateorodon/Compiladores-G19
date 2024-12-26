@@ -1,0 +1,27 @@
+----------ARBOL SINTACTICO -----------
+----------TABLA DE SIMBOLOS-----------
+Token{id=257, lexema=f, linea=6, tipo=null, uso = null}
+Token{id=257, lexema=f1, linea=11, tipo=null, uso = null}
+Token{id=257, lexema=prog, linea=1, tipo=null, uso = null}
+Token{id=262, lexema=1, linea=6, tipo=ulongint, uso = constante}
+Token{id=262, lexema=2, linea=5, tipo=ulongint, uso = constante}
+Token{id=257, lexema=y@main, linea=3, tipo=ulongint, uso = variable}
+Token{id=257, lexema=j@main@f1, linea=7, tipo=ulongint, uso = parametro}
+Token{id=257, lexema=z@main, linea=3, tipo=ulongint, uso = variable}
+Token{id=257, lexema=x, linea=11, tipo=ulongint, uso = null}
+Token{id=257, lexema=y, linea=4, tipo=ulongint, uso = null}
+Token{id=257, lexema=z, linea=5, tipo=ulongint, uso = null}
+Token{id=257, lexema=x@main, linea=3, tipo=ulongint, uso = variable}
+Token{id=257, lexema=f1@main, linea=7, tipo=ulongint, uso = funcion}
+-----------ERRORES LEXICOS----------
+-----------ERRORES SINTACTICOS----------
+ERROR SINTACTICO: Se esperaba un operador en la línea 4
+ERROR SINTACTICO: Se esperaba un operador en la línea 5
+ERROR SINTACTICO: Se esperaba un operador en la línea 6
+ERROR SINTACTICO: Se esperaba un operador en la línea 11
+-----------ERRORES SEMANTICOS----------
+El tipo 'unlongint' no fue declarado en la linea 7
+----------WARNINGS-----------
+WARNING: La variable 'x' ya esta declarada en la línea 3
+WARNING: La variable 'y' ya esta declarada en la línea 3
+WARNING: La variable 'z' ya esta declarada en la línea 3
