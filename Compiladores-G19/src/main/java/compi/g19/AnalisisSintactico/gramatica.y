@@ -398,7 +398,12 @@ sentencia_return:
                            } else {
                                 NodoComun funAct = funcionesDeclaradas.get(funcionActual);
                                 String tipoFun = funAct.getTipo();
-                                if (!(((Nodo)$3.obj).getTipo().equals(tipoFun))){
+                                String tipoDelTipo = tiposDeclarados.get(((Nodo)$3.obj).getTipo());
+                                if (tipoDelTipo != null){
+                                    if (!tipoDelTipo.equals(tipoFun)){
+                                        agregarErrorSemantico("El tipo del retorno no coincide con el de la funcion");
+                                    }
+                                } else if (!(((Nodo)$3.obj).getTipo().equals(tipoFun))){
                                     agregarErrorSemantico("El tipo del retorno no coincide con el de la funcion");
                                 } else {
                                     $$.obj = null;
@@ -656,7 +661,7 @@ invocacion_funcion:
                         $$.obj = null;
                     }
             } else {
-                agregarErrorSemantico("El tipo del parametro real no coincide con el del real");
+                agregarErrorSemantico("El tipo del parametro real no coincide con el del formal");
             }
         }
         TablaSimbolos.removeToken($1.sval);
